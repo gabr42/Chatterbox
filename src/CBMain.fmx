@@ -1,0 +1,64 @@
+object frmCBMain: TfrmCBMain
+  Left = 0
+  Top = 0
+  Caption = 'Chatterbox'
+  ClientHeight = 596
+  ClientWidth = 768
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object tcChatter: TTabControl
+    Align = Client
+    Size.Width = 768.000000000000000000
+    Size.Height = 558.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    TabPosition = PlatformDefault
+  end
+  object ToolbarMain: TToolBar
+    Size.Width = 768.000000000000000000
+    Size.Height = 38.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object btnNewChat: TSpeedButton
+      Action = actNewChat
+      ImageIndex = -1
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 41.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      ParentShowHint = False
+      ShowHint = True
+      StyleLookup = 'pagecurltoolbutton'
+      TextSettings.Trimming = None
+    end
+    object btnSettings: TSpeedButton
+      Hint = 'Settings'
+      Position.X = 57.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 41.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      ParentShowHint = False
+      ShowHint = True
+      StyleLookup = 'composetoolbutton'
+      Text = 'btnSettings'
+      TextSettings.Trimming = None
+      OnClick = btnSettingsClick
+    end
+  end
+  object ActionList1: TActionList
+    Left = 368
+    Top = 288
+    object actNewChat: TAction
+      Text = 'New chat'
+      Hint = 'New chat'
+      ShortCut = 16462
+      OnExecute = actNewChatExecute
+    end
+  end
+end

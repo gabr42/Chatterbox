@@ -1,0 +1,365 @@
+object frmSettings: TfrmSettings
+  Left = 0
+  Top = 0
+  ActiveControl = ListBox1
+  Caption = 'Settings'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object ListBox1: TListBox
+    Align = Left
+    Size.Width = 145.000000000000000000
+    Size.Height = 440.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    DisableFocusEffect = True
+    ItemIndex = 0
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    Viewport.Width = 141.000000000000000000
+    Viewport.Height = 436.000000000000000000
+    object liAIEngines: TListBoxItem
+      IsSelected = True
+      Size.Width = 141.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = '  AI engines'
+      OnClick = liAIEnginesClick
+      object Button1: TButton
+        Position.X = 112.000000000000000000
+        Position.Y = 9.000000000000000000
+        Size.Width = 21.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'arrowrighttoolbutton'
+        TabOrder = 40
+        Text = 'Button1'
+        TextSettings.Trimming = None
+      end
+    end
+    object liGlobalSettings: TListBoxItem
+      Position.Y = 41.000000000000000000
+      Size.Width = 141.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = '  Global settings'
+      OnClick = liGlobalSettingsClick
+      object Button2: TButton
+        Position.X = 112.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 21.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'arrowrighttoolbutton'
+        TabOrder = 40
+        Text = 'Button1'
+        TextSettings.Trimming = None
+      end
+    end
+  end
+  object tcSettings: TTabControl
+    Align = Client
+    Size.Width = 495.000000000000000000
+    Size.Height = 440.000000000000000000
+    Size.PlatformDefault = False
+    TabIndex = 0
+    TabOrder = 1
+    TabPosition = None
+    Sizes = (
+      495s
+      440s
+      495s
+      440s)
+    object tabAIEngines: TTabItem
+      CustomIcon = <
+        item
+        end>
+      TextSettings.Trimming = None
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'tabAIEngines'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object Layout1: TLayout
+        Align = MostLeft
+        Size.Width = 193.000000000000000000
+        Size.Height = 440.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Label1: TLabel
+          Align = Top
+          StyledSettings = [Family, Size, FontColor]
+          Size.Width = 193.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.HorzAlign = Center
+          Text = 'AI Engines'
+          TabOrder = 0
+        end
+        object Layout2: TLayout
+          Align = Bottom
+          Position.Y = 402.000000000000000000
+          Size.Width = 193.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object sbAddEngine: TSpeedButton
+            Hint = 'Add AI engine'
+            Position.X = 8.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 22.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = True
+            StyleLookup = 'additembutton'
+            Text = 'sbAddEngine'
+            TextSettings.Trimming = None
+            OnClick = sbAddEngineClick
+          end
+          object btnRemoveEngine: TSpeedButton
+            Action = actDeleteAIEngine
+            ImageIndex = -1
+            Position.X = 49.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 22.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = True
+            StyleLookup = 'deleteitembutton'
+            TextSettings.Trimming = None
+          end
+        end
+        object lbAIEngines: TListBox
+          Align = Client
+          Size.Width = 193.000000000000000000
+          Size.Height = 359.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          OnClick = lbAIEnginesClick
+          DisableFocusEffect = True
+          DefaultItemStyles.ItemStyle = ''
+          DefaultItemStyles.GroupHeaderStyle = ''
+          DefaultItemStyles.GroupFooterStyle = ''
+          Viewport.Width = 189.000000000000000000
+          Viewport.Height = 355.000000000000000000
+        end
+      end
+      object tcEngineTypes: TTabControl
+        Align = Client
+        Size.Width = 302.000000000000000000
+        Size.Height = 252.000000000000000000
+        Size.PlatformDefault = False
+        TabIndex = 0
+        TabOrder = 2
+        TabPosition = None
+        Sizes = (
+          302s
+          252s
+          302s
+          252s)
+        object tiEngineEmpty: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = True
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiEngineEmpty'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+        end
+        object tiEngineOpenAI: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = False
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiEngineOpenAI'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+        end
+      end
+      object lyCommonAIEngineSettings: TLayout
+        Align = Top
+        Position.X = 193.000000000000000000
+        Position.Y = 43.000000000000000000
+        Size.Width = 302.000000000000000000
+        Size.Height = 145.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object cbxEngineType: TComboBox
+          Anchors = [akLeft, akTop, akRight]
+          Items.Strings = (
+            'OpenAI')
+          Position.X = 97.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnChange = inpCommonAIChange
+        end
+        object Label2: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 13.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Type:'
+          TabOrder = 1
+        end
+        object Label3: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 39.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Model:'
+          TabOrder = 2
+        end
+        object Label4: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 65.000000000000000000
+          Size.Width = 73.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Name:'
+          TabOrder = 3
+        end
+        object inpModel: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 4
+          Position.X = 97.000000000000000000
+          Position.Y = 34.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object inpName: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 5
+          Position.X = 97.000000000000000000
+          Position.Y = 60.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object Label5: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 90.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Authorization:'
+          TabOrder = 6
+        end
+        object inpAuth: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 7
+          Password = True
+          Position.X = 97.000000000000000000
+          Position.Y = 86.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object cbDefault: TCheckBox
+          Position.X = 8.000000000000000000
+          Position.Y = 116.000000000000000000
+          TabOrder = 8
+          Text = 'Default engine'
+          OnChange = cbDefaultChange
+        end
+      end
+      object lblLoadedEngine: TLabel
+        Align = Top
+        StyledSettings = [Family, Size, FontColor]
+        Position.X = 193.000000000000000000
+        Size.Width = 302.000000000000000000
+        Size.Height = 43.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.HorzAlign = Center
+        TabOrder = 0
+      end
+    end
+    object tabGlobalSettings: TTabItem
+      CustomIcon = <
+        item
+        end>
+      TextSettings.Trimming = None
+      IsSelected = False
+      Size.Width = 8.000015258789063000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'tabGlobalSettings'
+      ExplicitSize.cx = 8.000015258789063000
+      ExplicitSize.cy = 8.000000000000000000
+    end
+  end
+  object S: TToolBar
+    Align = MostBottom
+    Position.Y = 440.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object btnOK: TButton
+      Anchors = [akTop, akRight]
+      Position.X = 452.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 0
+      Text = 'OK'
+      TextSettings.Trimming = None
+      OnClick = btnOKClick
+    end
+    object Button4: TButton
+      Anchors = [akTop, akRight]
+      ModalResult = 2
+      Position.X = 540.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 1
+      Text = 'Cancel'
+      TextSettings.Trimming = None
+    end
+  end
+  object ActionList1: TActionList
+    Left = 56
+    Top = 280
+    object actDeleteAIEngine: TAction
+      Text = 'actDeleteAIEngine'
+      OnExecute = actDeleteAIEngineExecute
+      OnUpdate = actDeleteAIEngineUpdate
+    end
+  end
+end

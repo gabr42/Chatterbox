@@ -1,0 +1,141 @@
+object frChat: TfrChat
+  Size.Width = 716.000000000000000000
+  Size.Height = 620.000000000000000000
+  Size.PlatformDefault = False
+  object outHistory: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    TextSettings.WordWrap = True
+    Align = Client
+    Size.Width = 716.000000000000000000
+    Size.Height = 436.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 712.000000000000000000
+    Viewport.Height = 432.000000000000000000
+  end
+  object inpQuestion: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    TextSettings.WordWrap = True
+    Align = Bottom
+    Position.Y = 436.000000000000000000
+    Size.Width = 716.000000000000000000
+    Size.Height = 124.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Viewport.Width = 712.000000000000000000
+    Viewport.Height = 120.000000000000000000
+  end
+  object tmrSend: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = tmrSendTimer
+    Left = 256
+    Top = 304
+  end
+  object ToolBar1: TToolBar
+    Align = MostBottom
+    Anchors = [akLeft, akBottom]
+    Position.Y = 560.000000000000000000
+    Size.Width = 716.000000000000000000
+    Size.Height = 60.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object btnClear: TButton
+      Anchors = [akRight, akBottom]
+      Position.X = 603.000000000000000000
+      Position.Y = 30.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Clear history'
+      TextSettings.Trimming = None
+      OnClick = btnClearClick
+    end
+    object btnCopyToClip: TButton
+      Action = actCopyLastAnswer
+      Anchors = [akRight, akBottom]
+      ImageIndex = -1
+      Position.X = 603.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      TextSettings.Trimming = None
+    end
+    object btnSend: TButton
+      Action = actSend
+      Anchors = [akLeft, akBottom]
+      ImageIndex = -1
+      Position.X = 136.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 89.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      TextSettings.Trimming = None
+      object indSend: TAniIndicator
+        Enabled = True
+        HelpType = htKeyword
+        StyleLookup = 'labelstyle'
+        Position.X = 22.000000000000000000
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+    object cbxEngines: TComboBox
+      DropDownCount = 32
+      Position.X = 8.000000000000000000
+      Position.Y = 30.000000000000000000
+      TabOrder = 4
+      OnChange = cbxEnginesChange
+    end
+    object lblActiveEngine: TLabel
+      Position.X = 9.000000000000000000
+      Position.Y = 8.000000000000000000
+      Text = 'Active engine'
+      TabOrder = 5
+    end
+    object Button1: TButton
+      Action = actSaveChat
+      Anchors = [akTop, akRight]
+      ImageIndex = -1
+      Position.X = 488.000000000000000000
+      Position.Y = 8.000000000000000000
+      TabOrder = 6
+      TextSettings.Trimming = None
+    end
+  end
+  object ActionList1: TActionList
+    Left = 344
+    Top = 296
+    object actSend: TAction
+      Text = 'Send'
+      ShortCut = 16397
+      OnExecute = actSendExecute
+      OnUpdate = actSendUpdate
+    end
+    object actCopyLastAnswer: TAction
+      Text = 'Copy last answer'
+      Hint = 'Copy last answer to the clipboard'
+      ShortCut = 24643
+      OnExecute = actCopyLastAnswerExecute
+      OnUpdate = actCopyLastAnswerUpdate
+    end
+    object actSaveChat: TAction
+      Text = 'Save chat'
+      Hint = 'Save chat history'
+      ShortCut = 16467
+      OnExecute = actSaveChatExecute
+      OnUpdate = actSaveChatUpdate
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    Left = 328
+    Top = 208
+  end
+end
