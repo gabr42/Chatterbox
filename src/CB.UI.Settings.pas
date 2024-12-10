@@ -25,7 +25,7 @@ type
     lbAIEngines: TListBox;
     Button1: TButton;
     Button2: TButton;
-    tcEngineTypes: TTabControl;
+    tcAIEngineSettings: TTabControl;
     tiEngineEmpty: TTabItem;
     tiEngineOpenAI: TTabItem;
     lyCommonAIEngineSettings: TLayout;
@@ -35,15 +35,18 @@ type
     Label4: TLabel;
     inpModel: TEdit;
     inpName: TEdit;
-    S: TToolBar;
+    tbMain: TToolBar;
     btnOK: TButton;
     Button4: TButton;
     ActionList1: TActionList;
     actDeleteAIEngine: TAction;
     Label5: TLabel;
     inpAuth: TEdit;
-    cbDefault: TCheckBox;
     lblLoadedEngine: TLabel;
+    tiEngineOllama: TTabItem;
+    Label8: TLabel;
+    inpHost: TEdit;
+    cbDefault: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -81,6 +84,7 @@ begin
   FEngines.ExtractAt(lbAIEngines.ItemIndex);
   lbAIEngines.Items.Delete(lbAIEngines.ItemIndex);
   MakeDefault;
+  lbAIEngines.OnClick(lbAIEngines);
 end;
 
 procedure TfrmSettings.actDeleteAIEngineUpdate(Sender: TObject);
@@ -96,7 +100,6 @@ end;
 
 procedure TfrmSettings.btnOKClick(Sender: TObject);
 begin
-//  inpCommonAIChange(nil);
   ModalResult := mrOK;
 end;
 
@@ -118,20 +121,30 @@ procedure TfrmSettings.inpCommonAIChange(Sender: TObject);
 begin
   if FUpdate or (lbAIEngines.ItemIndex < 0) then
     Exit;
-
   var stg := FEngines[lbAIEngines.ItemIndex];
   case cbxEngineType.ItemIndex of
     0:   stg.EngineType := etOpenAI;
+    1:   stg.EngineType := etOllama;
     else stg.EngineType := etNone;
+  end;
+  if inpHost.Text.Trim = '' then begin
+    FUpdate := true;
+    case cbxEngineType.ItemIndex of
+      0:   inpHost.Text := 'https://api.openai.com/v1/chat/completions';
+      1:   inpHost.Text := 'http://localhost:11434/api/chat';
+    end;
+    FUpdate := false;
   end;
   stg.Model := inpModel.Text;
   stg.Name := inpName.Text;
   stg.Authorization := inpAuth.Text;
+  stg.Host := inpHost.Text;
   stg.IsDefault := cbDefault.IsChecked;
   FEngines[lbAIEngines.ItemIndex] := stg;
 
   lbAIEngines.Items[lbAIEngines.ItemIndex] := stg.DisplayName;
   lblLoadedEngine.Text := stg.DisplayName(false);
+  tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
 procedure TfrmSettings.lbAIEnginesClick(Sender: TObject);
@@ -147,15 +160,18 @@ begin
   var stg := FEngines[lbAIEngines.ItemIndex];
   case stg.EngineType of
     etOpenAI: cbxEngineType.ItemIndex := 0;
+    etOllama: cbxEngineType.ItemIndex := 1;
     else      cbxEngineType.ItemIndex := -1;
   end;
   inpModel.Text := stg.Model;
   inpName.Text := stg.Name;
   inpAuth.Text := stg.Authorization;
+  inpHost.Text := stg.Host;
   cbDefault.IsChecked := stg.IsDefault;
   FUpdate := false;
 
   lblLoadedEngine.Text := stg.DisplayName(false);
+  tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
 procedure TfrmSettings.liAIEnginesClick(Sender: TObject);

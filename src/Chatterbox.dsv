@@ -1,8 +1,8 @@
 ﻿[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCTWFpbi5wYXM=]
 Module=H:\RAZVOJ\Chatterbox\src\CBMain.pas
-CursorX=19
-CursorY=49
-TopLine=46
+CursorX=1
+CursorY=46
+TopLine=42
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -220,7 +220,7 @@ EditViewName=
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkludGVyYWN0aW9uLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Interaction.pas
-CursorX=26
+CursorX=1
 CursorY=20
 TopLine=1
 LeftCol=1
@@ -230,9 +230,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Interaction.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PcGVuQUkucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.pas
-CursorX=14
-CursorY=17
-TopLine=1
+CursorX=1
+CursorY=56
+TopLine=34
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -241,8 +241,8 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.pas
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PcGVuQUkuVHlwZXMucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.Types.pas
 CursorX=1
-CursorY=40
-TopLine=10
+CursorY=7
+TopLine=3
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -370,9 +370,9 @@ EditViewName=x:\common\DCPCrypt2\DCPblockciphers.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlVJLkNoYXQucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.UI.Chat.pas
-CursorX=28
-CursorY=37
-TopLine=18
+CursorX=1
+CursorY=138
+TopLine=122
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -410,9 +410,9 @@ EditViewName=
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLk5ldHdvcmsucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.Network.pas
-CursorX=1
-CursorY=40
-TopLine=5
+CursorX=33
+CursorY=79
+TopLine=63
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -820,9 +820,9 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\Sy
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlVJLlNldHRpbmdzLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.UI.Settings.pas
-CursorX=44
-CursorY=122
-TopLine=107
+CursorX=28
+CursorY=130
+TopLine=108
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -830,9 +830,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.UI.Settings.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlNldHRpbmdzLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.Settings.pas
-CursorX=1
-CursorY=11
-TopLine=1
+CursorX=40
+CursorY=87
+TopLine=67
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1197,4 +1197,44 @@ LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\fmx\FMX.TabControl.pas
+
+[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PbGxhbWEucGFz]
+Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.pas
+CursorX=32
+CursorY=57
+TopLine=43
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.pas
+
+[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PbGxhbWEuVHlwZXMucGFz]
+Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.Types.pas
+CursorX=12
+CursorY=24
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.Types.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcUlRM
+XFNZU1xTeXN0ZW0uU3lzVXRpbHMucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.SysUtils.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxzb3VyY2VccnRs
+XGNvbW1vblxTeXN0ZW0uU3RyVXRpbHMucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.StrUtils.pas
+CursorX=9
+CursorY=103
+TopLine=86
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
 

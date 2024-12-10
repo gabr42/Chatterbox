@@ -3,7 +3,7 @@ unit CB.UI.Chat;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.StrUtils,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
   Spring.Collections,
@@ -91,8 +91,8 @@ end;
 
 procedure TfrChat.actSendExecute(Sender: TObject);
 begin
-  FRequest := SendAsyncRequest(FSerializer.URL,
-                               'Bearer ' + FEngine.Authorization,
+  FRequest := SendAsyncRequest(FEngine.Host,
+                               IfThen(FEngine.Authorization.Trim = '', '', 'Bearer ' + FEngine.Authorization),
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, inpQuestion.Text));
   tmrSend.Enabled := true;
   indSend.Visible := true;
@@ -101,7 +101,7 @@ end;
 
 procedure TfrChat.actSendUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := assigned(FSerializer) and (not assigned(FRequest));
+  (Sender as TAction).Enabled := assigned(FSerializer) and (not assigned(FRequest)) and (FEngine.Host.Trim <> '');
 end;
 
 procedure TfrChat.AfterConstruction;
@@ -157,6 +157,8 @@ begin
   if not FRequest.IsCompleted then
     Exit;
 
+  tmrSend.Enabled := false;
+
   var errorMsg := FRequest.Error;
   if errorMsg = '' then
     answer := FSerializer.JSONToAnswer(FEngine, FRequest.Response, errorMsg);
@@ -184,7 +186,6 @@ begin
 
   FRequest := nil;
 
-  tmrSend.Enabled := false;
   indSend.Visible := false;
   indSend.Enabled := false;
 end;

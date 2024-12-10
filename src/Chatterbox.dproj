@@ -147,6 +147,8 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="CB.Settings.pas"/>
+        <DCCReference Include="CB.AI.Client.Ollama.pas"/>
+        <DCCReference Include="CB.AI.Client.Ollama.Types.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

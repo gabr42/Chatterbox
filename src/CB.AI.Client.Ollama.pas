@@ -1,4 +1,4 @@
-unit CB.AI.Client.OpenAI;
+unit CB.AI.Client.Ollama;
 
 interface
 
@@ -9,52 +9,52 @@ uses
   REST.Json,
   CB.Settings,
   CB.AI.Interaction,
-  CB.AI.Client.OpenAI.Types;
+  CB.AI.Client.Ollama.Types;
 
 type
-  TOpenAISerializer = class(TInterfacedObject, IAISerializer)
+  TOllamaSerializer = class(TInterfacedObject, IAISerializer)
   public
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
 
-{ TOpenAISerializer }
+{ TOllamaSerializer }
 
-function TOpenAISerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+function TOllamaSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
   const history: TAIChat; const question: string): string;
 var
-  request: TOpenAIRequest;
+  request: TOllamaRequest;
 begin
-  request := TOpenAIRequest.Create;
+  request := TOllamaRequest.Create;
   try
     request.Model := engineConfig.Model;
     SetLength(request.Messages, 2*Length(history) + 1);
     var iMsg := 0;
     for var iHistory := 0 to High(history) do begin
-      request.Messages[iMsg] := TOpenAIMessage.Create;
+      request.Messages[iMsg] := TOllamaMessage.Create;
       request.Messages[iMsg].role := 'user';
       request.Messages[iMsg].content := history[iHistory].Question;
-      request.Messages[iMsg+1] := TOpenAIMessage.Create;
+      request.Messages[iMsg+1] := TOllamaMessage.Create;
       request.Messages[iMsg+1].role := 'assistant';
       request.Messages[iMsg+1].content := history[iHistory].Answer;
       Inc(iMsg, 2);
     end;
-    request.Messages[iMsg] := TOpenAIMessage.Create;
+    request.Messages[iMsg] := TOllamaMessage.Create;
     request.Messages[iMsg].role := 'user';
     request.Messages[iMsg].content := question;
+    request.Stream := false;
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;
 
-function TOpenAISerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+function TOllamaSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
   const json: string; var errorMsg: string): string;
 begin
   errorMsg := '';
   Result := '';
   try
-    var response := TJson.JsonToObject<TOpenAIResponse>(json);
-    if Length(response.choices) > 0 then
-      Result := response.choices[0].message.content;
+    var response := TJson.JsonToObject<TOllamaResponse>(json);
+    Result := response.message.content;
   except
     on E: Exception do
       errorMsg := E.Message;
@@ -62,5 +62,5 @@ begin
 end;
 
 initialization
-  GSerializers[etOpenAI] := TOpenAISerializer.Create;
+  GSerializers[etOllama] := TOllamaSerializer.Create;
 end.

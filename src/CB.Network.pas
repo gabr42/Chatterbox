@@ -48,11 +48,13 @@ constructor TAIAsyncRequest.Create(const url, authorization, request: string);
 begin
   FHttpClient := THTTPClient.Create;
   var headers: TNetHeaders;
-  SetLength(headers, 2);
+  SetLength(headers, 1 + Ord(authorization.Trim <> ''));
   headers[0].Name := 'Content-Type';
   headers[0].Value := 'application/json';
-  headers[1].Name := 'Authorization';
-  headers[1].Value := authorization;
+  if authorization.Trim <> '' then begin
+    headers[1].Name := 'Authorization';
+    headers[1].Value := authorization;
+  end;
   FPostData := TStringStream.Create(request, TEncoding.UTF8);
   FResponseData := TStringStream.Create('', TEncoding.UTF8);
   FHttpAsync := FHttpClient.BeginPost(url, FPostData, FResponseData, Headers);
@@ -73,7 +75,7 @@ begin
   if assigned(FHttpAsync) then
     FHttpResponse := THttpClient.EndAsyncHTTP(FHttpAsync);
   if (FHttpResponse.StatusCode div 100) <> 2 then
-    Result := FHttpResponse.StatusText;
+    Result := FHttpResponse.StatusCode.ToString + ' ' + FHttpResponse.StatusText;
 end;
 
 function TAIAsyncRequest.GetResponse: string;

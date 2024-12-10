@@ -38,7 +38,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 40
+        TabOrder = 39
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -58,7 +58,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 40
+        TabOrder = 39
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -158,25 +158,27 @@ object frmSettings: TfrmSettings
           Viewport.Height = 355.000000000000000000
         end
       end
-      object tcEngineTypes: TTabControl
+      object tcAIEngineSettings: TTabControl
         Align = Client
         Size.Width = 302.000000000000000000
-        Size.Height = 252.000000000000000000
+        Size.Height = 223.000000000000000000
         Size.PlatformDefault = False
-        TabIndex = 0
+        TabIndex = 2
         TabOrder = 2
         TabPosition = None
         Sizes = (
           302s
-          252s
+          223s
           302s
-          252s)
+          223s
+          302s
+          223s)
         object tiEngineEmpty: TTabItem
           CustomIcon = <
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -201,60 +203,76 @@ object frmSettings: TfrmSettings
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
         end
+        object tiEngineOllama: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = True
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiEngineOllama'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+        end
       end
       object lyCommonAIEngineSettings: TLayout
         Align = Top
         Position.X = 193.000000000000000000
         Position.Y = 43.000000000000000000
         Size.Width = 302.000000000000000000
-        Size.Height = 145.000000000000000000
+        Size.Height = 174.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
         object cbxEngineType: TComboBox
           Anchors = [akLeft, akTop, akRight]
           Items.Strings = (
-            'OpenAI')
+            'OpenAI'
+            'Ollama')
           Position.X = 97.000000000000000000
-          Position.Y = 8.000000000000000000
+          Position.Y = 35.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 0
+          TabOrder = 1
           OnChange = inpCommonAIChange
         end
         object Label2: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 13.000000000000000000
-          Size.Width = 80.000000000000000000
+          Position.Y = 38.000000000000000000
+          Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Type:'
-          TabOrder = 1
+          TabOrder = 2
         end
         object Label3: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 39.000000000000000000
+          Position.Y = 65.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Model:'
-          TabOrder = 2
+          TabOrder = 3
         end
         object Label4: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 65.000000000000000000
-          Size.Width = 73.000000000000000000
+          Position.Y = 92.000000000000000000
+          Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Name:'
-          TabOrder = 3
+          TabOrder = 5
         end
         object inpModel: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 4
+          TabOrder = 6
           Position.X = 97.000000000000000000
-          Position.Y = 34.000000000000000000
+          Position.Y = 62.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
@@ -263,9 +281,9 @@ object frmSettings: TfrmSettings
         object inpName: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 5
+          TabOrder = 8
           Position.X = 97.000000000000000000
-          Position.Y = 60.000000000000000000
+          Position.Y = 89.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
@@ -273,28 +291,48 @@ object frmSettings: TfrmSettings
         end
         object Label5: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 90.000000000000000000
+          Position.Y = 120.000000000000000000
           Size.Width = 81.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
           Text = 'Authorization:'
-          TabOrder = 6
+          TabOrder = 9
         end
         object inpAuth: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 7
+          TabOrder = 10
           Password = True
           Position.X = 97.000000000000000000
-          Position.Y = 86.000000000000000000
+          Position.Y = 116.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object Label8: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 146.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Host:'
+          TabOrder = 0
+        end
+        object inpHost: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 7
+          Position.X = 97.000000000000000000
+          Position.Y = 143.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
           OnChange = inpCommonAIChange
         end
         object cbDefault: TCheckBox
-          Position.X = 8.000000000000000000
-          Position.Y = 116.000000000000000000
-          TabOrder = 8
+          Position.X = 97.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 4
           Text = 'Default engine'
           OnChange = cbDefaultChange
         end
@@ -327,7 +365,7 @@ object frmSettings: TfrmSettings
       ExplicitSize.cy = 8.000000000000000000
     end
   end
-  object S: TToolBar
+  object tbMain: TToolBar
     Align = MostBottom
     Position.Y = 440.000000000000000000
     Size.Width = 640.000000000000000000

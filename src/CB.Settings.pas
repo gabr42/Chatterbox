@@ -6,7 +6,7 @@ uses
   Spring.Collections;
 
 type
-  TCBAIEngineType = (etNone, etOpenAI); // etOpenllama, etGemini, etClaude
+  TCBAIEngineType = (etNone, etOpenAI, etOllama); // etGemini, etClaude
 
   TCBAIEngineSettings = record
   public
@@ -14,6 +14,7 @@ type
     EngineType   : TCBAIEngineType;
     Model        : string;
     Authorization: string;
+    Host         : string;
     IsDefault    : boolean;
     function DisplayName(showDefault: boolean = true): string;
   end;
@@ -27,7 +28,7 @@ type
   end;
 
 var
-  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'OpenAI');
+  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'OpenAI', 'Ollama');
 
 implementation
 
@@ -64,6 +65,7 @@ begin
       if auth <> '' then
         auth := TEncoding.UTF8.GetString(DecryptAES(TNetEncoding.Base64.DecodeStringToBytes(auth), TEncoding.ANSI.GetBytes(Key)));
       eng.Authorization := auth;
+      eng.Host := ini.ReadString(section, 'Host', '');
       eng.IsDefault := ini.ReadInteger(section, 'IsDefault', 0) <> 0;
       AIEngines.Add(eng);
       Inc(iEng);
@@ -83,6 +85,7 @@ begin
       ini.WriteString(section, 'Model', eng.Model);
       var auth := TNetEncoding.Base64.EncodeBytesToString(EncryptAES(TEncoding.UTF8.GetBytes(eng.Authorization), TEncoding.ANSI.GetBytes(Key)));
       ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
+      ini.WriteString(section, 'Host', eng.Host);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
     end;
   finally FreeAndNil(ini); end;
