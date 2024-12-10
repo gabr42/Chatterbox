@@ -15,6 +15,7 @@ type
     Model        : string;
     Authorization: string;
     Host         : string;
+    SysPrompt    : string;
     IsDefault    : boolean;
     function DisplayName(showDefault: boolean = true): string;
   end;
@@ -66,6 +67,7 @@ begin
         auth := TEncoding.UTF8.GetString(DecryptAES(TNetEncoding.Base64.DecodeStringToBytes(auth), TEncoding.ANSI.GetBytes(Key)));
       eng.Authorization := auth;
       eng.Host := ini.ReadString(section, 'Host', '');
+      eng.SysPrompt := ini.ReadString(section, 'SystemPrompt', '');
       eng.IsDefault := ini.ReadInteger(section, 'IsDefault', 0) <> 0;
       AIEngines.Add(eng);
       Inc(iEng);
@@ -86,8 +88,18 @@ begin
       var auth := TNetEncoding.Base64.EncodeBytesToString(EncryptAES(TEncoding.UTF8.GetBytes(eng.Authorization), TEncoding.ANSI.GetBytes(Key)));
       ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
       ini.WriteString(section, 'Host', eng.Host);
+      ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
     end;
+
+    var iEng := AIEngines.Count;
+    repeat
+      var section := 'AIEngine_' + (iEng+1).ToString;
+      if not ini.SectionExists(section) then
+        break; //repeat
+      ini.EraseSection(section);
+      Inc(iEng);
+    until false;
   finally FreeAndNil(ini); end;
 end;
 

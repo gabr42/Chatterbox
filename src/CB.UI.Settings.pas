@@ -7,7 +7,8 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
   Spring.Collections,
-  CB.Settings, System.Actions, FMX.ActnList;
+  CB.Settings, System.Actions, FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox,
+  FMX.Memo;
 
 type
   TfrmSettings = class(TForm)
@@ -47,6 +48,8 @@ type
     Label8: TLabel;
     inpHost: TEdit;
     cbDefault: TCheckBox;
+    inpSystemPrompt: TMemo;
+    Label6: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -139,6 +142,7 @@ begin
   stg.Name := inpName.Text;
   stg.Authorization := inpAuth.Text;
   stg.Host := inpHost.Text;
+  stg.SysPrompt := StringReplace(StringReplace(inpSystemPrompt.Text, #$0D, ' ', [rfReplaceAll]), #$0A, ' ', [rfReplaceAll]);
   stg.IsDefault := cbDefault.IsChecked;
   FEngines[lbAIEngines.ItemIndex] := stg;
 
@@ -166,6 +170,7 @@ begin
   inpModel.Text := stg.Model;
   inpName.Text := stg.Name;
   inpAuth.Text := stg.Authorization;
+  inpSystemPrompt.Text := stg.SysPrompt;
   inpHost.Text := stg.Host;
   cbDefault.IsChecked := stg.IsDefault;
   FUpdate := false;

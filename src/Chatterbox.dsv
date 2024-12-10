@@ -230,9 +230,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Interaction.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PcGVuQUkucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.pas
-CursorX=1
-CursorY=56
-TopLine=34
+CursorX=54
+CursorY=45
+TopLine=31
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -820,9 +820,9 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\Sy
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlVJLlNldHRpbmdzLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.UI.Settings.pas
-CursorX=28
-CursorY=130
-TopLine=108
+CursorX=7
+CursorY=144
+TopLine=135
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -830,9 +830,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.UI.Settings.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlNldHRpbmdzLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.Settings.pas
-CursorX=40
-CursorY=87
-TopLine=67
+CursorX=38
+CursorY=91
+TopLine=71
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1200,9 +1200,9 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\fmx\FMX.TabCo
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PbGxhbWEucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.pas
-CursorX=32
-CursorY=57
-TopLine=43
+CursorX=1
+CursorY=31
+TopLine=16
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1233,6 +1233,26 @@ Module=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.S
 CursorX=9
 CursorY=103
 TopLine=86
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcUlRM
+XFNZU1xTeXN0ZW0uU3lzVXRpbHMucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.SysUtils.pas
+CursorX=24
+CursorY=4236
+TopLine=4219
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxzb3VyY2VccnRs
+XGNvbW1vblxTeXN0ZW0uSW5pRmlsZXMucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.IniFiles.pas
+CursorX=14
+CursorY=87
+TopLine=53
 LeftCol=1
 Elisions=
 Bookmarks=

@@ -28,8 +28,15 @@ begin
   request := TOllamaRequest.Create;
   try
     request.Model := engineConfig.Model;
-    SetLength(request.Messages, 2*Length(history) + 1);
+    var sysPrompt := engineConfig.SysPrompt.Trim;
+    SetLength(request.Messages, 2*Length(history) + 1 + Ord(sysPrompt <> ''));
     var iMsg := 0;
+    if sysPrompt <> '' then begin
+      request.Messages[iMsg] := TOllamaMessage.Create;
+      request.Messages[iMsg].role := 'system';
+      request.Messages[iMsg].content := sysPrompt.Trim;
+      Inc(iMsg);
+    end;
     for var iHistory := 0 to High(history) do begin
       request.Messages[iMsg] := TOllamaMessage.Create;
       request.Messages[iMsg].role := 'user';

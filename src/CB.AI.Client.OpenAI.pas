@@ -28,8 +28,16 @@ begin
   request := TOpenAIRequest.Create;
   try
     request.Model := engineConfig.Model;
-    SetLength(request.Messages, 2*Length(history) + 1);
+    var sysPrompt := engineConfig.SysPrompt.Trim;
+    var iso1 := engineConfig.Model.StartsWith('o1-', true);
+    SetLength(request.Messages, 2*Length(history) + 1 + Ord(sysPrompt <> ''));
     var iMsg := 0;
+    if (sysPrompt <> '') and (not iso1) then begin
+      request.Messages[iMsg] := TOpenAIMessage.Create;
+      request.Messages[iMsg].role := 'system';
+      request.Messages[iMsg].content := sysPrompt.Trim;
+      Inc(iMsg);
+    end;
     for var iHistory := 0 to High(history) do begin
       request.Messages[iMsg] := TOpenAIMessage.Create;
       request.Messages[iMsg].role := 'user';
@@ -38,6 +46,12 @@ begin
       request.Messages[iMsg+1].role := 'assistant';
       request.Messages[iMsg+1].content := history[iHistory].Answer;
       Inc(iMsg, 2);
+    end;
+    if (sysPrompt <> '') and iso1 then begin
+      request.Messages[iMsg] := TOpenAIMessage.Create;
+      request.Messages[iMsg].role := 'user';
+      request.Messages[iMsg].content := sysPrompt.Trim;
+      Inc(iMsg);
     end;
     request.Messages[iMsg] := TOpenAIMessage.Create;
     request.Messages[iMsg].role := 'user';

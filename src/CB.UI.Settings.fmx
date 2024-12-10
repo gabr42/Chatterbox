@@ -38,7 +38,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -58,7 +58,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -161,18 +161,18 @@ object frmSettings: TfrmSettings
       object tcAIEngineSettings: TTabControl
         Align = Client
         Size.Width = 302.000000000000000000
-        Size.Height = 223.000000000000000000
+        Size.Height = 127.000000000000000000
         Size.PlatformDefault = False
         TabIndex = 2
         TabOrder = 2
         TabPosition = None
         Sizes = (
           302s
-          223s
+          127s
           302s
-          223s
+          127s
           302s
-          223s)
+          127s)
         object tiEngineEmpty: TTabItem
           CustomIcon = <
             item
@@ -224,7 +224,7 @@ object frmSettings: TfrmSettings
         Position.X = 193.000000000000000000
         Position.Y = 43.000000000000000000
         Size.Width = 302.000000000000000000
-        Size.Height = 174.000000000000000000
+        Size.Height = 270.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
         object cbxEngineType: TComboBox
@@ -242,7 +242,7 @@ object frmSettings: TfrmSettings
         end
         object Label2: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 38.000000000000000000
+          Position.Y = 36.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
@@ -251,7 +251,7 @@ object frmSettings: TfrmSettings
         end
         object Label3: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 65.000000000000000000
+          Position.Y = 63.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
@@ -260,7 +260,7 @@ object frmSettings: TfrmSettings
         end
         object Label4: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 92.000000000000000000
+          Position.Y = 90.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
@@ -291,7 +291,7 @@ object frmSettings: TfrmSettings
         end
         object Label5: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 120.000000000000000000
+          Position.Y = 118.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
@@ -311,7 +311,7 @@ object frmSettings: TfrmSettings
         end
         object Label8: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 146.000000000000000000
+          Position.Y = 144.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
@@ -335,6 +335,26 @@ object frmSettings: TfrmSettings
           TabOrder = 4
           Text = 'Default engine'
           OnChange = cbDefaultChange
+        end
+        object inpSystemPrompt: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          TextSettings.WordWrap = True
+          OnChange = inpCommonAIChange
+          Position.X = 97.000000000000000000
+          Position.Y = 170.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 92.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 11
+          Viewport.Width = 193.000000000000000000
+          Viewport.Height = 88.000000000000000000
+        end
+        object Label6: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 171.000000000000000000
+          Text = 'System prompt:'
+          TabOrder = 12
         end
       end
       object lblLoadedEngine: TLabel
