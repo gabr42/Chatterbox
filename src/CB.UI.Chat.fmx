@@ -11,8 +11,8 @@ object frChat: TfrChat
     Size.Height = 436.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 716.000000000000000000
-    Viewport.Height = 436.000000000000000000
+    Viewport.Width = 712.000000000000000000
+    Viewport.Height = 432.000000000000000000
   end
   object inpQuestion: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -24,8 +24,8 @@ object frChat: TfrChat
     Size.Height = 124.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
-    Viewport.Width = 716.000000000000000000
-    Viewport.Height = 124.000000000000000000
+    Viewport.Width = 712.000000000000000000
+    Viewport.Height = 120.000000000000000000
   end
   object tmrSend: TTimer
     Enabled = False
@@ -44,7 +44,7 @@ object frChat: TfrChat
     TabOrder = 3
     object btnClear: TButton
       Anchors = [akRight, akBottom]
-      Position.X = 603.000000000000000000
+      Position.X = 543.000000000000000000
       Position.Y = 30.000000000000000000
       Size.Width = 105.000000000000000000
       Size.Height = 22.000000000000000000
@@ -58,7 +58,7 @@ object frChat: TfrChat
       Action = actCopyLastAnswer
       Anchors = [akRight, akBottom]
       ImageIndex = -1
-      Position.X = 603.000000000000000000
+      Position.X = 543.000000000000000000
       Position.Y = 8.000000000000000000
       Size.Width = 105.000000000000000000
       Size.Height = 22.000000000000000000
@@ -104,10 +104,22 @@ object frChat: TfrChat
       Action = actSaveChat
       Anchors = [akTop, akRight]
       ImageIndex = -1
-      Position.X = 488.000000000000000000
+      Position.X = 444.000000000000000000
       Position.Y = 8.000000000000000000
       TabOrder = 6
       TextSettings.Trimming = None
+    end
+    object SpeedButton1: TSpeedButton
+      Anchors = [akTop, akRight]
+      Position.X = 656.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 52.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'escapetoolbutton'
+      Text = 'SpeedButton1'
+      TextSettings.Trimming = None
+      OnClick = SpeedButton1Click
     end
   end
   object SaveDialog1: TSaveDialog

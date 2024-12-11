@@ -16,6 +16,7 @@ uses
 type
   TAnthropicSerializer = class(TInterfacedObject, IAISerializer)
   public
+    function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
@@ -38,6 +39,11 @@ begin
   finally FreeAndNil(request); end;
 end;
 
+function TAnthropicSerializer.URL(const engineConfig: TCBAIEngineSettings): string;
+begin
+  Result := engineConfig.Host;
+end;
+
 function TAnthropicSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
   const json: string; var errorMsg: string): string;
 begin
@@ -45,11 +51,13 @@ begin
   Result := '';
   try
     var response := TJson.JsonToObject<TAnthropicResponse>(json);
-    for var txt in response.content do begin
-      if Result <> '' then
-        Result := Result + #$0D#$0A;
-      Result := Result + txt.text;
-    end;
+    try
+      for var txt in response.content do begin
+        if Result <> '' then
+          Result := Result + #$0D#$0A;
+        Result := Result + txt.text;
+      end;
+    finally FreeAndNil(response); end;
   except
     on E: Exception do
       errorMsg := E.Message;

@@ -13,6 +13,7 @@ uses
 
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;
+  TFrameNotifyEvent = procedure (Frame: TFrame) of object;
 
   TfrChat = class(TFrame)
     outHistory: TMemo;
@@ -31,6 +32,7 @@ type
     SaveDialog1: TSaveDialog;
     Button1: TButton;
     actSaveChat: TAction;
+    SpeedButton1: TSpeedButton;
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actSaveChatExecute(Sender: TObject);
@@ -39,6 +41,7 @@ type
     procedure actSendUpdate(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
     procedure tmrSendTimer(Sender: TObject);
   private
     FChat          : IList<TAIInteraction>;
@@ -46,6 +49,7 @@ type
     FClipBoard     : IFMXClipboardService;
     FEngine        : TCBAIEngineSettings;
     FOnEngineChange: TFrameEngineChange;
+    FOnRequestClose: TFrameNotifyEvent;
     FRequest       : INetAsyncRequest;
     FSerializer    : IAISerializer;
   protected
@@ -55,6 +59,7 @@ type
     procedure ReloadConfiguration;
     property Configuration: TCBSettings read FConfiguration write SetConfiguration;
     property OnEngineChange: TFrameEngineChange read FOnEngineChange write FOnEngineChange;
+    property OnRequestClose: TFrameNotifyEvent read FOnRequestClose write FOnRequestClose;
   end;
 
 implementation
@@ -103,7 +108,7 @@ begin
       headers.Add(TNetworkHeader.Create(header.Value1,
                     StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
 
-  FRequest := SendAsyncRequest(FEngine.Host, headers,
+  FRequest := SendAsyncRequest(FSerializer.URL(FEngine), headers,
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, inpQuestion.Text));
   tmrSend.Enabled := true;
   indSend.Visible := true;
@@ -112,7 +117,10 @@ end;
 
 procedure TfrChat.actSendUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := assigned(FSerializer) and (not assigned(FRequest)) and (FEngine.Host.Trim <> '');
+  (Sender as TAction).Enabled := assigned(FSerializer)
+                                 and (not assigned(FRequest))
+                                 and (FEngine.Host.Trim <> '')
+                                 and (inpQuestion.Text.Trim <> '');
 end;
 
 procedure TfrChat.AfterConstruction;
@@ -170,6 +178,11 @@ begin
   ReloadConfiguration;
 end;
 
+procedure TfrChat.SpeedButton1Click(Sender: TObject);
+begin
+  FOnRequestClose(Self);
+end;
+
 procedure TfrChat.tmrSendTimer(Sender: TObject);
 var
   answer: string;
@@ -196,6 +209,7 @@ begin
         outHistory.Lines.Add('--------------------');
       outHistory.Lines.Add('Q> ' + inpQuestion.Text);
       outHistory.Lines.Add('');
+      outHistory.CaretPosition := Point(0, outHistory.Lines.Count);
       outHistory.Lines.Add('A> ' + answer);
       outHistory.Lines.Add('');
     finally

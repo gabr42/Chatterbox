@@ -1,6 +1,7 @@
 program Chatterbox;
 
 uses
+  FastMM4,
   System.StartUpCopy,
   FMX.Forms,
   CBMain in 'CBMain.pas' {frmCBMain},
@@ -17,7 +18,9 @@ uses
   CB.AI.Client.Types in 'CB.AI.Client.Types.pas',
   CB.AI.Client.Anthropic in 'CB.AI.Client.Anthropic.pas',
   CB.AI.Client.Anthropic.Types in 'CB.AI.Client.Anthropic.Types.pas',
-  CB.AI.Registry in 'CB.AI.Registry.pas';
+  CB.AI.Registry in 'CB.AI.Registry.pas',
+  CB.AI.Client.Gemini in 'CB.AI.Client.Gemini.pas',
+  CB.AI.Client.Gemini.Types in 'CB.AI.Client.Gemini.Types.pas';
 
 {$R *.res}
 

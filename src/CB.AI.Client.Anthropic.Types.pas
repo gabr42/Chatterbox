@@ -41,9 +41,23 @@ type
     stop_reason: string;
     //stop_sequence ???
     usage      : TAnthropicUsage;
+    destructor Destroy; override;
   end;
 {$M-}
 
 implementation
+
+uses
+  System.SysUtils;
+
+{ TAnthropicResponse }
+
+destructor TAnthropicResponse.Destroy;
+begin
+  for var c in content do
+    c.Free;
+  FreeAndNil(usage);
+  inherited;
+end;
 
 end.

@@ -16,6 +16,7 @@ uses
 type
   TOllamaSerializer = class(TInterfacedObject, IAISerializer)
   public
+    function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
@@ -36,6 +37,11 @@ begin
   finally FreeAndNil(request); end;
 end;
 
+function TOllamaSerializer.URL(const engineConfig: TCBAIEngineSettings): string;
+begin
+  Result := engineConfig.Host;
+end;
+
 function TOllamaSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
   const json: string; var errorMsg: string): string;
 begin
@@ -43,7 +49,9 @@ begin
   Result := '';
   try
     var response := TJson.JsonToObject<TOllamaResponse>(json);
-    Result := response.message.content;
+    try
+      Result := response.message.content;
+    finally FreeAndNil(response); end;
   except
     on E: Exception do
       errorMsg := E.Message;

@@ -108,6 +108,7 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_Define>FullDebugMode;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -130,7 +131,6 @@
         </DelphiCompile>
         <DCCReference Include="CBMain.pas">
             <Form>frmCBMain</Form>
-            <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="CB.AI.Interaction.pas"/>
         <DCCReference Include="CB.AI.Client.OpenAI.pas"/>
@@ -138,13 +138,11 @@
         <DCCReference Include="CB.Encryption.pas"/>
         <DCCReference Include="CB.UI.Chat.pas">
             <Form>frChat</Form>
-            <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="CB.Network.pas"/>
         <DCCReference Include="CB.UI.Settings.pas">
             <Form>frmSettings</Form>
-            <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="CB.Settings.pas"/>
         <DCCReference Include="CB.AI.Client.Ollama.pas"/>
@@ -153,6 +151,8 @@
         <DCCReference Include="CB.AI.Client.Anthropic.pas"/>
         <DCCReference Include="CB.AI.Client.Anthropic.Types.pas"/>
         <DCCReference Include="CB.AI.Registry.pas"/>
+        <DCCReference Include="CB.AI.Client.Gemini.pas"/>
+        <DCCReference Include="CB.AI.Client.Gemini.Types.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

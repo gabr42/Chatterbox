@@ -25,6 +25,7 @@ type
   protected
     function SettingsFileName: string;
     procedure HandleEngineChange(Frame: TFrame; const Engine: TCBAIEngineSettings);
+    procedure HandleRequestClose(Frame: TFrame);
   public
   end;
 
@@ -48,6 +49,7 @@ begin
   fr.Parent := ti;
   fr.Align := TAlignLayout.Client;
   fr.OnEngineChange := HandleEngineChange; // must be before setting Configuration
+  fr.OnRequestClose := HandleRequestClose;
   fr.Configuration := FSettings;
 end;
 
@@ -61,6 +63,12 @@ procedure TfrmCBMain.HandleEngineChange(Frame: TFrame;
 begin
   var ti := Frame.Parent.Parent as TTabItem;
   ti.Text := Engine.DisplayName(false);
+end;
+
+procedure TfrmCBMain.HandleRequestClose(Frame: TFrame);
+begin
+  var ti := Frame.Parent.Parent as TTabItem;
+  tcChatter.RemoveObject(ti);
 end;
 
 function TfrmCBMain.SettingsFileName: string;
