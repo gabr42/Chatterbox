@@ -16,7 +16,8 @@ object frmCBMain: TfrmCBMain
     Size.Height = 558.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    TabPosition = PlatformDefault
+    TabPosition = Top
+    OnChange = tcChatterChange
   end
   object ToolbarMain: TToolBar
     Size.Width = 768.000000000000000000
@@ -59,6 +60,16 @@ object frmCBMain: TfrmCBMain
       Hint = 'New chat'
       ShortCut = 16462
       OnExecute = actNewChatExecute
+    end
+    object actPrevEngine: TAction
+      Text = 'actPrevEngine'
+      ShortCut = 16417
+      OnExecute = actPrevEngineExecute
+    end
+    object actNextEngine: TAction
+      Text = 'actNextEngine'
+      ShortCut = 16418
+      OnExecute = actNextEngineExecute
     end
   end
 end

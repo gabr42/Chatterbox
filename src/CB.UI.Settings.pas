@@ -3,12 +3,12 @@ unit CB.UI.Settings;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Actions,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
+  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo,
   Spring.Collections,
-  CB.Settings, System.Actions, FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox,
-  FMX.Memo;
+  CB.Settings;
 
 type
   TfrmSettings = class(TForm)

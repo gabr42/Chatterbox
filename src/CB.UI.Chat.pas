@@ -14,6 +14,8 @@ uses
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;
   TFrameNotifyEvent = procedure (Frame: TFrame) of object;
+  TFrameGetChatInfo = procedure (Frame: TFrame; var countChats: integer) of object;
+  TFrameExecuteInAll = procedure (Frame: TFrame; const question: string) of object;
 
   TfrChat = class(TFrame)
     outHistory: TMemo;
@@ -33,11 +35,15 @@ type
     Button1: TButton;
     actSaveChat: TAction;
     SpeedButton1: TSpeedButton;
+    Button2: TButton;
+    actSendToAll: TAction;
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actSaveChatExecute(Sender: TObject);
     procedure actSaveChatUpdate(Sender: TObject);
     procedure actSendExecute(Sender: TObject);
+    procedure actSendToAllExecute(Sender: TObject);
+    procedure actSendToAllUpdate(Sender: TObject);
     procedure actSendUpdate(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
@@ -50,6 +56,8 @@ type
     FEngine        : TCBAIEngineSettings;
     FOnEngineChange: TFrameEngineChange;
     FOnRequestClose: TFrameNotifyEvent;
+    FOnGetChatInfo : TFrameGetChatInfo;
+    FOnExecuteInAll: TFrameExecuteInAll;
     FRequest       : INetAsyncRequest;
     FSerializer    : IAISerializer;
   protected
@@ -57,9 +65,13 @@ type
   public
     procedure AfterConstruction; override;
     procedure ReloadConfiguration;
+    procedure SendQuestion(const question: string);
+    procedure SetEngine(const engName: string);
     property Configuration: TCBSettings read FConfiguration write SetConfiguration;
     property OnEngineChange: TFrameEngineChange read FOnEngineChange write FOnEngineChange;
     property OnRequestClose: TFrameNotifyEvent read FOnRequestClose write FOnRequestClose;
+    property OnGetChatInfo: TFrameGetChatInfo read FOnGetChatInfo write FOnGetChatInfo;
+    property OnExecuteInAll: TFrameExecuteInAll read FOnExecuteInAll write FOnExecuteInAll;
   end;
 
 implementation
@@ -123,6 +135,21 @@ begin
                                  and (inpQuestion.Text.Trim <> '');
 end;
 
+procedure TfrChat.actSendToAllExecute(Sender: TObject);
+begin
+  FOnExecuteInAll(Self, inpQuestion.Text);
+end;
+
+procedure TfrChat.actSendToAllUpdate(Sender: TObject);
+var
+  count: integer;
+begin
+  count := 0;
+  if assigned(FOnGetChatInfo) then
+    FOnGetChatInfo(Self, count);
+  (Sender as TAction).Enabled := actSend.Enabled and (count > 1) and (assigned(FOnExecuteInAll));
+end;
+
 procedure TfrChat.AfterConstruction;
 begin
   inherited;
@@ -172,10 +199,27 @@ begin
   cbxEnginesChange(cbxEngines);
 end;
 
+procedure TfrChat.SendQuestion(const question: string);
+begin
+  inpQuestion.Text := question;
+  actSend.Execute;
+end;
+
 procedure TfrChat.SetConfiguration(const config: TCBSettings);
 begin
   FConfiguration := config;
   ReloadConfiguration;
+end;
+
+procedure TfrChat.SetEngine(const engName: string);
+begin
+  cbxEngines.ItemIndex := -1;
+  for var iEngine := 0 to FConfiguration.AIEngines.Count - 1 do
+    if SameText(engName, FConfiguration.AIEngines[iEngine].DisplayName(false)) then begin
+      cbxEngines.ItemIndex := iEngine;
+      break; //for iEngine
+    end;
+  cbxEngines.OnChange(cbxEngines);
 end;
 
 procedure TfrChat.SpeedButton1Click(Sender: TObject);

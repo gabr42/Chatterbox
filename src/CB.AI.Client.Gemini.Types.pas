@@ -106,6 +106,7 @@ end;
 
 destructor TGeminiRequest.Destroy;
 begin
+  FreeAndNil(system_instruction);
   for var content in contents do
     content.Free;
   inherited;

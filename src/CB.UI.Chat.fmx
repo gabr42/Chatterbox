@@ -121,6 +121,17 @@ object frChat: TfrChat
       TextSettings.Trimming = None
       OnClick = SpeedButton1Click
     end
+    object Button2: TButton
+      Action = actSendToAll
+      ImageIndex = -1
+      Position.X = 248.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 8
+      TextSettings.Trimming = None
+    end
   end
   object SaveDialog1: TSaveDialog
     Left = 328
@@ -148,6 +159,12 @@ object frChat: TfrChat
       ShortCut = 16467
       OnExecute = actSaveChatExecute
       OnUpdate = actSaveChatUpdate
+    end
+    object actSendToAll: TAction
+      Text = 'Send to all'
+      Hint = 'Send the question in all open chats'
+      OnExecute = actSendToAllExecute
+      OnUpdate = actSendToAllUpdate
     end
   end
 end

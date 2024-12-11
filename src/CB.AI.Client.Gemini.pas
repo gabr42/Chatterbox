@@ -32,8 +32,10 @@ begin
   request := TGeminiRequest.Create;
   try
     var sysPrompt := engineConfig.SysPrompt.Trim;
-    if sysPrompt <> '' then
+    if sysPrompt <> '' then begin
+      request.system_instruction := TGeminiParts.Create;
       request.system_instruction.parts := TArray<TGeminiPart>.Create(TGeminiPart.Create(sysPrompt));
+    end;
     SetLength(messages, 2*Length(history) + 1);
     var iMsg := 0;
     for var iHistory := 0 to High(history) do begin

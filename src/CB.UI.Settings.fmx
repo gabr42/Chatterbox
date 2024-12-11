@@ -38,7 +38,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 40
+        TabOrder = 39
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -58,7 +58,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 40
+        TabOrder = 39
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -381,8 +381,8 @@ object frmSettings: TfrmSettings
           Size.Height = 92.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 12
-          Viewport.Width = 193.000000000000000000
-          Viewport.Height = 88.000000000000000000
+          Viewport.Width = 197.000000000000000000
+          Viewport.Height = 92.000000000000000000
         end
         object Label6: TLabel
           Position.X = 8.000000000000000000
