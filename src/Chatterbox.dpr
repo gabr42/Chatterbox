@@ -13,7 +13,11 @@ uses
   CB.UI.Settings in 'CB.UI.Settings.pas' {frmSettings},
   CB.Settings in 'CB.Settings.pas',
   CB.AI.Client.Ollama in 'CB.AI.Client.Ollama.pas',
-  CB.AI.Client.Ollama.Types in 'CB.AI.Client.Ollama.Types.pas';
+  CB.AI.Client.Ollama.Types in 'CB.AI.Client.Ollama.Types.pas',
+  CB.AI.Client.Types in 'CB.AI.Client.Types.pas',
+  CB.AI.Client.Anthropic in 'CB.AI.Client.Anthropic.pas',
+  CB.AI.Client.Anthropic.Types in 'CB.AI.Client.Anthropic.Types.pas',
+  CB.AI.Registry in 'CB.AI.Registry.pas';
 
 {$R *.res}
 

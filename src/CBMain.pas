@@ -71,6 +71,8 @@ begin
 end;
 
 procedure TfrmCBMain.btnSettingsClick(Sender: TObject);
+var
+  frame: TComponent;
 begin
   var frmSettings := TfrmSettings.Create(Self);
   try
@@ -83,6 +85,8 @@ begin
         on E: Exception do
           ShowMessage('Error: ' + E.Message);
       end;
+      for var iTab := 0 to tcChatter.TabCount-1 do
+        (TControl((tcChatter.Tabs[iTab] as TTabItem).Components[0]).Children[0] as TfrChat).ReloadConfiguration;
     end;
   finally FreeAndNil(frmSettings); end;
 end;

@@ -2,19 +2,17 @@ unit CB.AI.Client.OpenAI.Types;
 
 interface
 
+uses
+  CB.AI.Client.Types;
+
 {$M+}
 type
-  TOpenAIMessage = class
-  public
-    role   : string;
-    content: string;
+  // https://platform.openai.com/docs/api-reference/chat
+
+  TOpenAIMessage = class(TAIMessage)
   end;
 
-  TOpenAIRequest = class
-  public
-    model   : string;
-    messages: TArray<TOpenAIMessage>;
-    destructor Destroy; override;
+  TOpenAIRequest = class(TAIRequest)
   end;
 
   TOpenAIChoice = class
@@ -42,17 +40,7 @@ type
   end;
 {$M-}
 
-
 implementation
-
-{ TOpenAIRequest }
-
-destructor TOpenAIRequest.Destroy;
-begin
-  for var msg in Messages do
-    msg.Free;
-  inherited;
-end;
 
 { TOpenAIChoice }
 

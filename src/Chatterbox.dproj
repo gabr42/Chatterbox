@@ -149,6 +149,10 @@
         <DCCReference Include="CB.Settings.pas"/>
         <DCCReference Include="CB.AI.Client.Ollama.pas"/>
         <DCCReference Include="CB.AI.Client.Ollama.Types.pas"/>
+        <DCCReference Include="CB.AI.Client.Types.pas"/>
+        <DCCReference Include="CB.AI.Client.Anthropic.pas"/>
+        <DCCReference Include="CB.AI.Client.Anthropic.Types.pas"/>
+        <DCCReference Include="CB.AI.Registry.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

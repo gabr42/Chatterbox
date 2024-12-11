@@ -50,9 +50,15 @@ type
     cbDefault: TCheckBox;
     inpSystemPrompt: TMemo;
     Label6: TLabel;
+    tcEngineAnthropic: TTabItem;
+    btnResetEngine: TButton;
+    actResetSettings: TAction;
+    tiEngineGemini: TTabItem;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
+    procedure actResetSettingsExecute(Sender: TObject);
+    procedure actResetSettingsUpdate(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure cbDefaultChange(Sender: TObject);
     procedure inpCommonAIChange(Sender: TObject);
@@ -95,6 +101,44 @@ begin
   (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
 end;
 
+procedure TfrmSettings.actResetSettingsExecute(Sender: TObject);
+begin
+  var stg := FEngines[lbAIEngines.ItemIndex];
+  FUpdate := true;
+  case stg.EngineType of
+    etAnthropic:
+      begin
+        inpHost.Text := 'https://api.anthropic.com/v1/messages';
+        inpModel.Text := 'claude-3-5-sonnet-latest';
+      end;
+    etOllama:
+      begin
+        inpHost.Text := 'http://localhost:11434/api/chat';
+        inpModel.Text := 'codellama';
+      end;
+    etOpenAI:
+      begin
+        inpHost.Text := 'https://api.openai.com/v1/chat/completions';
+        inpModel.Text := 'o1-mini';
+      end;
+    etGemini:
+      begin
+        inpHost.Text := 'https://generativelanguage.googleapis.com/v1beta/';
+        inpModel.Text := 'gemini-1.5-pro';
+      end
+    else
+      inpHost.Text := '';
+  end;
+  FUpdate := false;
+  inpCommonAIChange(nil);
+end;
+
+procedure TfrmSettings.actResetSettingsUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := lyCommonAIEngineSettings.Enabled
+                                 and (cbxEngineType.ItemIndex >= 0);
+end;
+
 procedure TfrmSettings.AfterConstruction;
 begin
   inherited;
@@ -124,19 +168,14 @@ procedure TfrmSettings.inpCommonAIChange(Sender: TObject);
 begin
   if FUpdate or (lbAIEngines.ItemIndex < 0) then
     Exit;
+
   var stg := FEngines[lbAIEngines.ItemIndex];
   case cbxEngineType.ItemIndex of
-    0:   stg.EngineType := etOpenAI;
-    1:   stg.EngineType := etOllama;
+    0:   stg.EngineType := etAnthropic;
+    1:   stg.EngineType := etGemini;
+    2:   stg.EngineType := etOllama;
+    3:   stg.EngineType := etOpenAI;
     else stg.EngineType := etNone;
-  end;
-  if inpHost.Text.Trim = '' then begin
-    FUpdate := true;
-    case cbxEngineType.ItemIndex of
-      0:   inpHost.Text := 'https://api.openai.com/v1/chat/completions';
-      1:   inpHost.Text := 'http://localhost:11434/api/chat';
-    end;
-    FUpdate := false;
   end;
   stg.Model := inpModel.Text;
   stg.Name := inpName.Text;
@@ -163,9 +202,11 @@ begin
   lyCommonAIEngineSettings.Enabled := true;
   var stg := FEngines[lbAIEngines.ItemIndex];
   case stg.EngineType of
-    etOpenAI: cbxEngineType.ItemIndex := 0;
-    etOllama: cbxEngineType.ItemIndex := 1;
-    else      cbxEngineType.ItemIndex := -1;
+    etAnthropic: cbxEngineType.ItemIndex := 0;
+    etGemini:    cbxEngineType.ItemIndex := 1;
+    etOllama:    cbxEngineType.ItemIndex := 2;
+    etOpenAI:    cbxEngineType.ItemIndex := 3;
+    else         cbxEngineType.ItemIndex := -1;
   end;
   inpModel.Text := stg.Model;
   inpName.Text := stg.Name;

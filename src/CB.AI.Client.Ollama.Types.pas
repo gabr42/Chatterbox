@@ -2,18 +2,18 @@ unit CB.AI.Client.Ollama.Types;
 
 interface
 
+uses
+  CB.AI.Client.Types;
+
 {$M+}
 type
-  TOllamaMessage = class
-  public
-    role   : string;
-    content: string;
+  // https://github.com/ollama/ollama/blob/main/docs/api.md
+
+  TOllamaMessage = class(TAIMessage)
   end;
 
-  TOllamaRequest = class
+  TOllamaRequest = class(TAIRequest)
   public
-    model : string;
-    messages: TArray<TOllamaMessage>;
     stream: boolean;
     //temperature
     //max_tokens

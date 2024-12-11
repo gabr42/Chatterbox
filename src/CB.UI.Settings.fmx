@@ -163,10 +163,14 @@ object frmSettings: TfrmSettings
         Size.Width = 302.000000000000000000
         Size.Height = 127.000000000000000000
         Size.PlatformDefault = False
-        TabIndex = 2
+        TabIndex = 4
         TabOrder = 2
         TabPosition = None
         Sizes = (
+          302s
+          127s
+          302s
+          127s
           302s
           127s
           302s
@@ -188,6 +192,36 @@ object frmSettings: TfrmSettings
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
         end
+        object tcEngineAnthropic: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = False
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tcEngineAnthropic'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+        end
+        object tiEngineOllama: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = False
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiEngineOllama'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+        end
         object tiEngineOpenAI: TTabItem
           CustomIcon = <
             item
@@ -203,7 +237,7 @@ object frmSettings: TfrmSettings
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
         end
-        object tiEngineOllama: TTabItem
+        object tiEngineGemini: TTabItem
           CustomIcon = <
             item
             end>
@@ -214,9 +248,7 @@ object frmSettings: TfrmSettings
           Size.PlatformDefault = False
           StyleLookup = ''
           TabOrder = 0
-          Text = 'tiEngineOllama'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
+          Text = 'tiEngineGemini'
         end
       end
       object lyCommonAIEngineSettings: TLayout
@@ -230,14 +262,16 @@ object frmSettings: TfrmSettings
         object cbxEngineType: TComboBox
           Anchors = [akLeft, akTop, akRight]
           Items.Strings = (
-            'OpenAI'
-            'Ollama')
+            'Anthropic'
+            'Gemini'
+            'Ollama'
+            'OpenAI')
           Position.X = 97.000000000000000000
           Position.Y = 35.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 1
+          TabOrder = 3
           OnChange = inpCommonAIChange
         end
         object Label2: TLabel
@@ -247,7 +281,7 @@ object frmSettings: TfrmSettings
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Type:'
-          TabOrder = 2
+          TabOrder = 4
         end
         object Label3: TLabel
           Position.X = 8.000000000000000000
@@ -256,7 +290,7 @@ object frmSettings: TfrmSettings
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Model:'
-          TabOrder = 3
+          TabOrder = 5
         end
         object Label4: TLabel
           Position.X = 8.000000000000000000
@@ -265,12 +299,12 @@ object frmSettings: TfrmSettings
           Size.Height = 17.000000000000000000
           Size.PlatformDefault = False
           Text = 'Name:'
-          TabOrder = 5
+          TabOrder = 6
         end
         object inpModel: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 6
+          TabOrder = 7
           Position.X = 97.000000000000000000
           Position.Y = 62.000000000000000000
           Size.Width = 197.000000000000000000
@@ -296,11 +330,11 @@ object frmSettings: TfrmSettings
           Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
           Text = 'Authorization:'
-          TabOrder = 9
+          TabOrder = 11
         end
         object inpAuth: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 10
+          TabOrder = 9
           Password = True
           Position.X = 97.000000000000000000
           Position.Y = 116.000000000000000000
@@ -321,7 +355,7 @@ object frmSettings: TfrmSettings
         object inpHost: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 7
+          TabOrder = 10
           Position.X = 97.000000000000000000
           Position.Y = 143.000000000000000000
           Size.Width = 197.000000000000000000
@@ -332,7 +366,7 @@ object frmSettings: TfrmSettings
         object cbDefault: TCheckBox
           Position.X = 97.000000000000000000
           Position.Y = 8.000000000000000000
-          TabOrder = 4
+          TabOrder = 1
           Text = 'Default engine'
           OnChange = cbDefaultChange
         end
@@ -346,7 +380,7 @@ object frmSettings: TfrmSettings
           Size.Width = 197.000000000000000000
           Size.Height = 92.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 11
+          TabOrder = 12
           Viewport.Width = 193.000000000000000000
           Viewport.Height = 88.000000000000000000
         end
@@ -354,7 +388,16 @@ object frmSettings: TfrmSettings
           Position.X = 8.000000000000000000
           Position.Y = 171.000000000000000000
           Text = 'System prompt:'
-          TabOrder = 12
+          TabOrder = 13
+        end
+        object btnResetEngine: TButton
+          Action = actResetSettings
+          Anchors = [akLeft, akRight]
+          ImageIndex = -1
+          Position.X = 214.000000000000000000
+          Position.Y = 7.000000000000000000
+          TabOrder = 2
+          TextSettings.Trimming = None
         end
       end
       object lblLoadedEngine: TLabel
@@ -418,6 +461,12 @@ object frmSettings: TfrmSettings
       Text = 'actDeleteAIEngine'
       OnExecute = actDeleteAIEngineExecute
       OnUpdate = actDeleteAIEngineUpdate
+    end
+    object actResetSettings: TAction
+      Text = 'Defaults'
+      Hint = 'Reset settings to default'
+      OnExecute = actResetSettingsExecute
+      OnUpdate = actResetSettingsUpdate
     end
   end
 end

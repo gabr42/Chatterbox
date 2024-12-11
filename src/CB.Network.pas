@@ -2,7 +2,13 @@ unit CB.Network;
 
 interface
 
+uses
+  Spring, Spring.Collections, Spring.Collections.Extensions,
+  CB.Settings;
+
 type
+  TNetworkHeader = Tuple<string, string>;
+
   INetAsyncRequest = interface ['{88B1028B-E8D2-47F3-B753-D4A47DA8B35C}']
     function GetError: string;
     function GetResponse: string;
@@ -12,7 +18,8 @@ type
     property Error: string read GetError;
   end;
 
-function SendAsyncRequest(const url, authorization, request: string): INetAsyncRequest;
+function SendAsyncRequest(const url: string; const headers: IEnumerable<TNetworkHeader>;
+  const request: string): INetAsyncRequest;
 
 implementation
 
@@ -32,32 +39,34 @@ type
     function  GetError: string;
     function  GetResponse: string;
   public
-    constructor Create(const url, authorization, request: string);
-    destructor Destroy; override;
+    constructor Create(const url: string; const headers: IEnumerable<TNetworkHeader>; const request: string);
+    destructor  Destroy; override;
     function IsCompleted: boolean;
   end;
 
-function SendAsyncRequest(const url, authorization, request: string): INetAsyncRequest;
+function SendAsyncRequest(const url: string; const headers: IEnumerable<TNetworkHeader>;
+  const request: string): INetAsyncRequest;
 begin
-  Result := TAIAsyncRequest.Create(url, authorization, request);
+  Result := TAIAsyncRequest.Create(url, headers, request);
 end;
 
 { TAIAsyncRequest }
 
-constructor TAIAsyncRequest.Create(const url, authorization, request: string);
+constructor TAIAsyncRequest.Create(const url: string; const headers: IEnumerable<TNetworkHeader>;
+  const request: string);
 begin
   FHttpClient := THTTPClient.Create;
-  var headers: TNetHeaders;
-  SetLength(headers, 1 + Ord(authorization.Trim <> ''));
-  headers[0].Name := 'Content-Type';
-  headers[0].Value := 'application/json';
-  if authorization.Trim <> '' then begin
-    headers[1].Name := 'Authorization';
-    headers[1].Value := authorization;
+  var netHeaders: TNetHeaders;
+  SetLength(netHeaders, 1 + headers.Count);
+  netHeaders[0].Name := 'Content-Type';
+  netHeaders[0].Value := 'application/json';
+  for var zip in TEnumerable.Zip<integer, TNetworkHeader>(TRangeIterator.Create(1, headers.Count), headers) do begin
+    netHeaders[zip.Value1].Name :=  zip.Value2.Value1;
+    netHeaders[zip.Value1].Value := zip.Value2.Value2;
   end;
   FPostData := TStringStream.Create(request, TEncoding.UTF8);
   FResponseData := TStringStream.Create('', TEncoding.UTF8);
-  FHttpAsync := FHttpClient.BeginPost(url, FPostData, FResponseData, Headers);
+  FHttpAsync := FHttpClient.BeginPost(url, FPostData, FResponseData, netHeaders);
 end;
 
 destructor TAIAsyncRequest.Destroy;
@@ -75,7 +84,7 @@ begin
   if assigned(FHttpAsync) then
     FHttpResponse := THttpClient.EndAsyncHTTP(FHttpAsync);
   if (FHttpResponse.StatusCode div 100) <> 2 then
-    Result := FHttpResponse.StatusCode.ToString + ' ' + FHttpResponse.StatusText;
+    Result := FHttpResponse.StatusCode.ToString + ' ' + FHttpResponse.ContentAsString(TEncoding.UTF8);
 end;
 
 function TAIAsyncRequest.GetResponse: string;

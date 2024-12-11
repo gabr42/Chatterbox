@@ -19,11 +19,6 @@ type
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
 
-var
-  GSerializers: IDictionary<TCBAIEngineType, IAISerializer>;
-
 implementation
 
-initialization
-  GSerializers := TCollections.CreateDictionary<TCBAIEngineType, IAISerializer>;
 end.

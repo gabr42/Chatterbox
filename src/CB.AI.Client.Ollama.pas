@@ -7,7 +7,9 @@ implementation
 uses
   System.SysUtils,
   REST.Json,
-  CB.Settings,
+  Spring,
+  CB.Settings, CB.Network,
+  CB.AI.Registry,
   CB.AI.Interaction,
   CB.AI.Client.Ollama.Types;
 
@@ -28,27 +30,7 @@ begin
   request := TOllamaRequest.Create;
   try
     request.Model := engineConfig.Model;
-    var sysPrompt := engineConfig.SysPrompt.Trim;
-    SetLength(request.Messages, 2*Length(history) + 1 + Ord(sysPrompt <> ''));
-    var iMsg := 0;
-    if sysPrompt <> '' then begin
-      request.Messages[iMsg] := TOllamaMessage.Create;
-      request.Messages[iMsg].role := 'system';
-      request.Messages[iMsg].content := sysPrompt.Trim;
-      Inc(iMsg);
-    end;
-    for var iHistory := 0 to High(history) do begin
-      request.Messages[iMsg] := TOllamaMessage.Create;
-      request.Messages[iMsg].role := 'user';
-      request.Messages[iMsg].content := history[iHistory].Question;
-      request.Messages[iMsg+1] := TOllamaMessage.Create;
-      request.Messages[iMsg+1].role := 'assistant';
-      request.Messages[iMsg+1].content := history[iHistory].Answer;
-      Inc(iMsg, 2);
-    end;
-    request.Messages[iMsg] := TOllamaMessage.Create;
-    request.Messages[iMsg].role := 'user';
-    request.Messages[iMsg].content := question;
+    request.LoadMessages(engineConfig.SysPrompt.Trim, false, history, question);
     request.Stream := false;
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
@@ -70,4 +52,5 @@ end;
 
 initialization
   GSerializers[etOllama] := TOllamaSerializer.Create;
+  GNetworkHeaderProvider.Add(etOllama, TNetworkHeader.Create('Authorization', 'Bearer ' + CAuthorizationKeyPlaceholder));
 end.

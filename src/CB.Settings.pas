@@ -6,7 +6,7 @@ uses
   Spring.Collections;
 
 type
-  TCBAIEngineType = (etNone, etOpenAI, etOllama); // etGemini, etClaude
+  TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini);
 
   TCBAIEngineSettings = record
   public
@@ -29,7 +29,7 @@ type
   end;
 
 var
-  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'OpenAI', 'Ollama');
+  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini');
 
 implementation
 
@@ -40,6 +40,9 @@ uses
 const
   Key = 'V7YTLI1rNionnj1p4t6kgXgoAEwFXCUirBM0eVewAIBh8zdoi1XlYSNz5WOXHYk3';
 
+var
+  SerializeEngineName: array [TCBAIEngineType] of string = ('None', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini');
+
 { TCBSettings }
 
 constructor TCBSettings.Create;
@@ -49,6 +52,15 @@ begin
 end;
 
 procedure TCBSettings.Load(const fileName: string);
+
+  function FindEngineByName(const name: string): TCBAIEngineType;
+  begin
+    Result := etNone;
+    for var engine := Low(TCBAIEngineType) to High(TCBAIEngineType) do
+      if SameText(SerializeEngineName[engine], name) then
+        Exit(engine);
+  end;
+
 begin
   AIEngines.Clear;
   var ini := TIniFile.Create(fileName);
@@ -60,7 +72,7 @@ begin
         break; //repeat
       var eng := Default(TCBAIEngineSettings);
       eng.Name := ini.ReadString(section, 'Name', '');
-      eng.EngineType := TCBAIEngineType(ini.ReadInteger(section, 'Type', 0));
+      eng.EngineType := FindEngineByName(ini.ReadString(section, 'Type', ''));
       eng.Model := ini.ReadString(section, 'Model', '');
       var auth := ini.ReadString(section, 'Auth', '');
       if auth <> '' then
@@ -79,11 +91,20 @@ procedure TCBSettings.Save(const fileName: string);
 begin
   var ini := TIniFile.Create(fileName);
   try
-    for var iEng := 0 to AIEngines.Count - 1 do begin
+    var iEng := 1;
+    repeat
+      var section := 'AIEngine_' + iEng.ToString;
+      if not ini.SectionExists(section) then
+        break; //repeat
+      ini.EraseSection(section);
+      Inc(iEng);
+    until false;
+
+    for iEng := 0 to AIEngines.Count - 1 do begin
       var eng := AIEngines[iEng];
       var section := 'AIEngine_' + (iEng+1).ToString;
       ini.WriteString(section, 'Name', eng.Name);
-      ini.WriteInteger(section, 'Type', Ord(eng.EngineType));
+      ini.WriteString(section, 'Type', SerializeEngineName[eng.EngineType]);
       ini.WriteString(section, 'Model', eng.Model);
       var auth := TNetEncoding.Base64.EncodeBytesToString(EncryptAES(TEncoding.UTF8.GetBytes(eng.Authorization), TEncoding.ANSI.GetBytes(Key)));
       ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
@@ -91,15 +112,6 @@ begin
       ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
     end;
-
-    var iEng := AIEngines.Count;
-    repeat
-      var section := 'AIEngine_' + (iEng+1).ToString;
-      if not ini.SectionExists(section) then
-        break; //repeat
-      ini.EraseSection(section);
-      Inc(iEng);
-    until false;
   finally FreeAndNil(ini); end;
 end;
 

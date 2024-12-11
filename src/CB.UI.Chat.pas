@@ -3,12 +3,13 @@ unit CB.UI.Chat;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.StrUtils,
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.StrUtils, System.Actions,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
-  Spring.Collections,
-  CB.Network, CB.Settings, CB.AI.Interaction, FMX.ListBox, System.Actions,
-  FMX.ActnList;
+  FMX.ListBox, FMX.ActnList,
+  Spring, Spring.Collections,
+  CB.Network, CB.Settings, CB.AI.Interaction;
 
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;
@@ -51,6 +52,7 @@ type
     procedure SetConfiguration(const config: TCBSettings);
   public
     procedure AfterConstruction; override;
+    procedure ReloadConfiguration;
     property Configuration: TCBSettings read FConfiguration write SetConfiguration;
     property OnEngineChange: TFrameEngineChange read FOnEngineChange write FOnEngineChange;
   end;
@@ -58,7 +60,7 @@ type
 implementation
 
 uses
-  GpConsole;
+  CB.AI.Registry;
 
 {$R *.fmx}
 
@@ -90,9 +92,18 @@ begin
 end;
 
 procedure TfrChat.actSendExecute(Sender: TObject);
+var
+  authorization: TNetworkHeader;
 begin
-  FRequest := SendAsyncRequest(FEngine.Host,
-                               IfThen(FEngine.Authorization.Trim = '', '', 'Bearer ' + FEngine.Authorization),
+  var headers := TCollections.CreateList<TNetworkHeader>;
+  for var header in GNetworkHeaderProvider[FEngine.EngineType] do
+    if not header.Value2.Contains(CAuthorizationKeyPlaceholder) then
+      headers.Add(header)
+    else if FEngine.Authorization.Trim <> '' then
+      headers.Add(TNetworkHeader.Create(header.Value1,
+                    StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
+
+  FRequest := SendAsyncRequest(FEngine.Host, headers,
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, inpQuestion.Text));
   tmrSend.Enabled := true;
   indSend.Visible := true;
@@ -133,21 +144,30 @@ begin
     OnEngineChange(Self, FEngine);
 end;
 
-procedure TfrChat.SetConfiguration(const config: TCBSettings);
+procedure TfrChat.ReloadConfiguration;
 begin
-  FConfiguration := config;
+  var activeEngine := cbxEngines.Text;
   var defEng := -1;
   cbxEngines.Clear;
   cbxEngines.Items.BeginUpdate;
   try
-    for var iEng := 0 to config.AIEngines.Count - 1 do begin
-      cbxEngines.Items.Add(config.AIEngines[iEng].DisplayName(false));
-      if config.AIEngines[iEng].IsDefault then
+    for var iEng := 0 to FConfiguration.AIEngines.Count - 1 do begin
+      cbxEngines.Items.Add(FConfiguration.AIEngines[iEng].DisplayName(false));
+      if FConfiguration.AIEngines[iEng].IsDefault then
         defEng := iEng;
     end;
   finally cbxEngines.Items.EndUpdate; end;
-  cbxEngines.ItemIndex := defEng;
+  if activeEngine <> '' then
+    cbxEngines.ItemIndex := cbxEngines.Items.IndexOf(activeEngine)
+  else
+    cbxEngines.ItemIndex := defEng;
   cbxEnginesChange(cbxEngines);
+end;
+
+procedure TfrChat.SetConfiguration(const config: TCBSettings);
+begin
+  FConfiguration := config;
+  ReloadConfiguration;
 end;
 
 procedure TfrChat.tmrSendTimer(Sender: TObject);
