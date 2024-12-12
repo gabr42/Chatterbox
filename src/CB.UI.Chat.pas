@@ -51,6 +51,7 @@ type
     SkSvg6: TSkSvg;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
+    procedure actCloseChatExecute(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actLoadChatExecute(Sender: TObject);
@@ -110,6 +111,11 @@ end;
 procedure TfrChat.actClearHistoryUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not FChat.IsEmpty;
+end;
+
+procedure TfrChat.actCloseChatExecute(Sender: TObject);
+begin
+  OnRequestClose(Self);
 end;
 
 procedure TfrChat.actCopyLastAnswerExecute(Sender: TObject);

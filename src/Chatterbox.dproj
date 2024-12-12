@@ -151,7 +151,7 @@
         </DCCReference>
         <DCCReference Include="CB.Network.pas"/>
         <DCCReference Include="CB.UI.Settings.pas">
-            <Form>frmSettings</Form>
+            <Form>S</Form>
         </DCCReference>
         <DCCReference Include="CB.Settings.pas"/>
         <DCCReference Include="CB.AI.Client.Ollama.pas"/>

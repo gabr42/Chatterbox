@@ -11,7 +11,7 @@ uses
   CB.Settings, FMX.EditBox, FMX.NumberBox;
 
 type
-  TfrmSettings = class(TForm)
+  TS = class(TForm)
     ListBox1: TListBox;
     liAIEngines: TListBoxItem;
     liSecurity: TListBoxItem;
@@ -85,18 +85,19 @@ type
   end;
 
 var
-  frmSettings: TfrmSettings;
+  S: TS;
 
 implementation
 
 {$R *.fmx}
 
-procedure TfrmSettings.FormCreate(Sender: TObject);
+procedure TS.FormCreate(Sender: TObject);
 begin
+  tcSettings.TabIndex := 0;
   lyCommonAIEngineSettings.Enabled := false;
 end;
 
-procedure TfrmSettings.actDeleteAIEngineExecute(Sender: TObject);
+procedure TS.actDeleteAIEngineExecute(Sender: TObject);
 begin
   FEngines.ExtractAt(lbAIEngines.ItemIndex);
   lbAIEngines.Items.Delete(lbAIEngines.ItemIndex);
@@ -104,12 +105,12 @@ begin
   lbAIEngines.OnClick(lbAIEngines);
 end;
 
-procedure TfrmSettings.actDeleteAIEngineUpdate(Sender: TObject);
+procedure TS.actDeleteAIEngineUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
 end;
 
-procedure TfrmSettings.actResetSettingsExecute(Sender: TObject);
+procedure TS.actResetSettingsExecute(Sender: TObject);
 begin
   var stg := FEngines[lbAIEngines.ItemIndex];
   FUpdate := true;
@@ -145,24 +146,24 @@ begin
   inpCommonAIChange(nil);
 end;
 
-procedure TfrmSettings.actResetSettingsUpdate(Sender: TObject);
+procedure TS.actResetSettingsUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := lyCommonAIEngineSettings.Enabled
                                  and (cbxEngineType.ItemIndex >= 0);
 end;
 
-procedure TfrmSettings.AfterConstruction;
+procedure TS.AfterConstruction;
 begin
   inherited;
   FEngines := TCollections.CreateList<TCBAIEngineSettings>;
 end;
 
-procedure TfrmSettings.btnOKClick(Sender: TObject);
+procedure TS.btnOKClick(Sender: TObject);
 begin
   ModalResult := mrOK;
 end;
 
-procedure TfrmSettings.cbDefaultChange(Sender: TObject);
+procedure TS.cbDefaultChange(Sender: TObject);
 begin
   inpCommonAIChange(Sender);
 
@@ -176,7 +177,7 @@ begin
       end;
 end;
 
-procedure TfrmSettings.inpCommonAIChange(Sender: TObject);
+procedure TS.inpCommonAIChange(Sender: TObject);
 begin
   if FUpdate or (lbAIEngines.ItemIndex < 0) then
     Exit;
@@ -203,7 +204,7 @@ begin
   tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
-procedure TfrmSettings.lbAIEnginesClick(Sender: TObject);
+procedure TS.lbAIEnginesClick(Sender: TObject);
 begin
   if lbAIEngines.ItemIndex < 0 then begin
     lyCommonAIEngineSettings.Enabled := false;
@@ -234,17 +235,17 @@ begin
   tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
-procedure TfrmSettings.liAIEnginesClick(Sender: TObject);
+procedure TS.liAIEnginesClick(Sender: TObject);
 begin
   tcSettings.TabIndex := 0;
 end;
 
-procedure TfrmSettings.liSecurityClick(Sender: TObject);
+procedure TS.liSecurityClick(Sender: TObject);
 begin
   tcSettings.TabIndex := 1;
 end;
 
-procedure TfrmSettings.LoadFromSettings(settings: TCBSettings);
+procedure TS.LoadFromSettings(settings: TCBSettings);
 begin
   FEngines.Clear;
   FEngines.AddRange(settings.AIEngines);
@@ -256,7 +257,7 @@ begin
   MakeDefault;
 end;
 
-procedure TfrmSettings.MakeDefault;
+procedure TS.MakeDefault;
 begin
   if FEngines.IsEmpty then
     Exit;
@@ -271,13 +272,13 @@ begin
   lbAIEngines.Items[0] := FEngines[0].DisplayName;
 end;
 
-procedure TfrmSettings.SaveToSettings(settings: TCBSettings);
+procedure TS.SaveToSettings(settings: TCBSettings);
 begin
   settings.AIEngines.Clear;
   settings.AIEngines.AddRange(FEngines);
 end;
 
-procedure TfrmSettings.sbAddEngineClick(Sender: TObject);
+procedure TS.sbAddEngineClick(Sender: TObject);
 begin
   var stg := Default(TCBAIEngineSettings);
   if FEngines.Count = 0 then

@@ -7,7 +7,7 @@ uses
   System.IOUtils, System.IniFiles,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, CB.UI.Chat,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl,
-  CB.Settings, System.Actions, FMX.ActnList{, CB.AI.Interaction};
+  CB.Settings, System.Actions, FMX.ActnList, System.Skia, FMX.Skia{, CB.AI.Interaction};
 
 type
   TfrmCBMain = class(TForm)
@@ -19,11 +19,14 @@ type
     actNewChat: TAction;
     actPrevEngine: TAction;
     actNextEngine: TAction;
+    SkSvg1: TSkSvg;
+    SkSvg2: TSkSvg;
+    actSettings: TAction;
     procedure actNewChatExecute(Sender: TObject);
     procedure actNextEngineExecute(Sender: TObject);
     procedure actPrevEngineExecute(Sender: TObject);
+    procedure actSettingsExecute(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure btnSettingsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure tcChatterChange(Sender: TObject);
   private
@@ -70,6 +73,25 @@ procedure TfrmCBMain.actPrevEngineExecute(Sender: TObject);
 begin
   if tcChatter.TabIndex > 0 then
     tcChatter.TabIndex := tcChatter.TabIndex - 1;
+end;
+
+procedure TfrmCBMain.actSettingsExecute(Sender: TObject);
+begin
+  var frmSettings := TfrmSettings.Create(Self);
+  try
+    frmSettings.LoadFromSettings(FSettings);
+    if frmSettings.ShowModal = mrOK then begin
+      frmSettings.SaveToSettings(FSettings);
+      try
+        FSettings.Save(SettingsFileName);
+      except
+        on E: Exception do
+          ShowMessage('Error: ' + E.Message);
+      end;
+      for var iTab := 0 to tcChatter.TabCount-1 do
+        (TControl((tcChatter.Tabs[iTab] as TTabItem).Components[0]).Children[0] as TfrChat).ReloadConfiguration;
+    end;
+  finally FreeAndNil(frmSettings); end;
 end;
 
 procedure TfrmCBMain.FormDestroy(Sender: TObject);
@@ -146,25 +168,6 @@ begin
   Result := TPath.Combine(TPath.GetDocumentsPath, 'Gp', 'Chatterbox');
   TDirectory.CreateDirectory(Result);
   Result := TPath.Combine(Result, 'settings.ini');
-end;
-
-procedure TfrmCBMain.btnSettingsClick(Sender: TObject);
-begin
-  var frmSettings := TfrmSettings.Create(Self);
-  try
-    frmSettings.LoadFromSettings(FSettings);
-    if frmSettings.ShowModal = mrOK then begin
-      frmSettings.SaveToSettings(FSettings);
-      try
-        FSettings.Save(SettingsFileName);
-      except
-        on E: Exception do
-          ShowMessage('Error: ' + E.Message);
-      end;
-      for var iTab := 0 to tcChatter.TabCount-1 do
-        (TControl((tcChatter.Tabs[iTab] as TTabItem).Components[0]).Children[0] as TfrChat).ReloadConfiguration;
-    end;
-  finally FreeAndNil(frmSettings); end;
 end;
 
 function TfrmCBMain.CreateChatFrame: TfrChat;
