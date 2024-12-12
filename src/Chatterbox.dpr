@@ -4,6 +4,7 @@ uses
   FastMM4,
   System.StartUpCopy,
   FMX.Forms,
+  FMX.Skia,
   CBMain in 'CBMain.pas' {frmCBMain},
   CB.AI.Interaction in 'CB.AI.Interaction.pas',
   CB.AI.Client.OpenAI in 'CB.AI.Client.OpenAI.pas',
@@ -25,6 +26,7 @@ uses
 {$R *.res}
 
 begin
+  GlobalUseSkia := True;
   Application.Initialize;
   Application.CreateForm(TfrmCBMain, frmCBMain);
   Application.CreateForm(TfrmSettings, frmSettings);

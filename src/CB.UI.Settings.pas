@@ -14,7 +14,7 @@ type
   TfrmSettings = class(TForm)
     ListBox1: TListBox;
     liAIEngines: TListBoxItem;
-    liGlobalSettings: TListBoxItem;
+    liSecurity: TListBoxItem;
     tcSettings: TTabControl;
     tabAIEngines: TTabItem;
     tabGlobalSettings: TTabItem;
@@ -36,7 +36,7 @@ type
     Label4: TLabel;
     inpModel: TEdit;
     inpName: TEdit;
-    tbMain: TToolBar;
+    S: TToolBar;
     btnOK: TButton;
     Button4: TButton;
     ActionList1: TActionList;
@@ -56,6 +56,12 @@ type
     tiEngineGemini: TTabItem;
     Label7: TLabel;
     inpMaxTokens: TNumberBox;
+    Label9: TLabel;
+    Label10: TLabel;
+    Edit1: TEdit;
+    Label11: TLabel;
+    Edit2: TEdit;
+    Label12: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -66,7 +72,7 @@ type
     procedure inpCommonAIChange(Sender: TObject);
     procedure lbAIEnginesClick(Sender: TObject);
     procedure liAIEnginesClick(Sender: TObject);
-    procedure liGlobalSettingsClick(Sender: TObject);
+    procedure liSecurityClick(Sender: TObject);
     procedure sbAddEngineClick(Sender: TObject);
   private
     FEngines: IList<TCBAIEngineSettings>;
@@ -233,7 +239,7 @@ begin
   tcSettings.TabIndex := 0;
 end;
 
-procedure TfrmSettings.liGlobalSettingsClick(Sender: TObject);
+procedure TfrmSettings.liSecurityClick(Sender: TObject);
 begin
   tcSettings.TabIndex := 1;
 end;

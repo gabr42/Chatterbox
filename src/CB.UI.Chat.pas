@@ -4,10 +4,10 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.StrUtils, System.Actions,
+  System.StrUtils, System.Actions, System.Skia,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
-  FMX.ListBox, FMX.ActnList,
+  FMX.ListBox, FMX.ActnList, FMX.Skia,
   Spring, Spring.Collections,
   CB.Network, CB.Settings, CB.AI.Interaction;
 
@@ -20,26 +20,37 @@ type
   TfrChat = class(TFrame)
     outHistory: TMemo;
     inpQuestion: TMemo;
-    btnSend: TButton;
-    btnCopyToClip: TButton;
-    btnClear: TButton;
-    indSend: TAniIndicator;
     tmrSend: TTimer;
-    ToolBar1: TToolBar;
+    tbChat: TToolBar;
     cbxEngines: TComboBox;
     ActionList1: TActionList;
     actSend: TAction;
     lblActiveEngine: TLabel;
     actCopyLastAnswer: TAction;
     SaveDialog1: TSaveDialog;
-    Button1: TButton;
     actSaveChat: TAction;
-    SpeedButton1: TSpeedButton;
-    Button2: TButton;
     actSendToAll: TAction;
-    btnLoadChat: TButton;
     actLoadChat: TAction;
     OpenDialog1: TOpenDialog;
+    btnLoadChat: TSpeedButton;
+    SkSvg1: TSkSvg;
+    SpeedButton3: TSpeedButton;
+    SkSvg2: TSkSvg;
+    btnCopy: TSpeedButton;
+    SkSvg3: TSkSvg;
+    actClearHistory: TAction;
+    SpeedButton2: TSpeedButton;
+    SkSvg4: TSkSvg;
+    btnCloseChat: TSpeedButton;
+    SkSvg5: TSkSvg;
+    actCloseChat: TAction;
+    btnSend: TSpeedButton;
+    svgSend: TSkSvg;
+    indSend: TAniIndicator;
+    btnSendToAll: TSpeedButton;
+    SkSvg6: TSkSvg;
+    procedure actClearHistoryExecute(Sender: TObject);
+    procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actLoadChatExecute(Sender: TObject);
@@ -50,7 +61,6 @@ type
     procedure actSendToAllExecute(Sender: TObject);
     procedure actSendToAllUpdate(Sender: TObject);
     procedure actSendUpdate(Sender: TObject);
-    procedure btnClearClick(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure tmrSendTimer(Sender: TObject);
@@ -90,6 +100,17 @@ uses
   CB.AI.Registry;
 
 {$R *.fmx}
+
+procedure TfrChat.actClearHistoryExecute(Sender: TObject);
+begin
+  FChat.Clear;
+  outHistory.Lines.Clear;
+end;
+
+procedure TfrChat.actClearHistoryUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not FChat.IsEmpty;
+end;
 
 procedure TfrChat.actCopyLastAnswerExecute(Sender: TObject);
 begin
@@ -156,6 +177,7 @@ begin
   tmrSend.Enabled := true;
   indSend.Visible := true;
   indSend.Enabled := true;
+  svgSend.Visible := false;
 end;
 
 procedure TfrChat.actSendUpdate(Sender: TObject);
@@ -186,14 +208,9 @@ begin
   inherited;
   FChat := TCollections.CreateList<TAIInteraction>;
   indSend.Visible := false;
+  svgSend.Visible := true;
   if not TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, FClipBoard) then
     FClipBoard := nil;
-end;
-
-procedure TfrChat.btnClearClick(Sender: TObject);
-begin
-  FChat.Clear;
-  outHistory.Lines.Clear;
 end;
 
 procedure TfrChat.cbxEnginesChange(Sender: TObject);
@@ -327,6 +344,7 @@ begin
 
   indSend.Visible := false;
   indSend.Enabled := false;
+  svgSend.Visible := true;
 end;
 
 end.

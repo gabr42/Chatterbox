@@ -43,14 +43,14 @@ object frmSettings: TfrmSettings
         TextSettings.Trimming = None
       end
     end
-    object liGlobalSettings: TListBoxItem
+    object liSecurity: TListBoxItem
       Position.Y = 41.000000000000000000
       Size.Width = 141.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      Text = '  Global settings'
-      OnClick = liGlobalSettingsClick
+      Text = '  Security'
+      OnClick = liSecurityClick
       object Button2: TButton
         Position.X = 112.000000000000000000
         Position.Y = 10.000000000000000000
@@ -69,7 +69,7 @@ object frmSettings: TfrmSettings
     Size.Width = 495.000000000000000000
     Size.Height = 440.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     TabPosition = None
     Sizes = (
@@ -82,7 +82,7 @@ object frmSettings: TfrmSettings
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -105,7 +105,7 @@ object frmSettings: TfrmSettings
           Size.PlatformDefault = False
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.HorzAlign = Center
-          Text = 'AI Engines'
+          Text = 'AI engines'
           TabOrder = 0
         end
         object Layout2: TLayout
@@ -444,7 +444,7 @@ object frmSettings: TfrmSettings
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000015258789063000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -453,9 +453,73 @@ object frmSettings: TfrmSettings
       Text = 'tabGlobalSettings'
       ExplicitSize.cx = 8.000015258789063000
       ExplicitSize.cy = 8.000000000000000000
+      object Label9: TLabel
+        Align = Top
+        StyledSettings = [Family, Size, FontColor]
+        Size.Width = 495.000000000000000000
+        Size.Height = 43.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.HorzAlign = Center
+        Text = 'Security'
+        TabOrder = 0
+      end
+      object Label10: TLabel
+        Position.X = 24.000000000000000000
+        Position.Y = 51.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Protect API keys with a passphrase:'
+        TabOrder = 2
+      end
+      object Edit1: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 10
+        Password = True
+        Position.X = 24.000000000000000000
+        Position.Y = 72.000000000000000000
+        Size.Width = 449.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChange = inpCommonAIChange
+      end
+      object Label11: TLabel
+        Position.X = 24.000000000000000000
+        Position.Y = 107.000000000000000000
+        Size.Width = 345.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Repeat the passphrase:'
+        TabOrder = 1
+      end
+      object Edit2: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 9
+        Password = True
+        Position.X = 24.000000000000000000
+        Position.Y = 128.000000000000000000
+        Size.Width = 449.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChange = inpCommonAIChange
+      end
+      object Label12: TLabel
+        Position.X = 24.000000000000000000
+        Position.Y = 168.000000000000000000
+        Size.Width = 449.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 
+          'You will have to enter this passphrase when the program is start' +
+          'ed.'
+        TabOrder = 11
+      end
     end
   end
-  object tbMain: TToolBar
+  object S: TToolBar
     Align = MostBottom
     Position.Y = 440.000000000000000000
     Size.Width = 640.000000000000000000

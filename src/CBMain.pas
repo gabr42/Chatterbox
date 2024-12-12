@@ -105,8 +105,6 @@ begin
 end;
 
 procedure TfrmCBMain.LoadDesktop;
-var
-  engName: string;
 begin
   FLoadingDesktop := true;
   try
@@ -151,8 +149,6 @@ begin
 end;
 
 procedure TfrmCBMain.btnSettingsClick(Sender: TObject);
-var
-  frame: TComponent;
 begin
   var frmSettings := TfrmSettings.Create(Self);
   try
