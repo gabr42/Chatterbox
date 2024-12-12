@@ -37,8 +37,13 @@ type
     SpeedButton1: TSpeedButton;
     Button2: TButton;
     actSendToAll: TAction;
+    btnLoadChat: TButton;
+    actLoadChat: TAction;
+    OpenDialog1: TOpenDialog;
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
+    procedure actLoadChatExecute(Sender: TObject);
+    procedure actLoadChatUpdate(Sender: TObject);
     procedure actSaveChatExecute(Sender: TObject);
     procedure actSaveChatUpdate(Sender: TObject);
     procedure actSendExecute(Sender: TObject);
@@ -49,7 +54,11 @@ type
     procedure cbxEnginesChange(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure tmrSendTimer(Sender: TObject);
-  private
+  private const
+    CConversationDelimiter = '--------------------';
+    CConversationQuestion = 'Q>';
+    CConversationAnswer = 'A>';
+  private var
     FChat          : IList<TAIInteraction>;
     FConfiguration : TCBSettings;
     FClipBoard     : IFMXClipboardService;
@@ -61,6 +70,7 @@ type
     FRequest       : INetAsyncRequest;
     FSerializer    : IAISerializer;
   protected
+    procedure LoadChat(chat: TStrings);
     procedure SetConfiguration(const config: TCBSettings);
   public
     procedure AfterConstruction; override;
@@ -89,6 +99,27 @@ end;
 procedure TfrChat.actCopyLastAnswerUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (not FChat.IsEmpty) and assigned(FClipboard);
+end;
+
+procedure TfrChat.actLoadChatExecute(Sender: TObject);
+begin
+  if OpenDialog1.Execute then begin
+    var chat := TStringList.Create;
+    try
+      try
+        chat.LoadFromFile(OpenDialog1.FileName);
+        LoadChat(chat);
+      except
+        on E: Exception do
+          ShowMessage('Error: ' + E.Message);
+      end;
+    finally FreeAndNil(chat); end;
+  end;
+end;
+
+procedure TfrChat.actLoadChatUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := not assigned(FRequest);
 end;
 
 procedure TfrChat.actSaveChatExecute(Sender: TObject);
@@ -179,6 +210,36 @@ begin
     OnEngineChange(Self, FEngine);
 end;
 
+procedure TfrChat.LoadChat(chat: TStrings);
+var
+  qa: TAIInteraction;
+begin
+  outHistory.Lines.Assign(chat);
+  FChat.Clear;
+  qa := Default(TAIInteraction);
+  var inQuestion := true;
+  for var s in chat do begin
+    if SameText(s, CConversationDelimiter) then begin
+      FChat.Add(qa);
+      qa := Default(TAIInteraction);
+    end
+    else if s.StartsWith(CConversationQuestion, true) then begin
+      inQuestion := true;
+      qa.Question := s.Remove(0, Length(CConversationQuestion) + 1);
+    end
+    else if s.StartsWith(CConversationAnswer, true) then begin
+      inQuestion := false;
+      qa.Answer := s.Remove(0, Length(CConversationAnswer) + 1);
+    end
+    else if inQuestion then
+      qa.Question := qa.Question + #$0A + s
+    else
+      qa.Answer := qa.Answer + #$0A + s;
+  end;
+  if qa.Question <> '' then
+    FChat.Add(qa);
+end;
+
 procedure TfrChat.ReloadConfiguration;
 begin
   var activeEngine := cbxEngines.Text;
@@ -250,11 +311,11 @@ begin
     outHistory.Lines.BeginUpdate;
     try
       if outHistory.Lines.Count > 0 then
-        outHistory.Lines.Add('--------------------');
-      outHistory.Lines.Add('Q> ' + inpQuestion.Text);
+        outHistory.Lines.Add(CConversationDelimiter);
+      outHistory.Lines.Add(CConversationQuestion + ' ' + inpQuestion.Text);
       outHistory.Lines.Add('');
       outHistory.CaretPosition := Point(0, outHistory.Lines.Count);
-      outHistory.Lines.Add('A> ' + answer);
+      outHistory.Lines.Add(CConversationAnswer + ' ' + answer);
       outHistory.Lines.Add('');
     finally
       outHistory.Lines.EndUpdate;

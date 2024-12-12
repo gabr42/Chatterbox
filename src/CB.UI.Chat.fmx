@@ -106,7 +106,7 @@ object frChat: TfrChat
       ImageIndex = -1
       Position.X = 444.000000000000000000
       Position.Y = 8.000000000000000000
-      TabOrder = 6
+      TabOrder = 7
       TextSettings.Trimming = None
     end
     object SpeedButton1: TSpeedButton
@@ -129,7 +129,16 @@ object frChat: TfrChat
       Size.Width = 80.000000000000000000
       Size.Height = 44.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 8
+      TabOrder = 9
+      TextSettings.Trimming = None
+    end
+    object btnLoadChat: TButton
+      Action = actLoadChat
+      Anchors = [akTop, akRight]
+      ImageIndex = -1
+      Position.X = 444.000000000000000000
+      Position.Y = 30.000000000000000000
+      TabOrder = 6
       TextSettings.Trimming = None
     end
   end
@@ -138,8 +147,8 @@ object frChat: TfrChat
     Top = 208
   end
   object ActionList1: TActionList
-    Left = 344
-    Top = 296
+    Left = 232
+    Top = 216
     object actSend: TAction
       Text = 'Send'
       ShortCut = 16397
@@ -166,5 +175,15 @@ object frChat: TfrChat
       OnExecute = actSendToAllExecute
       OnUpdate = actSendToAllUpdate
     end
+    object actLoadChat: TAction
+      Text = 'Load chat'
+      Hint = 'Load chat history'
+      OnExecute = actLoadChatExecute
+      OnUpdate = actLoadChatUpdate
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 416
+    Top = 208
   end
 end

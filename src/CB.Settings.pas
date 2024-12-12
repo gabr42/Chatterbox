@@ -80,6 +80,7 @@ begin
         auth := TEncoding.UTF8.GetString(DecryptAES(TNetEncoding.Base64.DecodeStringToBytes(auth), TEncoding.ANSI.GetBytes(Key)));
       eng.Authorization := auth;
       eng.Host := ini.ReadString(section, 'Host', '');
+      eng.MaxTokens := ini.ReadInteger(section, 'MaxTokens', 2048);
       eng.SysPrompt := ini.ReadString(section, 'SystemPrompt', '');
       eng.IsDefault := ini.ReadInteger(section, 'IsDefault', 0) <> 0;
       AIEngines.Add(eng);
@@ -110,6 +111,7 @@ begin
       var auth := TNetEncoding.Base64.EncodeBytesToString(EncryptAES(TEncoding.UTF8.GetBytes(eng.Authorization), TEncoding.ANSI.GetBytes(Key)));
       ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
       ini.WriteString(section, 'Host', eng.Host);
+      ini.WriteInteger(section, 'MaxTokens', eng.MaxTokens);
       ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
     end;

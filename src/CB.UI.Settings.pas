@@ -276,6 +276,7 @@ begin
   var stg := Default(TCBAIEngineSettings);
   if FEngines.Count = 0 then
     stg.IsDefault := true;
+  stg.MaxTokens := 2048;
   var li := TListBoxItem.Create(Self);
   li.Parent := lbAIEngines;
   li.Text := stg.DisplayName;

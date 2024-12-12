@@ -10,6 +10,7 @@ type
   TAIInteraction = record
     Question: string;
     Answer  : string;
+    constructor Create(const AQuestion, AAnswer: string);
   end;
 
   TAIChat = TArray<TAIInteraction>;
@@ -21,5 +22,13 @@ type
   end;
 
 implementation
+
+{ TAIInteraction }
+
+constructor TAIInteraction.Create(const AQuestion, AAnswer: string);
+begin
+  Question := AQuestion;
+  Answer := AAnswer;
+end;
 
 end.
