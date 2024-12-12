@@ -45,6 +45,11 @@ begin
     end;
     messages[iMsg] := TGeminiMessage.Create('user', question);
     request.contents := messages;
+    if engineConfig.MaxTokens > 0 then begin
+      request.generationConfig := TGeminiGenerationConfig.Create;
+      request.generationConfig.temperature := 1; // TODO : make configurable
+      request.generationConfig.maxOutputTokens := engineConfig.MaxTokens;
+    end;
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;

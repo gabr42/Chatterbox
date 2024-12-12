@@ -30,7 +30,8 @@ var
 begin
   request := TOpenAIRequest.Create;
   try
-    request.Model := engineConfig.Model;
+    request.model := engineConfig.Model;
+    request.max_completion_tokens := engineConfig.MaxTokens;
     request.LoadMessages(engineConfig.SysPrompt.Trim, not engineConfig.Model.StartsWith('o1-', true), history, question);
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;

@@ -1,8 +1,8 @@
 ﻿[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCTWFpbi5wYXM=]
 Module=H:\RAZVOJ\Chatterbox\src\CBMain.pas
-CursorX=1
-CursorY=136
-TopLine=113
+CursorX=43
+CursorY=121
+TopLine=99
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -231,17 +231,17 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Interaction.pas
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PcGVuQUkucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.pas
 CursorX=35
-CursorY=54
-TopLine=39
+CursorY=34
+TopLine=24
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.pas
+EditViewName=
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PcGVuQUkuVHlwZXMucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.OpenAI.Types.pas
-CursorX=35
-CursorY=30
+CursorX=36
+CursorY=15
 TopLine=8
 LeftCol=1
 Elisions=
@@ -370,9 +370,9 @@ EditViewName=x:\common\DCPCrypt2\DCPblockciphers.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlVJLkNoYXQucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.UI.Chat.pas
-CursorX=1
-CursorY=199
-TopLine=198
+CursorX=48
+CursorY=217
+TopLine=200
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -830,9 +830,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.UI.Settings.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLlNldHRpbmdzLnBhcw==]
 Module=H:\RAZVOJ\Chatterbox\src\CB.Settings.pas
-CursorX=19
-CursorY=92
-TopLine=85
+CursorX=43
+CursorY=25
+TopLine=7
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1200,9 +1200,9 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\fmx\FMX.TabCo
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PbGxhbWEucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.pas
-CursorX=13
-CursorY=54
-TopLine=40
+CursorX=47
+CursorY=34
+TopLine=22
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1210,13 +1210,13 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5PbGxhbWEuVHlwZXMucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.Types.pas
-CursorX=1
-CursorY=27
+CursorX=29
+CursorY=18
 TopLine=1
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Ollama.Types.pas
+EditViewName=
 [ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcUlRM
 XFNZU1xTeXN0ZW0uU3lzVXRpbHMucGFz]
 Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.SysUtils.pas
@@ -1290,9 +1290,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.Client.Anthropic.Types.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5BbnRocm9waWMucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.pas
-CursorX=67
-CursorY=66
-TopLine=42
+CursorX=1
+CursorY=38
+TopLine=16
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -1760,12 +1760,12 @@ EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\fmx\FMX.Scrol
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5HZW1pbmkuVHlwZXMucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Gemini.Types.pas
-CursorX=34
-CursorY=109
-TopLine=105
+CursorX=5
+CursorY=150
+TopLine=143
 LeftCol=1
 Elisions=
-Bookmarks=
+Bookmarks={7,150,1}
 EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Gemini.Types.pas
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5BbnRocm9waWMuVHlwZXMucGFz
 ]
@@ -1820,9 +1820,9 @@ EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.Types.pas
 
 [ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5HZW1pbmkucGFz]
 Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Gemini.pas
-CursorX=44
-CursorY=36
-TopLine=15
+CursorX=1
+CursorY=53
+TopLine=29
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -2027,4 +2027,34 @@ LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\studio\23.0\source\rtl\common\System.IniFiles.pas
+[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5BbnRocm9waWMuVHlwZXMucGFz
+]
+Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.Types.pas
+CursorX=15
+CursorY=18
+TopLine=8
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.Types.pas
+[ClosedView_SDpcUkFaVk9KXENoYXR0ZXJib3hcc3JjXENCLkFJLkNsaWVudC5BbnRocm9waWMuVHlwZXMucGFz
+]
+Module=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.Types.pas
+CursorX=15
+CursorY=18
+TopLine=8
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=H:\RAZVOJ\Chatterbox\src\CB.AI.Client.Anthropic.Types.pas
+[ClosedView_YzpccHJvZ3JhbSBmaWxlcyAoeDg2KVxlbWJhcmNhZGVyb1xzdHVkaW9cMjMuMFxTT1VSQ0VcUlRM
+XFNZU1xTeXN0ZW0ucGFz]
+Module=c:\program files (x86)\embarcadero\studio\23.0\SOURCE\RTL\SYS\System.pas
+CursorX=1
+CursorY=18413
+TopLine=18395
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=
 

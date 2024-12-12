@@ -26,10 +26,17 @@ type
     destructor Destroy; override;
   end;
 
+  TGeminiGenerationConfig = class
+  public
+    temperature    : real;
+    maxOutputTokens: integer; // default 1
+  end;
+
   TGeminiRequest = class
   public
     system_instruction: TGeminiParts;
     contents: TArray<TGeminiMessage>;
+    generationConfig: TGeminiGenerationConfig;
     destructor Destroy; override;
   end;
 
@@ -107,6 +114,7 @@ end;
 destructor TGeminiRequest.Destroy;
 begin
   FreeAndNil(system_instruction);
+  FreeAndNil(generationConfig);
   for var content in contents do
     content.Free;
   inherited;

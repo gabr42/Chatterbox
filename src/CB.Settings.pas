@@ -16,6 +16,7 @@ type
     Authorization: string;
     Host         : string;
     SysPrompt    : string;
+    MaxTokens    : integer;
     IsDefault    : boolean;
     function DisplayName(showDefault: boolean = true): string;
   end;

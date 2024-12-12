@@ -38,7 +38,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -58,7 +58,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -88,7 +88,7 @@ object frmSettings: TfrmSettings
       Size.PlatformDefault = False
       StyleLookup = ''
       TabOrder = 0
-      Text = 'tabAIEngines'
+      Text = 'S'
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       object Layout1: TLayout
@@ -161,22 +161,22 @@ object frmSettings: TfrmSettings
       object tcAIEngineSettings: TTabControl
         Align = Client
         Size.Width = 302.000000000000000000
-        Size.Height = 127.000000000000000000
+        Size.Height = 103.000000000000000000
         Size.PlatformDefault = False
         TabIndex = 4
         TabOrder = 2
         TabPosition = None
         Sizes = (
           302s
-          127s
+          103s
           302s
-          127s
+          103s
           302s
-          127s
+          103s
           302s
-          127s
+          103s
           302s
-          127s)
+          103s)
         object tiEngineEmpty: TTabItem
           CustomIcon = <
             item
@@ -249,6 +249,8 @@ object frmSettings: TfrmSettings
           StyleLookup = ''
           TabOrder = 0
           Text = 'tiEngineGemini'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
         end
       end
       object lyCommonAIEngineSettings: TLayout
@@ -256,7 +258,7 @@ object frmSettings: TfrmSettings
         Position.X = 193.000000000000000000
         Position.Y = 43.000000000000000000
         Size.Width = 302.000000000000000000
-        Size.Height = 270.000000000000000000
+        Size.Height = 294.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
         object cbxEngineType: TComboBox
@@ -330,7 +332,7 @@ object frmSettings: TfrmSettings
           Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
           Text = 'Authorization:'
-          TabOrder = 11
+          TabOrder = 12
         end
         object inpAuth: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -380,24 +382,49 @@ object frmSettings: TfrmSettings
           Size.Width = 197.000000000000000000
           Size.Height = 92.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 12
-          Viewport.Width = 197.000000000000000000
-          Viewport.Height = 92.000000000000000000
+          TabOrder = 13
+          Viewport.Width = 193.000000000000000000
+          Viewport.Height = 88.000000000000000000
         end
         object Label6: TLabel
           Position.X = 8.000000000000000000
           Position.Y = 171.000000000000000000
           Text = 'System prompt:'
-          TabOrder = 13
+          TabOrder = 14
         end
         object btnResetEngine: TButton
           Action = actResetSettings
           Anchors = [akLeft, akRight]
           ImageIndex = -1
           Position.X = 214.000000000000000000
-          Position.Y = 7.000000000000000000
+          Position.Y = 8.600000381469727000
+          Size.Width = 80.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
           TabOrder = 2
           TextSettings.Trimming = None
+        end
+        object Label7: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 268.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 16.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Max tokens:'
+          TabOrder = 11
+        end
+        object inpMaxTokens: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 15
+          Cursor = crIBeam
+          DecimalDigits = 0
+          Max = 99999.000000000000000000
+          Position.X = 97.000000000000000000
+          Position.Y = 266.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
         end
       end
       object lblLoadedEngine: TLabel

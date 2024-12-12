@@ -16,16 +16,28 @@ type
   public
     stream: boolean;
     //temperature
-    //max_tokens
+    max_tokens: integer;
   end;
 
   TOllamaResponse = class
   public
     model  : string;
     message: TOllamaMessage;
+    destructor Destroy; override;
   end;
 {$M-}
 
 implementation
+
+uses
+  System.SysUtils;
+
+{ TOllamaResponse }
+
+destructor TOllamaResponse.Destroy;
+begin
+  FreeAndNil(message);
+  inherited;
+end;
 
 end.

@@ -30,9 +30,10 @@ var
 begin
   request := TOllamaRequest.Create;
   try
-    request.Model := engineConfig.Model;
+    request.model := engineConfig.Model;
+    request.max_tokens := engineConfig.MaxTokens;
+    request.stream := false;
     request.LoadMessages(engineConfig.SysPrompt.Trim, false, history, question);
-    request.Stream := false;
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;

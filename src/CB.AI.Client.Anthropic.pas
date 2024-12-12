@@ -33,8 +33,8 @@ begin
     request.model := engineConfig.Model;
     request.LoadMessages('', false, history, question);
     request.system := engineConfig.SysPrompt.Trim;
+    request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
-    request.max_tokens := 1024; // TODO : Make configurable
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;

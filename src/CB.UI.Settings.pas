@@ -8,7 +8,7 @@ uses
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
   FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo,
   Spring.Collections,
-  CB.Settings;
+  CB.Settings, FMX.EditBox, FMX.NumberBox;
 
 type
   TfrmSettings = class(TForm)
@@ -54,6 +54,8 @@ type
     btnResetEngine: TButton;
     actResetSettings: TAction;
     tiEngineGemini: TTabItem;
+    Label7: TLabel;
+    inpMaxTokens: TNumberBox;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -110,21 +112,25 @@ begin
       begin
         inpHost.Text := 'https://api.anthropic.com/v1/messages';
         inpModel.Text := 'claude-3-5-sonnet-latest';
+        inpMaxTokens.Value := 2048;
       end;
     etOllama:
       begin
         inpHost.Text := 'http://localhost:11434/api/chat';
         inpModel.Text := 'codellama';
+        inpMaxTokens.Value := 2048;
       end;
     etOpenAI:
       begin
         inpHost.Text := 'https://api.openai.com/v1/chat/completions';
         inpModel.Text := 'o1-mini';
+        inpMaxTokens.Value := 2048;
       end;
     etGemini:
       begin
         inpHost.Text := 'https://generativelanguage.googleapis.com/v1beta/';
         inpModel.Text := 'gemini-1.5-pro';
+        inpMaxTokens.Value := 2048;
       end
     else
       inpHost.Text := '';
@@ -170,6 +176,7 @@ begin
     Exit;
 
   var stg := FEngines[lbAIEngines.ItemIndex];
+  stg.IsDefault := cbDefault.IsChecked;
   case cbxEngineType.ItemIndex of
     0:   stg.EngineType := etAnthropic;
     1:   stg.EngineType := etGemini;
@@ -182,7 +189,7 @@ begin
   stg.Authorization := inpAuth.Text;
   stg.Host := inpHost.Text;
   stg.SysPrompt := StringReplace(StringReplace(inpSystemPrompt.Text, #$0D, ' ', [rfReplaceAll]), #$0A, ' ', [rfReplaceAll]);
-  stg.IsDefault := cbDefault.IsChecked;
+  stg.MaxTokens := Round(inpMaxTokens.Value);
   FEngines[lbAIEngines.ItemIndex] := stg;
 
   lbAIEngines.Items[lbAIEngines.ItemIndex] := stg.DisplayName;
@@ -201,6 +208,7 @@ begin
   FUpdate := true;
   lyCommonAIEngineSettings.Enabled := true;
   var stg := FEngines[lbAIEngines.ItemIndex];
+  cbDefault.IsChecked := stg.IsDefault;
   case stg.EngineType of
     etAnthropic: cbxEngineType.ItemIndex := 0;
     etGemini:    cbxEngineType.ItemIndex := 1;
@@ -213,7 +221,7 @@ begin
   inpAuth.Text := stg.Authorization;
   inpSystemPrompt.Text := stg.SysPrompt;
   inpHost.Text := stg.Host;
-  cbDefault.IsChecked := stg.IsDefault;
+  inpMaxTokens.Value := stg.MaxTokens;
   FUpdate := false;
 
   lblLoadedEngine.Text := stg.DisplayName(false);

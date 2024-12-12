@@ -13,6 +13,8 @@ type
   end;
 
   TOpenAIRequest = class(TAIRequest)
+  public
+    max_completion_tokens: integer;
   end;
 
   TOpenAIChoice = class
