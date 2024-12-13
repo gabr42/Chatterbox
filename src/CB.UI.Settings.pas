@@ -6,12 +6,12 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Actions,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
-  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo,
+  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox,
   Spring.Collections,
-  CB.Settings, FMX.EditBox, FMX.NumberBox;
+  CB.Settings;
 
 type
-  TS = class(TForm)
+  TfrmSettings = class(TForm)
     ListBox1: TListBox;
     liAIEngines: TListBoxItem;
     liSecurity: TListBoxItem;
@@ -36,7 +36,7 @@ type
     Label4: TLabel;
     inpModel: TEdit;
     inpName: TEdit;
-    S: TToolBar;
+    tbSettings: TToolBar;
     btnOK: TButton;
     Button4: TButton;
     ActionList1: TActionList;
@@ -58,21 +58,24 @@ type
     inpMaxTokens: TNumberBox;
     Label9: TLabel;
     Label10: TLabel;
-    Edit1: TEdit;
+    inpPassphrase: TEdit;
     Label11: TLabel;
-    Edit2: TEdit;
+    inpPassphraseCheck: TEdit;
     Label12: TLabel;
+    actOK: TAction;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
+    procedure actOKExecute(Sender: TObject);
+    procedure actOKUpdate(Sender: TObject);
     procedure actResetSettingsExecute(Sender: TObject);
     procedure actResetSettingsUpdate(Sender: TObject);
-    procedure btnOKClick(Sender: TObject);
     procedure cbDefaultChange(Sender: TObject);
     procedure inpCommonAIChange(Sender: TObject);
     procedure lbAIEnginesClick(Sender: TObject);
     procedure liAIEnginesClick(Sender: TObject);
     procedure liSecurityClick(Sender: TObject);
+    procedure PassPhraseChange(Sender: TObject);
     procedure sbAddEngineClick(Sender: TObject);
   private
     FEngines: IList<TCBAIEngineSettings>;
@@ -84,20 +87,17 @@ type
     procedure SaveToSettings(settings: TCBSettings);
   end;
 
-var
-  S: TS;
-
 implementation
 
 {$R *.fmx}
 
-procedure TS.FormCreate(Sender: TObject);
+procedure TfrmSettings.FormCreate(Sender: TObject);
 begin
   tcSettings.TabIndex := 0;
   lyCommonAIEngineSettings.Enabled := false;
 end;
 
-procedure TS.actDeleteAIEngineExecute(Sender: TObject);
+procedure TfrmSettings.actDeleteAIEngineExecute(Sender: TObject);
 begin
   FEngines.ExtractAt(lbAIEngines.ItemIndex);
   lbAIEngines.Items.Delete(lbAIEngines.ItemIndex);
@@ -105,12 +105,22 @@ begin
   lbAIEngines.OnClick(lbAIEngines);
 end;
 
-procedure TS.actDeleteAIEngineUpdate(Sender: TObject);
+procedure TfrmSettings.actDeleteAIEngineUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
 end;
 
-procedure TS.actResetSettingsExecute(Sender: TObject);
+procedure TfrmSettings.actOKExecute(Sender: TObject);
+begin
+  ModalResult := mrOK;
+end;
+
+procedure TfrmSettings.actOKUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := (inpPassphrase.Text = inpPassphraseCheck.Text);
+end;
+
+procedure TfrmSettings.actResetSettingsExecute(Sender: TObject);
 begin
   var stg := FEngines[lbAIEngines.ItemIndex];
   FUpdate := true;
@@ -146,24 +156,19 @@ begin
   inpCommonAIChange(nil);
 end;
 
-procedure TS.actResetSettingsUpdate(Sender: TObject);
+procedure TfrmSettings.actResetSettingsUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := lyCommonAIEngineSettings.Enabled
                                  and (cbxEngineType.ItemIndex >= 0);
 end;
 
-procedure TS.AfterConstruction;
+procedure TfrmSettings.AfterConstruction;
 begin
   inherited;
   FEngines := TCollections.CreateList<TCBAIEngineSettings>;
 end;
 
-procedure TS.btnOKClick(Sender: TObject);
-begin
-  ModalResult := mrOK;
-end;
-
-procedure TS.cbDefaultChange(Sender: TObject);
+procedure TfrmSettings.cbDefaultChange(Sender: TObject);
 begin
   inpCommonAIChange(Sender);
 
@@ -177,7 +182,7 @@ begin
       end;
 end;
 
-procedure TS.inpCommonAIChange(Sender: TObject);
+procedure TfrmSettings.inpCommonAIChange(Sender: TObject);
 begin
   if FUpdate or (lbAIEngines.ItemIndex < 0) then
     Exit;
@@ -204,7 +209,7 @@ begin
   tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
-procedure TS.lbAIEnginesClick(Sender: TObject);
+procedure TfrmSettings.lbAIEnginesClick(Sender: TObject);
 begin
   if lbAIEngines.ItemIndex < 0 then begin
     lyCommonAIEngineSettings.Enabled := false;
@@ -235,18 +240,20 @@ begin
   tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
-procedure TS.liAIEnginesClick(Sender: TObject);
+procedure TfrmSettings.liAIEnginesClick(Sender: TObject);
 begin
   tcSettings.TabIndex := 0;
 end;
 
-procedure TS.liSecurityClick(Sender: TObject);
+procedure TfrmSettings.liSecurityClick(Sender: TObject);
 begin
   tcSettings.TabIndex := 1;
 end;
-
-procedure TS.LoadFromSettings(settings: TCBSettings);
+//
+procedure TfrmSettings.LoadFromSettings(settings: TCBSettings);
 begin
+  inpPassphrase.Text := settings.Passphrase;
+  inpPassphraseCheck.Text := settings.Passphrase;
   FEngines.Clear;
   FEngines.AddRange(settings.AIEngines);
   for var eng in FEngines do begin
@@ -257,7 +264,7 @@ begin
   MakeDefault;
 end;
 
-procedure TS.MakeDefault;
+procedure TfrmSettings.MakeDefault;
 begin
   if FEngines.IsEmpty then
     Exit;
@@ -272,13 +279,26 @@ begin
   lbAIEngines.Items[0] := FEngines[0].DisplayName;
 end;
 
-procedure TS.SaveToSettings(settings: TCBSettings);
+procedure TfrmSettings.PassPhraseChange(Sender: TObject);
+var
+  color: TAlphaColor;
 begin
+  if inpPassphrase.Text = inpPassphraseCheck.Text then
+    color := inpModel.TextSettings.FontColor
+  else
+    color := TAlphaColors.OrangeRed;
+  inpPassphrase.TextSettings.FontColor := color;
+  inpPassphraseCheck.TextSettings.FontColor := color;
+end;
+
+procedure TfrmSettings.SaveToSettings(settings: TCBSettings);
+begin
+  settings.Passphrase := inpPassphrase.Text;
   settings.AIEngines.Clear;
   settings.AIEngines.AddRange(FEngines);
 end;
 
-procedure TS.sbAddEngineClick(Sender: TObject);
+procedure TfrmSettings.sbAddEngineClick(Sender: TObject);
 begin
   var stg := Default(TCBAIEngineSettings);
   if FEngines.Count = 0 then

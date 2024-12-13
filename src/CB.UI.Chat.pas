@@ -167,8 +167,6 @@ begin
 end;
 
 procedure TfrChat.actSendExecute(Sender: TObject);
-var
-  authorization: TNetworkHeader;
 begin
   var headers := TCollections.CreateList<TNetworkHeader>;
   for var header in GNetworkHeaderProvider[FEngine.EngineType] do

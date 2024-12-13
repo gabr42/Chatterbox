@@ -12,7 +12,7 @@ uses
   CB.Encryption in 'CB.Encryption.pas',
   CB.UI.Chat in 'CB.UI.Chat.pas' {frChat: TFrame},
   CB.Network in 'CB.Network.pas',
-  CB.UI.Settings in 'CB.UI.Settings.pas' {S},
+  CB.UI.Settings in 'CB.UI.Settings.pas' {frmSettings},
   CB.Settings in 'CB.Settings.pas',
   CB.AI.Client.Ollama in 'CB.AI.Client.Ollama.pas',
   CB.AI.Client.Ollama.Types in 'CB.AI.Client.Ollama.Types.pas',
@@ -21,7 +21,8 @@ uses
   CB.AI.Client.Anthropic.Types in 'CB.AI.Client.Anthropic.Types.pas',
   CB.AI.Registry in 'CB.AI.Registry.pas',
   CB.AI.Client.Gemini in 'CB.AI.Client.Gemini.pas',
-  CB.AI.Client.Gemini.Types in 'CB.AI.Client.Gemini.Types.pas';
+  CB.AI.Client.Gemini.Types in 'CB.AI.Client.Gemini.Types.pas',
+  CB.UI.Passphrase in 'CB.UI.Passphrase.pas' {frmPassphrase};
 
 {$R *.res}
 
@@ -29,6 +30,5 @@ begin
   GlobalUseSkia := True;
   Application.Initialize;
   Application.CreateForm(TfrmCBMain, frmCBMain);
-  Application.CreateForm(TS, S);
   Application.Run;
 end.

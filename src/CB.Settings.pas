@@ -3,6 +3,8 @@ unit CB.Settings;
 interface
 
 uses
+  System.UITypes,
+  FMX.Dialogs,
   Spring.Collections;
 
 type
@@ -21,12 +23,20 @@ type
     function DisplayName(showDefault: boolean = true): string;
   end;
 
+  TCBGetPassphraseEvent = procedure(var passphrase: string; var cancel: boolean) of object;
+
   TCBSettings = class
+  strict private
+    FOnGetPassphrase: TCBGetPassphraseEvent;
+  strict protected
+    function  AskForPassphrase(var passphrase: string): boolean;
   public
-    AIEngines: IList<TCBAIEngineSettings>;
+    Passphrase: string;
+    AIEngines : IList<TCBAIEngineSettings>;
     constructor Create;
     procedure Save(const fileName: string);
     procedure Load(const fileName: string);
+    property OnGetPassphrase: TCBGetPassphraseEvent read FOnGetPassphrase write FOnGetPassphrase;
   end;
 
 var
@@ -44,7 +54,30 @@ const
 var
   SerializeEngineName: array [TCBAIEngineType] of string = ('None', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini');
 
+function Encrypt(const plaintext, key, passphrase: string): string;
+begin
+  var bytes := EncryptAES(TEncoding.UTF8.GetBytes(plainText), TEncoding.UTF8.GetBytes(key));
+  if passphrase <> '' then
+    bytes := EncryptAES(bytes, TEncoding.UTF8.GetBytes(passphrase));
+  Result := TNetEncoding.Base64.EncodeBytesToString(bytes);
+end;
+
+function Decrypt(const cryptext, key, passphrase: string): string;
+begin
+  var bytes := TNetEncoding.Base64.DecodeStringToBytes(crypText);
+  if passphrase <> '' then
+    bytes := DecryptAES(bytes, TEncoding.UTF8.GetBytes(passphrase));
+  Result := TEncoding.UTF8.GetString(DecryptAES(bytes, TEncoding.UTF8.GetBytes(key)));
+end;
+
 { TCBSettings }
+
+function TCBSettings.AskForPassphrase(var passphrase: string): boolean;
+begin
+  var cancel: boolean;
+  OnGetPassphrase(passphrase, cancel);
+  Result := not cancel;
+end;
 
 constructor TCBSettings.Create;
 begin
@@ -66,6 +99,21 @@ begin
   AIEngines.Clear;
   var ini := TIniFile.Create(fileName);
   try
+    var cryptPassphrase := ini.ReadString('Security', 'Passphrase', '');
+    if cryptPassphrase <> '' then begin
+      repeat
+        var passphrase: string;
+        if not AskForPassphrase(passphrase) then
+          Exit;
+        if DecryptAES(cryptPassphrase, passphrase) = passphrase then begin
+          Self.Passphrase := passphrase;
+          break //repeat
+        end
+        else
+          ShowMessage('Incorrect passphrase');
+      until false;
+    end;
+
     var iEng := 1;
     repeat
       var section := 'AIEngine_' + iEng.ToString;
@@ -77,7 +125,7 @@ begin
       eng.Model := ini.ReadString(section, 'Model', '');
       var auth := ini.ReadString(section, 'Auth', '');
       if auth <> '' then
-        auth := TEncoding.UTF8.GetString(DecryptAES(TNetEncoding.Base64.DecodeStringToBytes(auth), TEncoding.ANSI.GetBytes(Key)));
+        auth := Decrypt(auth, Key, Passphrase);
       eng.Authorization := auth;
       eng.Host := ini.ReadString(section, 'Host', '');
       eng.MaxTokens := ini.ReadInteger(section, 'MaxTokens', 2048);
@@ -93,6 +141,11 @@ procedure TCBSettings.Save(const fileName: string);
 begin
   var ini := TIniFile.Create(fileName);
   try
+    if Passphrase = '' then
+      ini.DeleteKey('Security', 'Passphrase')
+    else
+      ini.WriteString('Security', 'Passphrase', EncryptAES(Passphrase, Passphrase));
+
     var iEng := 1;
     repeat
       var section := 'AIEngine_' + iEng.ToString;
@@ -108,7 +161,7 @@ begin
       ini.WriteString(section, 'Name', eng.Name);
       ini.WriteString(section, 'Type', SerializeEngineName[eng.EngineType]);
       ini.WriteString(section, 'Model', eng.Model);
-      var auth := TNetEncoding.Base64.EncodeBytesToString(EncryptAES(TEncoding.UTF8.GetBytes(eng.Authorization), TEncoding.ANSI.GetBytes(Key)));
+      var auth := Encrypt(eng.Authorization, Key, Passphrase);
       ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
       ini.WriteString(section, 'Host', eng.Host);
       ini.WriteInteger(section, 'MaxTokens', eng.MaxTokens);

@@ -1,10 +1,11 @@
-object S: TS
+object frmSettings: TfrmSettings
   Left = 0
   Top = 0
   ActiveControl = ListBox1
   Caption = 'Settings'
   ClientHeight = 480
   ClientWidth = 640
+  Position = OwnerFormCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -473,17 +474,18 @@ object S: TS
         Text = 'Protect API keys with a passphrase:'
         TabOrder = 2
       end
-      object Edit1: TEdit
+      object inpPassphrase: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Anchors = [akLeft, akTop, akRight]
-        TabOrder = 10
+        TabOrder = 3
         Password = True
         Position.X = 8.000000000000000000
         Position.Y = 72.000000000000000000
         Size.Width = 477.000000000000000000
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
-        OnChange = inpCommonAIChange
+        StyledSettings = [Family, Size, Style]
+        OnChange = PassPhraseChange
       end
       object Label11: TLabel
         Position.X = 8.000000000000000000
@@ -494,17 +496,17 @@ object S: TS
         Text = 'Repeat the passphrase:'
         TabOrder = 1
       end
-      object Edit2: TEdit
+      object inpPassphraseCheck: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Anchors = [akLeft, akTop, akRight]
-        TabOrder = 9
+        TabOrder = 4
         Password = True
         Position.X = 8.000000000000000000
         Position.Y = 128.000000000000000000
         Size.Width = 477.000000000000000000
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
-        OnChange = inpCommonAIChange
+        OnChange = PassPhraseChange
       end
       object Label12: TLabel
         Position.X = 8.000000000000000000
@@ -515,11 +517,11 @@ object S: TS
         Text = 
           'You will have to enter this passphrase when the program is start' +
           'ed.'
-        TabOrder = 11
+        TabOrder = 5
       end
     end
   end
-  object S: TToolBar
+  object tbSettings: TToolBar
     Align = MostBottom
     Position.Y = 440.000000000000000000
     Size.Width = 640.000000000000000000
@@ -527,13 +529,13 @@ object S: TS
     Size.PlatformDefault = False
     TabOrder = 2
     object btnOK: TButton
+      Action = actOK
       Anchors = [akTop, akRight]
+      ImageIndex = -1
       Position.X = 452.000000000000000000
       Position.Y = 8.000000000000000000
       TabOrder = 0
-      Text = 'OK'
       TextSettings.Trimming = None
-      OnClick = btnOKClick
     end
     object Button4: TButton
       Anchors = [akTop, akRight]
@@ -558,6 +560,11 @@ object S: TS
       Hint = 'Reset settings to default'
       OnExecute = actResetSettingsExecute
       OnUpdate = actResetSettingsUpdate
+    end
+    object actOK: TAction
+      Text = 'OK'
+      OnExecute = actOKExecute
+      OnUpdate = actOKUpdate
     end
   end
 end

@@ -4,10 +4,10 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.IOUtils, System.IniFiles,
+  System.IOUtils, System.IniFiles, System.Actions, System.Skia,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, CB.UI.Chat,
-  FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl,
-  CB.Settings, System.Actions, FMX.ActnList, System.Skia, FMX.Skia{, CB.AI.Interaction};
+  FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.ActnList, FMX.Skia,
+  CB.Settings;
 
 type
   TfrmCBMain = class(TForm)
@@ -39,6 +39,7 @@ type
     procedure SaveDesktop;
     function  SettingsFileName: string;
     procedure HandleEngineChange(Frame: TFrame; const Engine: TCBAIEngineSettings);
+    procedure HandleGetPassphrase(var passphrase: string; var cancel: boolean);
     procedure HandleRequestClose(Frame: TFrame);
     procedure HandleGetChatInfo(Frame: TFrame; var countChats: integer);
     procedure HandleExecuteInAll(Frame: TFrame; const question: string);
@@ -54,7 +55,7 @@ implementation
 
 uses
   CB.Encryption,
-  CB.UI.Settings,
+  CB.UI.Settings, CB.UI.Passphrase,
   CB.AI.Client.OpenAI;
 
 procedure TfrmCBMain.actNewChatExecute(Sender: TObject);
@@ -117,6 +118,18 @@ end;
 procedure TfrmCBMain.HandleGetChatInfo(Frame: TFrame; var countChats: integer);
 begin
   countChats := tcChatter.TabCount;
+end;
+
+procedure TfrmCBMain.HandleGetPassphrase(var passphrase: string; var cancel: boolean);
+begin
+  var frmPassphrase := TfrmPassphrase.Create(Self);
+  try
+    cancel := (frmPassphrase.ShowModal <> mrOK);
+    if cancel then
+      passPhrase := ''
+    else
+      passPhrase := frmPassphrase.Passphrase;
+  finally FreeAndNil(frmPassphrase); end;
 end;
 
 procedure TfrmCBMain.HandleRequestClose(Frame: TFrame);
@@ -189,6 +202,7 @@ end;
 procedure TfrmCBMain.FormCreate(Sender: TObject);
 begin
   FSettings := TCBSettings.Create;
+  FSettings.OnGetPassphrase := HandleGetPassphrase;
   if FileExists(SettingsFileName) then begin
     try
       FSettings.Load(SettingsFileName);

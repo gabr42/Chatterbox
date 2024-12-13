@@ -151,7 +151,7 @@
         </DCCReference>
         <DCCReference Include="CB.Network.pas"/>
         <DCCReference Include="CB.UI.Settings.pas">
-            <Form>S</Form>
+            <Form>frmSettings</Form>
         </DCCReference>
         <DCCReference Include="CB.Settings.pas"/>
         <DCCReference Include="CB.AI.Client.Ollama.pas"/>
@@ -162,6 +162,10 @@
         <DCCReference Include="CB.AI.Registry.pas"/>
         <DCCReference Include="CB.AI.Client.Gemini.pas"/>
         <DCCReference Include="CB.AI.Client.Gemini.Types.pas"/>
+        <DCCReference Include="CB.UI.Passphrase.pas">
+            <Form>frmPassphrase</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -269,7 +273,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Chatterbox.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\bin\Chatterbox.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Chatterbox.exe</RemoteName>
                         <Overwrite>true</Overwrite>

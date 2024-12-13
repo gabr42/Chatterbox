@@ -11,8 +11,8 @@ object frChat: TfrChat
     Size.Height = 431.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 712.000000000000000000
-    Viewport.Height = 427.000000000000000000
+    Viewport.Width = 716.000000000000000000
+    Viewport.Height = 431.000000000000000000
   end
   object inpQuestion: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -24,8 +24,8 @@ object frChat: TfrChat
     Size.Height = 124.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
-    Viewport.Width = 712.000000000000000000
-    Viewport.Height = 120.000000000000000000
+    Viewport.Width = 716.000000000000000000
+    Viewport.Height = 124.000000000000000000
   end
   object tmrSend: TTimer
     Enabled = False
