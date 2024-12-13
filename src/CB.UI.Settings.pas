@@ -4,11 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Actions,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
+  FMX.Platform, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
   FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox,
   Spring.Collections,
-  CB.Settings;
+  CB.Utils, CB.Settings;
 
 type
   TfrmSettings = class(TForm)
@@ -63,9 +63,13 @@ type
     inpPassphraseCheck: TEdit;
     Label12: TLabel;
     actOK: TAction;
+    btnGetAPIKey: TButton;
+    actGetAPIKey: TAction;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
+    procedure actGetAPIKeyExecute(Sender: TObject);
+    procedure actGetAPIKeyUpdate(Sender: TObject);
     procedure actOKExecute(Sender: TObject);
     procedure actOKUpdate(Sender: TObject);
     procedure actResetSettingsExecute(Sender: TObject);
@@ -108,6 +112,25 @@ end;
 procedure TfrmSettings.actDeleteAIEngineUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
+end;
+
+procedure TfrmSettings.actGetAPIKeyExecute(Sender: TObject);
+begin
+  case FEngines[lbAIEngines.ItemIndex].EngineType of
+    etOpenAI:    OpenURL('https://platform.openai.com/api-keys');
+    etAnthropic: OpenURL('https://console.anthropic.com/settings/keys');
+    etGemini:    OpenURL('https://aistudio.google.com/app/apikey');
+  end;
+end;
+
+procedure TfrmSettings.actGetAPIKeyUpdate(Sender: TObject);
+begin
+  if lbAIEngines.ItemIndex < 0 then
+    (Sender as TAction).Enabled := false
+  else begin
+    var stg := FEngines[lbAIEngines.ItemIndex];
+    (Sender as TAction).Enabled := (stg.EngineType in [etOpenAI, etAnthropic, etGemini]);
+  end;
 end;
 
 procedure TfrmSettings.actOKExecute(Sender: TObject);

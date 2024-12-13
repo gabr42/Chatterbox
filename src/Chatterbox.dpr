@@ -22,7 +22,8 @@ uses
   CB.AI.Registry in 'CB.AI.Registry.pas',
   CB.AI.Client.Gemini in 'CB.AI.Client.Gemini.pas',
   CB.AI.Client.Gemini.Types in 'CB.AI.Client.Gemini.Types.pas',
-  CB.UI.Passphrase in 'CB.UI.Passphrase.pas' {frmPassphrase};
+  CB.UI.Passphrase in 'CB.UI.Passphrase.pas' {frmPassphrase},
+  CB.Utils in 'CB.Utils.pas';
 
 {$R *.res}
 

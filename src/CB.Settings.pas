@@ -30,6 +30,7 @@ type
     FOnGetPassphrase: TCBGetPassphraseEvent;
   strict protected
     function  AskForPassphrase(var passphrase: string): boolean;
+    function  SingleLine(const s: string): string;
   public
     Passphrase: string;
     AIEngines : IList<TCBAIEngineSettings>;
@@ -144,7 +145,7 @@ begin
     if Passphrase = '' then
       ini.DeleteKey('Security', 'Passphrase')
     else
-      ini.WriteString('Security', 'Passphrase', EncryptAES(Passphrase, Passphrase));
+      ini.WriteString('Security', 'Passphrase', SingleLine(EncryptAES(Passphrase, Passphrase)));
 
     var iEng := 1;
     repeat
@@ -161,14 +162,18 @@ begin
       ini.WriteString(section, 'Name', eng.Name);
       ini.WriteString(section, 'Type', SerializeEngineName[eng.EngineType]);
       ini.WriteString(section, 'Model', eng.Model);
-      var auth := Encrypt(eng.Authorization, Key, Passphrase);
-      ini.WriteString(section, 'Auth', StringReplace(StringReplace(auth, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]));
+      ini.WriteString(section, 'Auth', SingleLine(Encrypt(eng.Authorization, Key, Passphrase)));
       ini.WriteString(section, 'Host', eng.Host);
       ini.WriteInteger(section, 'MaxTokens', eng.MaxTokens);
       ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
     end;
   finally FreeAndNil(ini); end;
+end;
+
+function TCBSettings.SingleLine(const s: string): string;
+begin
+  Result := StringReplace(StringReplace(s, #13, '', [rfReplaceAll]), #10, '', [rfReplaceAll]);
 end;
 
 { TCBAIEngineSettings }

@@ -2,13 +2,15 @@ object frmPassphrase: TfrmPassphrase
   Left = 0
   Top = 0
   ActiveControl = inpPassphrase
-  Caption = 'Passphrase'
+  BorderIcons = [biSystemMenu, biMinimize]
+  Caption = 'Chatterbox'
   ClientHeight = 124
   ClientWidth = 520
   Position = OwnerFormCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
   DesignerMasterStyle = 0
   object Label1: TLabel
     Position.X = 16.000000000000000000
@@ -32,6 +34,7 @@ object frmPassphrase: TfrmPassphrase
     StyledSettings = [Family, Size, Style]
   end
   object btnOK: TButton
+    Anchors = [akTop, akRight]
     Default = True
     ModalResult = 1
     Position.X = 304.000000000000000000
@@ -41,6 +44,7 @@ object frmPassphrase: TfrmPassphrase
     TextSettings.Trimming = None
   end
   object btnCancel: TButton
+    Anchors = [akTop, akRight]
     Cancel = True
     ModalResult = 2
     Position.X = 400.000000000000000000

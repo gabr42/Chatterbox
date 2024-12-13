@@ -13,6 +13,7 @@ type
     inpPassphrase: TEdit;
     btnOK: TButton;
     btnCancel: TButton;
+    procedure FormCreate(Sender: TObject);
   private
   public
     function Passphrase: string;
@@ -21,6 +22,12 @@ type
 implementation
 
 {$R *.fmx}
+
+procedure TfrmPassphrase.FormCreate(Sender: TObject);
+begin
+  Constraints.MinHeight := Height;
+  Constraints.MaxHeight := Height;
+end;
 
 { TfrmPassphrase }
 
