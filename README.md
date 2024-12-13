@@ -19,7 +19,8 @@ Currently, Chatterbox must be compiled from source. Please ensure you have the f
 - A Delphi IDE capable of building the project.
 - The required dependencies: Spring4D, DCPCrypt, and TAES.
 
-Detailed build instructions will be added in the future.
+Builting it is simple:
+- Open the project in RAD Studio and build.
 
 ## Usage
 (Usage instructions will be provided here.)
