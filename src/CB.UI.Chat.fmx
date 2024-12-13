@@ -64,7 +64,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg1: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
@@ -91,7 +91,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg2: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
@@ -116,7 +116,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg3: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
@@ -143,7 +143,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg4: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
@@ -170,7 +170,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg5: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
@@ -229,7 +229,7 @@ object frChat: TfrChat
       Size.PlatformDefault = False
       TextSettings.Trimming = None
       object SkSvg6: TSkSvg
-        Size.Width = 41.000000000000000000
+        Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
         Svg.Source = 
