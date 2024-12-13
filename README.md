@@ -15,12 +15,17 @@ Chatterbox is an open-source application designed to enable users to run multipl
   - [TAES](https://github.com/Delphier/TAES).
 
 ## Installation
-Currently, Chatterbox must be compiled from source. Please ensure you have the following:
-- A Delphi IDE capable of building the project.
-- The required dependencies: Spring4D, DCPCrypt, and TAES.
+Chatterbox offers two installation options:
 
-Builting it is simple:
-- Open the project in RAD Studio and build.
+1. **Compile from Source**
+   - Ensure you have the following:
+     - A fairly new RAD Studio (any version 12 will do).
+     - The required dependencies: Spring4D, DCPCrypt, and TAES.
+   - Open project in RAD Studio and build.
+
+2. **Download Precompiled EXE**
+   - Download the latest precompiled executable from the [GitHub Releases](https://github.com/gabr42/Chatterbox/releases) page.
+   - The EXE does not require any installation; simply download and run it.
 
 ## Usage
 (Usage instructions will be provided here.)
