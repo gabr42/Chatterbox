@@ -23,9 +23,9 @@ Chatterbox offers two installation options:
      - The required dependencies: Spring4D, DCPCrypt, and TAES.
    - Open project in RAD Studio and build.
 
-2. **Download Precompiled EXE**
-   - Download the latest precompiled executable from the [GitHub Releases](https://github.com/gabr42/Chatterbox/releases) page.
-   - The EXE does not require any installation; simply download and run it.
+2. **Download Precompiled ZIP**
+   - Download the latest precompiled ZIP file from the [GitHub Releases](https://github.com/gabr42/Chatterbox/releases) page.
+   - Unpack the ZIP file and run the executable (EXE).
 
 ## Usage
 (Usage instructions will be provided here.)
@@ -42,3 +42,5 @@ This project is distributed under the **CC0 1.0 Universal** license. See the LIC
 ## Contact
 For support or inquiries, contact [gabr42@gmail.com](mailto:gabr42@gmail.com).
 
+## Repository
+The source code is hosted on GitHub: [Chatterbox Repository](https://github.com/gabr42/Chatterbox).
