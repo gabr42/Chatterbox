@@ -69,3 +69,5 @@ __recovery/
 modules/
 
 *.dsv
+
+bin/Chatterbox_MemoryManager_EventLog.txt
