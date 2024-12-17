@@ -29,13 +29,22 @@ Chatterbox offers two installation options:
 
 ## Usage
 Main Chatterbox window is split into the main toolbar (at the top) and open chat tabs (main part of the window).
+
 ![Main window](doc/screenshot.png)
 
 The following image describes all the buttons.
+
 ![Main window, annotated](doc/screenshot-annotated.png)
 
 To configure engines, go to Settings and add information on the AI Engines tab.
+
 ![Settings](doc/settings-engines.png)
+
+Settings are stored in the Gp/Chatterbox subfolder of the Documents folder. 
+
+### Security warning
+
+API keys are stored encrypted to prevent accidental exposure. This protection, however, is weak as anyone that can access your settings file can also compile Chatterbox and modify it to display your API keys. For a better protection, define Passkey in the Settings. It will be used to encrypt API keys.
 
 ## Contributing
 Contributions are welcome! If you'd like to contribute:
