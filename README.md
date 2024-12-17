@@ -28,7 +28,14 @@ Chatterbox offers two installation options:
    - Unpack the ZIP file and run the executable (EXE).
 
 ## Usage
-(Usage instructions will be provided here.)
+Main Chatterbox window is split into the main toolbar (at the top) and open chat tabs (main part of the window).
+![Main window](doc/screenshot.png)
+
+The following image describes all the buttons.
+![Main window, annotated](doc/screenshot-annotated.png)
+
+To configure engines, go to Settings and add information on the AI Engines tab.
+![Settings](doc/settings-engines.png)
 
 ## Contributing
 Contributions are welcome! If you'd like to contribute:
