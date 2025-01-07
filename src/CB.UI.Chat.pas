@@ -49,6 +49,7 @@ type
     lyEngine: TFlowLayout;
     lyTools: TFlowLayout;
     lySpacer: TLayout;
+    cbDisableSysPrompt: TCheckBox;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
@@ -169,7 +170,7 @@ begin
                     StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
 
   FRequest := SendAsyncRequest(FSerializer.URL(FEngine), headers,
-                               FSerializer.QuestionToJSON(FEngine, FChat.ToArray, inpQuestion.Text));
+                               FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text));
   tmrSend.Enabled := true;
   indSend.Visible := true;
   indSend.Enabled := true;

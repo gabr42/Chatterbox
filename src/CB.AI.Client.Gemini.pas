@@ -17,14 +17,14 @@ type
   TGeminiSerializer = class(TInterfacedObject, IAISerializer)
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
 
 { TGeminiSerializer }
 
 function TGeminiSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
 var
   request : TGeminiRequest;
   messages: TArray<TGeminiMessage>;
@@ -32,7 +32,7 @@ begin
   request := TGeminiRequest.Create;
   try
     var sysPrompt := engineConfig.SysPrompt.Trim;
-    if sysPrompt <> '' then begin
+    if sendSystemPrompt and (sysPrompt <> '') then begin
       request.system_instruction := TGeminiParts.Create;
       request.system_instruction.parts := TArray<TGeminiPart>.Create(TGeminiPart.Create(sysPrompt));
     end;

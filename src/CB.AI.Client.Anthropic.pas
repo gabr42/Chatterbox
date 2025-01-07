@@ -5,7 +5,7 @@ interface
 implementation
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.StrUtils,
   REST.Json,
   Spring,
   CB.Settings, CB.Network,
@@ -17,14 +17,14 @@ type
   TAnthropicSerializer = class(TInterfacedObject, IAISerializer)
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
 
 { TAnthropicSerializer }
 
 function TAnthropicSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
 var
   request: TAnthropicRequest;
 begin
@@ -32,7 +32,7 @@ begin
   try
     request.model := engineConfig.Model;
     request.LoadMessages('', false, history, question);
-    request.system := engineConfig.SysPrompt.Trim;
+    request.system := IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, '');
     request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
     Result := TJson.ObjectToJsonString(request);

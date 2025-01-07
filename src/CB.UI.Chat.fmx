@@ -8,18 +8,18 @@ object frChat: TfrChat
     TextSettings.WordWrap = True
     Align = Client
     Size.Width = 716.000000000000000000
-    Size.Height = 431.000000000000000000
+    Size.Height = 420.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     Viewport.Width = 712.000000000000000000
-    Viewport.Height = 427.000000000000000000
+    Viewport.Height = 416.000000000000000000
   end
   object inpQuestion: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
     TextSettings.WordWrap = True
     Align = Bottom
-    Position.Y = 431.000000000000000000
+    Position.Y = 420.000000000000000000
     Size.Width = 716.000000000000000000
     Size.Height = 124.000000000000000000
     Size.PlatformDefault = False
@@ -36,9 +36,9 @@ object frChat: TfrChat
   end
   object tbChat: TToolBar
     Align = MostBottom
-    Position.Y = 555.000000000000000000
+    Position.Y = 544.000000000000000000
     Size.Width = 716.000000000000000000
-    Size.Height = 65.000000000000000000
+    Size.Height = 76.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
     object lyEngine: TFlowLayout
@@ -48,8 +48,8 @@ object frChat: TfrChat
       Margins.Bottom = 8.000000000000000000
       Position.X = 8.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 105.000000000000000000
-      Size.Height = 49.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 60.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       Justify = Left
@@ -62,8 +62,19 @@ object frChat: TfrChat
       object cbxEngines: TComboBox
         DropDownCount = 32
         Position.Y = 17.000000000000000000
+        Size.Width = 145.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
         TabOrder = 2
         OnChange = cbxEnginesChange
+      end
+      object cbDisableSysPrompt: TCheckBox
+        Position.Y = 39.000000000000000000
+        Size.Width = 145.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Disable system prompt'
       end
     end
     object lyTools: TFlowLayout
@@ -72,8 +83,8 @@ object frChat: TfrChat
       Margins.Top = 8.000000000000000000
       Margins.Right = 8.000000000000000000
       Margins.Bottom = 8.000000000000000000
-      Size.Width = 587.000000000000000000
-      Size.Height = 49.000000000000000000
+      Size.Width = 539.000000000000000000
+      Size.Height = 60.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       Justify = Left

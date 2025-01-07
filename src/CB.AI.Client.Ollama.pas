@@ -5,7 +5,7 @@ interface
 implementation
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.StrUtils,
   REST.Json,
   Spring,
   CB.Settings, CB.Network,
@@ -17,14 +17,14 @@ type
   TOllamaSerializer = class(TInterfacedObject, IAISerializer)
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; const question: string): string;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
   end;
 
 { TOllamaSerializer }
 
 function TOllamaSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
 var
   request: TOllamaRequest;
 begin
@@ -33,7 +33,7 @@ begin
     request.model := engineConfig.Model;
     request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
-    request.LoadMessages(engineConfig.SysPrompt.Trim, false, history, question);
+    request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), false, history, question);
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;
