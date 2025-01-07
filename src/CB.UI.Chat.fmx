@@ -41,206 +41,204 @@ object frChat: TfrChat
     Size.Height = 65.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
-    object cbxEngines: TComboBox
-      DropDownCount = 32
+    object lyEngine: TFlowLayout
+      Align = Left
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
       Position.X = 8.000000000000000000
-      Position.Y = 30.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 105.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
       TabOrder = 1
-      OnChange = cbxEnginesChange
+      Justify = Left
+      JustifyLastLine = Left
+      FlowDirection = LeftToRight
+      object lblActiveEngine: TLabel
+        Text = 'Active engine'
+        TabOrder = 1
+      end
+      object cbxEngines: TComboBox
+        DropDownCount = 32
+        Position.Y = 17.000000000000000000
+        TabOrder = 2
+        OnChange = cbxEnginesChange
+      end
     end
-    object lblActiveEngine: TLabel
-      Position.X = 9.000000000000000000
-      Position.Y = 8.000000000000000000
-      Text = 'Active engine'
+    object lyTools: TFlowLayout
+      Align = Client
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 587.000000000000000000
+      Size.Height = 49.000000000000000000
+      Size.PlatformDefault = False
       TabOrder = 2
-    end
-    object btnLoadChat: TSpeedButton
-      Action = actSaveChat
-      ImageIndex = -1
-      Position.X = 336.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg1: TSkSvg
+      Justify = Left
+      JustifyLastLine = Left
+      FlowDirection = LeftToRight
+      HorizontalGap = 8.000000000000000000
+      object btnSend: TSpeedButton
+        Action = actSend
+        StyledSettings = [Family, Size, FontColor]
+        ImageIndex = -1
+        Size.Width = 88.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.HorzAlign = Trailing
+        TextSettings.Trimming = None
+        object svgSend: TSkSvg
+          Position.X = 8.000000000000000000
+          Size.Width = 41.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
+            'ath d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 4' +
+            '0.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6zm-16.2 55.' +
+            '1l-352 208C45.6 483.9 32 476.6 32 464V47.9c0-16.3 16.4-18.4 24.1' +
+            '-13.8l352 208.1c10.5 6.2 10.5 21.4.1 27.6z"/></svg>'
+        end
+        object indSend: TAniIndicator
+          Position.X = 8.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+        end
+      end
+      object btnSendToAll: TSpeedButton
+        Action = actSendToAll
+        ImageIndex = -1
+        Position.X = 96.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
-          'ath d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48' +
-          'C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48' +
-          '-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM288 64v96H96V64h' +
-          '192zm128 368c0 8.822-7.178 16-16 16H48c-8.822 0-16-7.178-16-16V8' +
-          '0c0-8.822 7.178-16 16-16h16v104c0 13.255 10.745 24 24 24h208c13.' +
-          '255 0 24-10.745 24-24V64.491a15.888 15.888 0 0 1 7.432 4.195l83.' +
-          '882 83.882A15.895 15.895 0 0 1 416 163.882V432zM224 232c-48.523 ' +
-          '0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-8' +
-          '8zm0 144c-30.879 0-56-25.121-56-56s25.121-56 56-56 56 25.121 56 ' +
-          '56-25.121 56-56 56z"/></svg>'
+        TextSettings.Trimming = None
+        object SkSvg6: TSkSvg
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><p' +
+            'ath d="M500 63h-8c-6.6 0-12 5.4-12 12v157.7c-.9-1-1.9-2-3-2.9L27' +
+            '6.5 70.4C255.9 53.3 224 67.6 224 95v117.8L52.5 70.4C31.9 53.3 0 ' +
+            '67.6 0 95v320c0 27.4 31.9 41.8 52.5 24.6L224 296.2V415c0 27.4 31' +
+            '.9 41.8 52.5 24.6L477 279c1.1-.9 2.1-1.9 3-2.9V435c0 6.6 5.4 12 ' +
+            '12 12h8c6.6 0 12-5.4 12-12V75c0-6.6-5.4-12-12-12zM219.5 254.4l-.' +
+            '2.1-.2.1L32 415V95l187.3 159.2.1.1.1.1zm231.5.5l-194.8 160-.1.1h' +
+            '-.1V95l.1.1.1.1L451 254v.9z"/></svg>'
+        end
       end
-    end
-    object SpeedButton3: TSpeedButton
-      Action = actLoadChat
-      ImageIndex = -1
-      Position.X = 385.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg2: TSkSvg
+      object lySpacer: TLayout
+        Position.X = 148.000000000000000000
+        Size.Width = 16.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+      end
+      object btnSaveChat: TSpeedButton
+        Action = actSaveChat
+        ImageIndex = -1
+        Position.X = 172.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><p' +
-          'ath d="M527.95 224H480v-48c0-26.51-21.49-48-48-48H272l-64-64H48C' +
-          '21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h385.057c28.068' +
-          ' 0 54.135-14.733 68.599-38.84l67.453-112.464C588.24 264.812 565.' +
-          '285 224 527.95 224zM48 96h146.745l64 64H432c8.837 0 16 7.163 16 ' +
-          '16v48H171.177c-28.068 0-54.135 14.733-68.599 38.84L32 380.47V112' +
-          'c0-8.837 7.163-16 16-16zm493.695 184.232l-67.479 112.464A47.997 ' +
-          '47.997 0 0 1 433.057 416H44.823l82.017-136.696A48 48 0 0 1 168 2' +
-          '56h359.975c12.437 0 20.119 13.568 13.72 24.232z"/></svg>'
+        TextSettings.Trimming = None
+        object SkSvg1: TSkSvg
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
+            'ath d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48' +
+            'C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48' +
+            '-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM288 64v96H96V64h' +
+            '192zm128 368c0 8.822-7.178 16-16 16H48c-8.822 0-16-7.178-16-16V8' +
+            '0c0-8.822 7.178-16 16-16h16v104c0 13.255 10.745 24 24 24h208c13.' +
+            '255 0 24-10.745 24-24V64.491a15.888 15.888 0 0 1 7.432 4.195l83.' +
+            '882 83.882A15.895 15.895 0 0 1 416 163.882V432zM224 232c-48.523 ' +
+            '0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-8' +
+            '8zm0 144c-30.879 0-56-25.121-56-56s25.121-56 56-56 56 25.121 56 ' +
+            '56-25.121 56-56 56z"/></svg>'
+        end
       end
-    end
-    object btnCopy: TSpeedButton
-      Action = actCopyLastAnswer
-      ImageIndex = -1
-      Position.X = 434.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg3: TSkSvg
+      object btnLoadChat: TSpeedButton
+        Action = actLoadChat
+        ImageIndex = -1
+        Position.X = 224.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
-          'ath d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c' +
-          '-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.5' +
-          '1 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21' +
-          '.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM352 32.491a15.88 15.' +
-          '88 0 0 1 7.431 4.195l51.882 51.883A15.885 15.885 0 0 1 415.508 9' +
-          '6H352V32.491zM288 464c0 8.822-7.178 16-16 16H48c-8.822 0-16-7.17' +
-          '8-16-16V144c0-8.822 7.178-16 16-16h80v240c0 26.51 21.49 48 48 48' +
-          'h112v48zm128-96c0 8.822-7.178 16-16 16H176c-8.822 0-16-7.178-16-' +
-          '16V48c0-8.822 7.178-16 16-16h144v72c0 13.2 10.8 24 24 24h72v240z' +
-          '"/></svg>'
+        TextSettings.Trimming = None
+        object SkSvg2: TSkSvg
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><p' +
+            'ath d="M527.95 224H480v-48c0-26.51-21.49-48-48-48H272l-64-64H48C' +
+            '21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h385.057c28.068' +
+            ' 0 54.135-14.733 68.599-38.84l67.453-112.464C588.24 264.812 565.' +
+            '285 224 527.95 224zM48 96h146.745l64 64H432c8.837 0 16 7.163 16 ' +
+            '16v48H171.177c-28.068 0-54.135 14.733-68.599 38.84L32 380.47V112' +
+            'c0-8.837 7.163-16 16-16zm493.695 184.232l-67.479 112.464A47.997 ' +
+            '47.997 0 0 1 433.057 416H44.823l82.017-136.696A48 48 0 0 1 168 2' +
+            '56h359.975c12.437 0 20.119 13.568 13.72 24.232z"/></svg>'
+        end
       end
-    end
-    object SpeedButton2: TSpeedButton
-      Action = actClearHistory
-      ImageIndex = -1
-      Position.X = 483.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg4: TSkSvg
+      object btnCopy: TSpeedButton
+        Action = actCopyLastAnswer
+        ImageIndex = -1
+        Position.X = 276.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512' +
-          '"><path d="M497.942 273.941c18.745-18.745 18.745-49.137 0-67.882' +
-          'l-160-160c-18.744-18.744-49.136-18.746-67.883 0l-256 256c-18.745' +
-          ' 18.745-18.745 49.137 0 67.882l96 96A48 48 0 0 0 144 480h356c6.6' +
-          '27 0 12-5.373 12-12v-8c0-6.627-5.373-12-12-12H323.883l174.059-17' +
-          '4.059zM292.686 68.687c6.243-6.243 16.374-6.254 22.628-.001l160 1' +
-          '60c6.243 6.243 6.253 16.374 0 22.627L358.627 368.001 176 185.373' +
-          ' 292.686 68.687zM144 448a15.895 15.895 0 0 1-11.314-4.686l-96-96' +
-          'c-6.243-6.243-6.253-16.374 0-22.627L153.373 208 336 390.628l-52.' +
-          '686 52.686A15.895 15.895 0 0 1 272 448H144z"/></svg>'
+        TextSettings.Trimming = None
+        object SkSvg3: TSkSvg
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
+            'ath d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c' +
+            '-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.5' +
+            '1 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21' +
+            '.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM352 32.491a15.88 15.' +
+            '88 0 0 1 7.431 4.195l51.882 51.883A15.885 15.885 0 0 1 415.508 9' +
+            '6H352V32.491zM288 464c0 8.822-7.178 16-16 16H48c-8.822 0-16-7.17' +
+            '8-16-16V144c0-8.822 7.178-16 16-16h80v240c0 26.51 21.49 48 48 48' +
+            'h112v48zm128-96c0 8.822-7.178 16-16 16H176c-8.822 0-16-7.178-16-' +
+            '16V48c0-8.822 7.178-16 16-16h144v72c0 13.2 10.8 24 24 24h72v240z' +
+            '"/></svg>'
+        end
       end
-    end
-    object btnCloseChat: TSpeedButton
-      Action = actCloseChat
-      Anchors = [akTop, akRight]
-      ImageIndex = -1
-      Position.X = 664.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg5: TSkSvg
+      object btnClearChat: TSpeedButton
+        Action = actClearHistory
+        ImageIndex = -1
+        Position.X = 328.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><p' +
-          'ath d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21' +
-          '.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c' +
-          '0-12.7-5.1-25-14.1-34zm-22.6 22.7c2.1 2.1 3.5 4.6 4.2 7.4H256V32' +
-          '.5c2.8.7 5.3 2.1 7.4 4.2l83.9 83.9zM336 480H48c-8.8 0-16-7.2-16-' +
-          '16V48c0-8.8 7.2-16 16-16h176v104c0 13.3 10.7 24 24 24h104v304c0 ' +
-          '8.8-7.2 16-16 16zm-73.3-127.9c4.7 4.7 4.7 12.3 0 17l-5.7 5.7c-4.' +
-          '7 4.7-12.3 4.7-17 0l-48-48.2-48.1 48.1c-4.7 4.7-12.3 4.7-17 0l-5' +
-          '.7-5.7c-4.7-4.7-4.7-12.3 0-17l48.1-48.1-48.1-48.1c-4.7-4.7-4.7-1' +
-          '2.3 0-17l5.7-5.7c4.7-4.7 12.3-4.7 17 0l48.1 48.1 48.1-48.1c4.7-4' +
-          '.7 12.3-4.7 17 0l5.7 5.7c4.7 4.7 4.7 12.3 0 17L214.6 304l48.1 48' +
-          '.1z"/></svg>'
-      end
-    end
-    object btnSend: TSpeedButton
-      Action = actSend
-      StyledSettings = [Family, Size, FontColor]
-      ImageIndex = -1
-      Position.X = 116.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 88.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Font.StyleExt = {00070000000000000004000000}
-      TextSettings.HorzAlign = Trailing
-      TextSettings.Trimming = None
-      object svgSend: TSkSvg
-        Position.X = 8.000000000000000000
-        Size.Width = 41.000000000000000000
-        Size.Height = 44.000000000000000000
-        Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><p' +
-          'ath d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 4' +
-          '0.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6zm-16.2 55.' +
-          '1l-352 208C45.6 483.9 32 476.6 32 464V47.9c0-16.3 16.4-18.4 24.1' +
-          '-13.8l352 208.1c10.5 6.2 10.5 21.4.1 27.6z"/></svg>'
-      end
-      object indSend: TAniIndicator
-        Position.X = 8.000000000000000000
-        Size.Width = 44.000000000000000000
-        Size.Height = 44.000000000000000000
-        Size.PlatformDefault = False
-      end
-    end
-    object btnSendToAll: TSpeedButton
-      Action = actSendToAll
-      ImageIndex = -1
-      Position.X = 224.000000000000000000
-      Position.Y = 8.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 44.000000000000000000
-      Size.PlatformDefault = False
-      TextSettings.Trimming = None
-      object SkSvg6: TSkSvg
-        Size.Width = 44.000000000000000000
-        Size.Height = 44.000000000000000000
-        Size.PlatformDefault = False
-        Svg.Source = 
-          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><p' +
-          'ath d="M500 63h-8c-6.6 0-12 5.4-12 12v157.7c-.9-1-1.9-2-3-2.9L27' +
-          '6.5 70.4C255.9 53.3 224 67.6 224 95v117.8L52.5 70.4C31.9 53.3 0 ' +
-          '67.6 0 95v320c0 27.4 31.9 41.8 52.5 24.6L224 296.2V415c0 27.4 31' +
-          '.9 41.8 52.5 24.6L477 279c1.1-.9 2.1-1.9 3-2.9V435c0 6.6 5.4 12 ' +
-          '12 12h8c6.6 0 12-5.4 12-12V75c0-6.6-5.4-12-12-12zM219.5 254.4l-.' +
-          '2.1-.2.1L32 415V95l187.3 159.2.1.1.1.1zm231.5.5l-194.8 160-.1.1h' +
-          '-.1V95l.1.1.1.1L451 254v.9z"/></svg>'
+        TextSettings.Trimming = None
+        object SkSvg4: TSkSvg
+          Size.Width = 44.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Svg.Source = 
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512' +
+            '"><path d="M497.942 273.941c18.745-18.745 18.745-49.137 0-67.882' +
+            'l-160-160c-18.744-18.744-49.136-18.746-67.883 0l-256 256c-18.745' +
+            ' 18.745-18.745 49.137 0 67.882l96 96A48 48 0 0 0 144 480h356c6.6' +
+            '27 0 12-5.373 12-12v-8c0-6.627-5.373-12-12-12H323.883l174.059-17' +
+            '4.059zM292.686 68.687c6.243-6.243 16.374-6.254 22.628-.001l160 1' +
+            '60c6.243 6.243 6.253 16.374 0 22.627L358.627 368.001 176 185.373' +
+            ' 292.686 68.687zM144 448a15.895 15.895 0 0 1-11.314-4.686l-96-96' +
+            'c-6.243-6.243-6.253-16.374 0-22.627L153.373 208 336 390.628l-52.' +
+            '686 52.686A15.895 15.895 0 0 1 272 448H144z"/></svg>'
+        end
       end
     end
   end
@@ -288,11 +286,6 @@ object frChat: TfrChat
       Hint = 'Clear chat history'
       OnExecute = actClearHistoryExecute
       OnUpdate = actClearHistoryUpdate
-    end
-    object actCloseChat: TAction
-      Hint = 'Close chat window'
-      ShortCut = 16471
-      OnExecute = actCloseChatExecute
     end
   end
 end

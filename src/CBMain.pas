@@ -26,8 +26,13 @@ type
     btnClearAll: TSpeedButton;
     SkSvg3: TSkSvg;
     actClearAll: TAction;
+    btnCloseChat: TSpeedButton;
+    SkSvg5: TSkSvg;
+    actCloseChat: TAction;
     procedure actClearAllExecute(Sender: TObject);
     procedure actClearAllUpdate(Sender: TObject);
+    procedure actCloseChatExecute(Sender: TObject);
+    procedure actCloseChatUpdate(Sender: TObject);
     procedure actNewChatExecute(Sender: TObject);
     procedure actNextEngineExecute(Sender: TObject);
     procedure actPrevEngineExecute(Sender: TObject);
@@ -46,7 +51,6 @@ type
     function  SettingsFileName: string;
     procedure HandleEngineChange(Frame: TFrame; const Engine: TCBAIEngineSettings);
     procedure HandleGetPassphrase(var passphrase: string; var cancel: boolean);
-    procedure HandleRequestClose(Frame: TFrame);
     procedure HandleGetChatInfo(Frame: TFrame; var countChats: integer);
     procedure HandleExecuteInAll(Frame: TFrame; const question: string);
     function  TabIndexToChat(tabIndex: integer): TfrChat;
@@ -72,6 +76,17 @@ begin
 end;
 
 procedure TfrmCBMain.actClearAllUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := tcChatter.TabCount > 0;
+end;
+
+procedure TfrmCBMain.actCloseChatExecute(Sender: TObject);
+begin
+  tcChatter.RemoveObject(tcChatter.ActiveTab);
+  SaveDesktop;
+end;
+
+procedure TfrmCBMain.actCloseChatUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := tcChatter.TabCount > 0;
 end;
@@ -150,13 +165,6 @@ begin
   finally FreeAndNil(frmPassphrase); end;
 end;
 
-procedure TfrmCBMain.HandleRequestClose(Frame: TFrame);
-begin
-  var ti := Frame.Parent.Parent as TTabItem;
-  tcChatter.RemoveObject(ti);
-  SaveDesktop;
-end;
-
 procedure TfrmCBMain.LoadDesktop;
 begin
   FLoadingDesktop := true;
@@ -215,7 +223,6 @@ begin
   fr.Parent := ti;
   fr.Align := TAlignLayout.Client;
   fr.OnEngineChange := HandleEngineChange; // must be before setting Configuration
-  fr.OnRequestClose := HandleRequestClose;
   fr.OnGetChatInfo := HandleGetChatInfo;
   fr.OnExecuteInAll := HandleExecuteInAll;
   fr.Configuration := FSettings;

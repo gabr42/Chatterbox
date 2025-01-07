@@ -9,7 +9,7 @@ uses
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
   FMX.ListBox, FMX.ActnList, FMX.Skia,
   Spring, Spring.Collections,
-  CB.Network, CB.Settings, CB.AI.Interaction;
+  CB.Network, CB.Settings, CB.AI.Interaction, FMX.Layouts;
 
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;
@@ -32,26 +32,25 @@ type
     actSendToAll: TAction;
     actLoadChat: TAction;
     OpenDialog1: TOpenDialog;
-    btnLoadChat: TSpeedButton;
+    btnSaveChat: TSpeedButton;
     SkSvg1: TSkSvg;
-    SpeedButton3: TSpeedButton;
+    btnLoadChat: TSpeedButton;
     SkSvg2: TSkSvg;
     btnCopy: TSpeedButton;
     SkSvg3: TSkSvg;
     actClearHistory: TAction;
-    SpeedButton2: TSpeedButton;
+    btnClearChat: TSpeedButton;
     SkSvg4: TSkSvg;
-    btnCloseChat: TSpeedButton;
-    SkSvg5: TSkSvg;
-    actCloseChat: TAction;
     btnSend: TSpeedButton;
     svgSend: TSkSvg;
     indSend: TAniIndicator;
     btnSendToAll: TSpeedButton;
     SkSvg6: TSkSvg;
+    lyEngine: TFlowLayout;
+    lyTools: TFlowLayout;
+    lySpacer: TLayout;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
-    procedure actCloseChatExecute(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actLoadChatExecute(Sender: TObject);
@@ -63,7 +62,6 @@ type
     procedure actSendToAllUpdate(Sender: TObject);
     procedure actSendUpdate(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
     procedure tmrSendTimer(Sender: TObject);
   private const
     CConversationDelimiter = '--------------------';
@@ -75,7 +73,6 @@ type
     FClipBoard     : IFMXClipboardService;
     FEngine        : TCBAIEngineSettings;
     FOnEngineChange: TFrameEngineChange;
-    FOnRequestClose: TFrameNotifyEvent;
     FOnGetChatInfo : TFrameGetChatInfo;
     FOnExecuteInAll: TFrameExecuteInAll;
     FRequest       : INetAsyncRequest;
@@ -91,7 +88,6 @@ type
     procedure SetEngine(const engName: string);
     property Configuration: TCBSettings read FConfiguration write SetConfiguration;
     property OnEngineChange: TFrameEngineChange read FOnEngineChange write FOnEngineChange;
-    property OnRequestClose: TFrameNotifyEvent read FOnRequestClose write FOnRequestClose;
     property OnGetChatInfo: TFrameGetChatInfo read FOnGetChatInfo write FOnGetChatInfo;
     property OnExecuteInAll: TFrameExecuteInAll read FOnExecuteInAll write FOnExecuteInAll;
   end;
@@ -112,11 +108,6 @@ end;
 procedure TfrChat.actClearHistoryUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not FChat.IsEmpty;
-end;
-
-procedure TfrChat.actCloseChatExecute(Sender: TObject);
-begin
-  OnRequestClose(Self);
 end;
 
 procedure TfrChat.actCopyLastAnswerExecute(Sender: TObject);
@@ -308,11 +299,6 @@ begin
       break; //for iEngine
     end;
   cbxEngines.OnChange(cbxEngines);
-end;
-
-procedure TfrChat.SpeedButton1Click(Sender: TObject);
-begin
-  FOnRequestClose(Self);
 end;
 
 procedure TfrChat.tmrSendTimer(Sender: TObject);
