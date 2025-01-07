@@ -7,7 +7,7 @@ uses
   System.IOUtils, System.IniFiles, System.Actions, System.Skia,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, CB.UI.Chat,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.ActnList, FMX.Skia,
-  CB.Settings;
+  CB.Settings, FMX.Layouts;
 
 type
   TfrmCBMain = class(TForm)
@@ -22,6 +22,12 @@ type
     SkSvg1: TSkSvg;
     SkSvg2: TSkSvg;
     actSettings: TAction;
+    FlowLayout1: TFlowLayout;
+    btnClearAll: TSpeedButton;
+    SkSvg3: TSkSvg;
+    actClearAll: TAction;
+    procedure actClearAllExecute(Sender: TObject);
+    procedure actClearAllUpdate(Sender: TObject);
     procedure actNewChatExecute(Sender: TObject);
     procedure actNextEngineExecute(Sender: TObject);
     procedure actPrevEngineExecute(Sender: TObject);
@@ -43,6 +49,7 @@ type
     procedure HandleRequestClose(Frame: TFrame);
     procedure HandleGetChatInfo(Frame: TFrame; var countChats: integer);
     procedure HandleExecuteInAll(Frame: TFrame; const question: string);
+    function  TabIndexToChat(tabIndex: integer): TfrChat;
   public
   end;
 
@@ -57,6 +64,17 @@ uses
   CB.Encryption,
   CB.UI.Settings, CB.UI.Passphrase,
   CB.AI.Client.OpenAI;
+
+procedure TfrmCBMain.actClearAllExecute(Sender: TObject);
+begin
+  for var iTab := 0 to tcChatter.TabCount-1 do
+    TabIndexToChat(iTab).ClearLog;
+end;
+
+procedure TfrmCBMain.actClearAllUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := tcChatter.TabCount > 0;
+end;
 
 procedure TfrmCBMain.actNewChatExecute(Sender: TObject);
 begin
@@ -90,7 +108,7 @@ begin
           ShowMessage('Error: ' + E.Message);
       end;
       for var iTab := 0 to tcChatter.TabCount-1 do
-        (TControl((tcChatter.Tabs[iTab] as TTabItem).Components[0]).Children[0] as TfrChat).ReloadConfiguration;
+        TabIndexToChat(iTab).ReloadConfiguration;
     end;
   finally FreeAndNil(frmSettings); end;
 end;
@@ -112,7 +130,7 @@ end;
 procedure TfrmCBMain.HandleExecuteInAll(Frame: TFrame; const question: string);
 begin
   for var iTab := 0 to tcChatter.TabCount-1 do
-    (TControl((tcChatter.Tabs[iTab] as TTabItem).Components[0]).Children[0] as TfrChat).SendQuestion(question);
+    TabIndexToChat(iTab).SendQuestion(question);
 end;
 
 procedure TfrmCBMain.HandleGetChatInfo(Frame: TFrame; var countChats: integer);
@@ -181,6 +199,11 @@ begin
   Result := TPath.Combine(TPath.GetDocumentsPath, 'Gp', 'Chatterbox');
   TDirectory.CreateDirectory(Result);
   Result := TPath.Combine(Result, 'settings.ini');
+end;
+
+function TfrmCBMain.TabIndexToChat(tabIndex: integer): TfrChat;
+begin
+  Result := (TControl((tcChatter.Tabs[tabIndex] as TTabItem).Components[0]).Children[0] as TfrChat);
 end;
 
 function TfrmCBMain.CreateChatFrame: TfrChat;

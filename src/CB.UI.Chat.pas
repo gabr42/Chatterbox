@@ -85,6 +85,7 @@ type
     procedure SetConfiguration(const config: TCBSettings);
   public
     procedure AfterConstruction; override;
+    procedure ClearLog;
     procedure ReloadConfiguration;
     procedure SendQuestion(const question: string);
     procedure SetEngine(const engName: string);
@@ -229,6 +230,11 @@ begin
   end;
   if assigned(OnEngineChange) then
     OnEngineChange(Self, FEngine);
+end;
+
+procedure TfrChat.ClearLog;
+begin
+  actClearHistory.Execute;
 end;
 
 procedure TfrChat.LoadChat(chat: TStrings);
