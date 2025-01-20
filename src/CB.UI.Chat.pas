@@ -7,7 +7,7 @@ uses
   System.StrUtils, System.Actions, System.Skia,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
-  FMX.ListBox, FMX.ActnList, FMX.Skia,
+  FMX.ListBox, FMX.ActnList, FMX.Skia, FMX.TextLayout,
   Spring, Spring.Collections,
   CB.Network, CB.Settings, CB.AI.Interaction, FMX.Layouts;
 
@@ -50,12 +50,20 @@ type
     lyTools: TFlowLayout;
     lySpacer: TLayout;
     cbDisableSysPrompt: TCheckBox;
+    btnPrevious: TSpeedButton;
+    btnNext: TSpeedButton;
+    actPrevious: TAction;
+    actNext: TAction;
+    SkSvg5: TSkSvg;
+    SkSvg7: TSkSvg;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
     procedure actCopyLastAnswerUpdate(Sender: TObject);
     procedure actLoadChatExecute(Sender: TObject);
     procedure actLoadChatUpdate(Sender: TObject);
+    procedure actNextExecute(Sender: TObject);
+    procedure actPreviousExecute(Sender: TObject);
     procedure actSaveChatExecute(Sender: TObject);
     procedure actSaveChatUpdate(Sender: TObject);
     procedure actSendExecute(Sender: TObject);
@@ -63,6 +71,12 @@ type
     procedure actSendToAllUpdate(Sender: TObject);
     procedure actSendUpdate(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
+    procedure outHistoryChange(Sender: TObject);
+    procedure outHistoryEnter(Sender: TObject);
+    procedure outHistoryKeyUp(Sender: TObject; var Key: Word; var KeyChar:
+        WideChar; Shift: TShiftState);
+    procedure outHistoryMouseUp(Sender: TObject; Button: TMouseButton; Shift:
+        TShiftState; X, Y: Single);
     procedure tmrSendTimer(Sender: TObject);
   private const
     CConversationDelimiter = '--------------------';
@@ -70,6 +84,7 @@ type
     CConversationAnswer = 'A>';
   private var
     FChat          : IList<TAIInteraction>;
+    FChatPosition  : TCaretPosition;
     FConfiguration : TCBSettings;
     FClipBoard     : IFMXClipboardService;
     FEngine        : TCBAIEngineSettings;
@@ -79,7 +94,11 @@ type
     FRequest       : INetAsyncRequest;
     FSerializer    : IAISerializer;
   protected
+    procedure CheckActions(force: boolean = false);
+    function  FindQA(line, delta: integer; var newLine: integer): boolean;
+    procedure JumpInChat(delta: integer);
     procedure LoadChat(chat: TStrings);
+    procedure ScrollToLine(memo: TMemo; line: integer);
     procedure SetConfiguration(const config: TCBSettings);
   public
     procedure AfterConstruction; override;
@@ -140,6 +159,41 @@ end;
 procedure TfrChat.actLoadChatUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := not assigned(FRequest);
+end;
+
+function GetLineHeight(Memo: TMemo; const text: string = 'Ag'): Single;
+var
+  TextLayout: TTextLayout;
+begin
+  // Create a TTextLayout instance
+  TextLayout := TTextLayoutManager.DefaultTextLayout.Create;
+  try
+    TextLayout.BeginUpdate;
+    try
+      // Assign the memo's font and text settings
+      TextLayout.Font.Assign(Memo.Font);
+      TextLayout.WordWrap := Memo.WordWrap;
+      TextLayout.HorizontalAlign := Memo.TextAlign;
+      TextLayout.MaxSize := PointF(Memo.Width - Memo.Padding.Left - Memo.Padding.Right, 9999999);
+      TextLayout.Text := text;
+    finally
+      TextLayout.EndUpdate;
+    end;
+    // The height of the layout corresponds to a single line height
+    Result := TextLayout.Height;
+  finally
+    TextLayout.Free;
+  end;
+end;
+
+procedure TfrChat.actNextExecute(Sender: TObject);
+begin
+  JumpInChat(+1);
+end;
+
+procedure TfrChat.actPreviousExecute(Sender: TObject);
+begin
+  JumpInChat(-1);
 end;
 
 procedure TfrChat.actSaveChatExecute(Sender: TObject);
@@ -208,6 +262,7 @@ begin
   svgSend.Visible := true;
   if not TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, FClipBoard) then
     FClipBoard := nil;
+  ClearLog;
 end;
 
 procedure TfrChat.cbxEnginesChange(Sender: TObject);
@@ -224,9 +279,48 @@ begin
     OnEngineChange(Self, FEngine);
 end;
 
+procedure TfrChat.CheckActions(force: boolean);
+var
+  newLine: integer;
+begin
+  if force or (FChatPosition <> outHistory.CaretPosition) then begin
+    actNext.Enabled := FindQA(outHistory.CaretPosition.Line, +1, newLine);
+    actPrevious.Enabled := FindQA(outHistory.CaretPosition.Line, -1, newLine);
+  end;
+  FChatPosition := outHistory.CaretPosition;
+end;
+
 procedure TfrChat.ClearLog;
 begin
   actClearHistory.Execute;
+  actPrevious.Enabled := false;
+  actNext.Enabled := false;
+end;
+
+function TfrChat.FindQA(line, delta: integer; var newLine: integer): boolean;
+begin
+  repeat
+    line := line + delta;
+    if (line < 0) or (line >= outHistory.Lines.Count) then
+      Exit(false);
+    if outHistory.Lines[line].StartsWith(CConversationQuestion)
+       or outHistory.Lines[line].StartsWith(CConversationAnswer)
+    then begin
+      newLine := line;
+      Exit(true);
+    end;
+  until false;
+end;
+
+procedure TfrChat.JumpInChat(delta: integer);
+var
+  newLine: integer;
+begin
+  if not FindQA(outHistory.CaretPosition.Line, delta, newLine) then
+    Exit;
+  outHistory.CaretPosition := TCaretPosition.Create(newLine, 0);
+  ScrollToLine(outHistory, outHistory.CaretPosition.Line);
+  CheckActions;
 end;
 
 procedure TfrChat.LoadChat(chat: TStrings);
@@ -257,6 +351,29 @@ begin
   end;
   if qa.Question <> '' then
     FChat.Add(qa);
+  CheckActions(true);
+end;
+
+procedure TfrChat.outHistoryChange(Sender: TObject);
+begin
+  CheckActions(true);
+end;
+
+procedure TfrChat.outHistoryEnter(Sender: TObject);
+begin
+  CheckActions;
+end;
+
+procedure TfrChat.outHistoryKeyUp(Sender: TObject; var Key: Word; var KeyChar: WideChar;
+  Shift: TShiftState);
+begin
+  CheckActions;
+end;
+
+procedure TfrChat.outHistoryMouseUp(Sender: TObject; Button: TMouseButton;
+    Shift: TShiftState; X, Y: Single);
+begin
+  CheckActions;
 end;
 
 procedure TfrChat.ReloadConfiguration;
@@ -277,6 +394,23 @@ begin
   else
     cbxEngines.ItemIndex := defEng;
   cbxEnginesChange(cbxEngines);
+end;
+
+procedure TfrChat.ScrollToLine(memo: TMemo; line: integer);
+var
+  height: Single;
+begin
+  var sl := TStringList.Create;
+  try
+    if line = 0 then
+      height := 0
+    else begin
+      for var i := 0 to line - 1 do
+        sl.Add(memo.Lines[i]);
+      height := GetLineHeight(outHistory, sl.Text);
+    end;
+    memo.VScrollBar.Value := height;
+  finally FreeAndNil(sl); end;
 end;
 
 procedure TfrChat.SendQuestion(const question: string);
@@ -335,6 +469,7 @@ begin
       outHistory.Lines.EndUpdate;
     end;
     inpQuestion.Lines.Clear;
+    CheckActions(true);
   end;
 
   FRequest := nil;
