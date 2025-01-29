@@ -120,6 +120,7 @@ begin
     etOpenAI:    OpenURL('https://platform.openai.com/api-keys');
     etAnthropic: OpenURL('https://console.anthropic.com/settings/keys');
     etGemini:    OpenURL('https://aistudio.google.com/app/apikey');
+    etDeepSeek:  OpenURL('https://platform.deepseek.com/api_keys');
   end;
 end;
 
@@ -129,7 +130,7 @@ begin
     (Sender as TAction).Enabled := false
   else begin
     var stg := FEngines[lbAIEngines.ItemIndex];
-    (Sender as TAction).Enabled := (stg.EngineType in [etOpenAI, etAnthropic, etGemini]);
+    (Sender as TAction).Enabled := (stg.EngineType in [etOpenAI, etAnthropic, etGemini, etDeepSeek]);
   end;
 end;
 
@@ -152,26 +153,32 @@ begin
       begin
         inpHost.Text := 'https://api.anthropic.com/v1/messages';
         inpModel.Text := 'claude-3-5-sonnet-latest';
-        inpMaxTokens.Value := 2048;
+        inpMaxTokens.Value := 4096;
       end;
     etOllama:
       begin
         inpHost.Text := 'http://localhost:11434/api/chat';
         inpModel.Text := 'codellama';
-        inpMaxTokens.Value := 2048;
+        inpMaxTokens.Value := 4096;
       end;
     etOpenAI:
       begin
         inpHost.Text := 'https://api.openai.com/v1/chat/completions';
         inpModel.Text := 'o1-mini';
-        inpMaxTokens.Value := 2048;
+        inpMaxTokens.Value := 4096;
       end;
     etGemini:
       begin
         inpHost.Text := 'https://generativelanguage.googleapis.com/v1beta/';
         inpModel.Text := 'gemini-1.5-pro';
-        inpMaxTokens.Value := 2048;
-      end
+        inpMaxTokens.Value := 4096;
+      end;
+    etDeepSeek:
+      begin
+        inpHost.Text := 'https://api.deepseek.com/chat/completions';
+        inpModel.Text := 'deepseek-reasoner';
+        inpMaxTokens.Value := 4096;
+      end;
     else
       inpHost.Text := '';
   end;
@@ -217,6 +224,7 @@ begin
     1:   stg.EngineType := etGemini;
     2:   stg.EngineType := etOllama;
     3:   stg.EngineType := etOpenAI;
+    4:   stg.EngineType := etDeepSeek;
     else stg.EngineType := etNone;
   end;
   stg.Model := inpModel.Text;
@@ -249,6 +257,7 @@ begin
     etGemini:    cbxEngineType.ItemIndex := 1;
     etOllama:    cbxEngineType.ItemIndex := 2;
     etOpenAI:    cbxEngineType.ItemIndex := 3;
+    etDeepSeek:  cbxEngineType.ItemIndex := 4;
     else         cbxEngineType.ItemIndex := -1;
   end;
   inpModel.Text := stg.Model;

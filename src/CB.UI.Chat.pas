@@ -82,6 +82,7 @@ type
     CConversationDelimiter = '--------------------';
     CConversationQuestion = 'Q>';
     CConversationAnswer = 'A>';
+    CConversationReasoning = 'R>';
   private var
     FChat          : IList<TAIInteraction>;
     FChatPosition  : TCaretPosition;
@@ -305,6 +306,7 @@ begin
       Exit(false);
     if outHistory.Lines[line].StartsWith(CConversationQuestion)
        or outHistory.Lines[line].StartsWith(CConversationAnswer)
+       or outHistory.Lines[line].StartsWith(CConversationReasoning)
     then begin
       newLine := line;
       Exit(true);
@@ -325,29 +327,36 @@ end;
 
 procedure TfrChat.LoadChat(chat: TStrings);
 var
-  qa: TAIInteraction;
+  qa    : TAIInteraction;
+  inPart: (partQuestion, partAnswer, partReasoning);
 begin
   outHistory.Lines.Assign(chat);
   FChat.Clear;
   qa := Default(TAIInteraction);
-  var inQuestion := true;
+  inPart := partQuestion;
   for var s in chat do begin
     if SameText(s, CConversationDelimiter) then begin
       FChat.Add(qa);
       qa := Default(TAIInteraction);
     end
     else if s.StartsWith(CConversationQuestion, true) then begin
-      inQuestion := true;
+      inPart := partQuestion;
       qa.Question := s.Remove(0, Length(CConversationQuestion) + 1);
     end
     else if s.StartsWith(CConversationAnswer, true) then begin
-      inQuestion := false;
+      inPart := partAnswer;
       qa.Answer := s.Remove(0, Length(CConversationAnswer) + 1);
     end
-    else if inQuestion then
-      qa.Question := qa.Question + #$0A + s
-    else
-      qa.Answer := qa.Answer + #$0A + s;
+    else if s.StartsWith(CConversationReasoning, true) then begin
+      inPart := partReasoning;
+      qa.Answer := s.Remove(0, Length(CConversationReasoning) + 1);
+    end
+    else case inPart of
+      partQuestion : qa.Question := qa.Question + #$0A + s;
+      partAnswer   : qa.Answer := qa.Answer + #$0A + s;
+      partReasoning: qa.Reasoning := qa.Reasoning + #$0A + s;
+      else raise Exception.Create('Unsupported part: ' + Ord(inPart).ToString);
+    end;
   end;
   if qa.Question <> '' then
     FChat.Add(qa);
@@ -438,7 +447,8 @@ end;
 
 procedure TfrChat.tmrSendTimer(Sender: TObject);
 var
-  answer: string;
+  answer   : string;
+  reasoning: string;
 begin
   if not FRequest.IsCompleted then
     Exit;
@@ -447,14 +457,15 @@ begin
 
   var errorMsg := FRequest.Error;
   if errorMsg = '' then
-    answer := FSerializer.JSONToAnswer(FEngine, FRequest.Response, errorMsg);
+    answer := FSerializer.JSONToAnswer(FEngine, FRequest.Response, reasoning, errorMsg);
 
   if errorMsg <> '' then
-    ShowMessage('Error: ' + errorMsg)
+    ShowMessage(FEngine.Name + #13#10#13#10'Error : ' + errorMsg)
   else begin
     var int := Default(TAIInteraction);
     int.Question := inpQuestion.Text;
     int.Answer := answer;
+    int.Reasoning := reasoning;
     FChat.Add(int);
     outHistory.Lines.BeginUpdate;
     try
@@ -465,6 +476,10 @@ begin
       outHistory.CaretPosition := Point(0, outHistory.Lines.Count);
       outHistory.Lines.Add(CConversationAnswer + ' ' + answer);
       outHistory.Lines.Add('');
+      if reasoning.Trim <> '' then begin
+        outHistory.Lines.Add(CConversationReasoning + ' ' + reasoning);
+        outHistory.Lines.Add('');
+      end;
     finally
       outHistory.Lines.EndUpdate;
     end;

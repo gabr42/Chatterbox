@@ -167,6 +167,8 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="CB.Utils.pas"/>
+        <DCCReference Include="CB.AI.Client.DeepSeek.pas"/>
+        <DCCReference Include="CB.AI.Client.DeepSeek.Types.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

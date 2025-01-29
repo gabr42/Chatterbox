@@ -18,7 +18,7 @@ type
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
   end;
 
 { TAnthropicSerializer }
@@ -45,7 +45,7 @@ begin
 end;
 
 function TAnthropicSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
-  const json: string; var errorMsg: string): string;
+  const json: string; var reasoning, errorMsg: string): string;
 begin
   errorMsg := '';
   Result := '';

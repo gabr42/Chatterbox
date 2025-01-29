@@ -268,7 +268,8 @@ object frmSettings: TfrmSettings
             'Anthropic'
             'Gemini'
             'Ollama'
-            'OpenAI')
+            'OpenAI'
+            'DeepSeek')
           Position.X = 97.000000000000000000
           Position.Y = 35.000000000000000000
           Size.Width = 197.000000000000000000
@@ -452,6 +453,7 @@ object frmSettings: TfrmSettings
         Size.PlatformDefault = False
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.HorzAlign = Center
+        Text = 'S'
         TabOrder = 0
       end
     end

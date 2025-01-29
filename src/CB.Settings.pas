@@ -8,7 +8,7 @@ uses
   Spring.Collections;
 
 type
-  TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini);
+  TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini, etDeepSeek);
 
   TCBAIEngineSettings = record
   public
@@ -41,7 +41,7 @@ type
   end;
 
 var
-  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini');
+  CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini', 'DeepSeek');
 
 implementation
 
@@ -53,7 +53,7 @@ const
   Key = 'V7YTLI1rNionnj1p4t6kgXgoAEwFXCUirBM0eVewAIBh8zdoi1XlYSNz5WOXHYk3';
 
 var
-  SerializeEngineName: array [TCBAIEngineType] of string = ('None', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini');
+  SerializeEngineName: array [TCBAIEngineType] of string = ('None', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini', 'DeepSeek');
 
 function Encrypt(const plaintext, key, passphrase: string): string;
 begin
