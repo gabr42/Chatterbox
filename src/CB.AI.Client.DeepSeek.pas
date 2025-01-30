@@ -5,7 +5,7 @@ interface
 implementation
 
 uses
-  System.SysUtils, System.StrUtils,
+  System.SysUtils, System.StrUtils, System.Classes,
   REST.Json,
   Spring,
   CB.Settings, CB.Network,
@@ -20,7 +20,6 @@ type
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
   end;
-
 
 { TDeepSeekSerializer }
 

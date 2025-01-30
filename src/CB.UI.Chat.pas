@@ -99,6 +99,7 @@ type
     FSerializer    : IAISerializer;
   protected
     procedure CheckActions(force: boolean = false);
+    function  ExtractReasoning(const response: string; var reasoning: string): string;
     function  FindQA(line, delta: integer; var newLine: integer): boolean;
     procedure JumpInChat(delta: integer);
     procedure LoadChat(chat: TStrings);
@@ -323,6 +324,30 @@ begin
   actNext.Enabled := false;
 end;
 
+function TfrChat.ExtractReasoning(const response: string;
+  var reasoning: string): string;
+begin
+  if (reasoning <> '') or (not response.StartsWith('<think>')) then
+    Exit(response);
+
+  var sl := TStringList.Create;
+  try
+    sl.Text := response;
+    var s2 := TStringList.Create;
+    try
+      for var i := 1 to sl.Count - 1 do begin
+        if sl[i].StartsWith('</think>') then begin
+          reasoning := s2.Text;
+          s2.Clear;
+        end
+        else
+          s2.Add(sl[i]);
+      end;
+      Result := s2.Text;
+    finally FreeAndNil(s2); end;
+  finally FreeAndNil(sl); end;
+end;
+
 function TfrChat.FindQA(line, delta: integer; var newLine: integer): boolean;
 begin
   repeat
@@ -487,6 +512,8 @@ begin
   if errorMsg <> '' then
     ShowMessage(FEngine.Name + #13#10#13#10'Error : ' + errorMsg)
   else begin
+    answer := ExtractReasoning(answer, reasoning).Trim([#13, #10]);
+    reasoning := reasoning.Trim([#13, #10]);
     var int := Default(TAIInteraction);
     int.Question := inpQuestion.Text;
     int.Answer := answer;
