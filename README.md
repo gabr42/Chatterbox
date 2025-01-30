@@ -8,6 +8,7 @@ Chatterbox is an open-source application designed to enable users to run multipl
   - Ollama
   - OpenAI
   - Google (Gemini)
+  - DeepSeek
 - Easy-to-use interface for managing multiple chats simultaneously.
 - Written in Delphi using powerful open-source libraries:
   - [Spring4D](https://bitbucket.org/sglienke/spring4d/src)
