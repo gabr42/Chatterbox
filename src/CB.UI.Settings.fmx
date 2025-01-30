@@ -159,109 +159,12 @@ object frmSettings: TfrmSettings
           Viewport.Height = 411.000000000000000000
         end
       end
-      object tcAIEngineSettings: TTabControl
+      object lyCommonAIEngineSettings: TLayout
         Align = Client
         Size.Width = 302.000000000000000000
-        Size.Height = 94.000000000000000000
+        Size.Height = 453.000000000000000000
         Size.PlatformDefault = False
-        TabIndex = 4
         TabOrder = 2
-        TabPosition = None
-        Sizes = (
-          302s
-          94s
-          302s
-          94s
-          302s
-          94s
-          302s
-          94s
-          302s
-          94s)
-        object tiEngineEmpty: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = False
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiEngineEmpty'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-        end
-        object tcEngineAnthropic: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = False
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tcEngineAnthropic'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-        end
-        object tiEngineOllama: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = False
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiEngineOllama'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-        end
-        object tiEngineOpenAI: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = False
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiEngineOpenAI'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-        end
-        object tiEngineGemini: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = True
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiEngineGemini'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-        end
-      end
-      object lyCommonAIEngineSettings: TLayout
-        Align = Top
-        Position.X = 193.000000000000000000
-        Position.Y = 43.000000000000000000
-        Size.Width = 302.000000000000000000
-        Size.Height = 359.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 3
         object cbxEngineType: TComboBox
           Anchors = [akLeft, akTop, akRight]
           Items.Strings = (
@@ -396,16 +299,16 @@ object frmSettings: TfrmSettings
           Text = 'System prompt:'
           TabOrder = 14
         end
-        object btnResetEngine: TButton
+        object btnSetToDefault: TButton
           Action = actResetSettings
           Anchors = [akLeft, akTop, akRight]
           ImageIndex = -1
           Position.X = 97.000000000000000000
-          Position.Y = 326.000000000000000000
+          Position.Y = 352.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 16
+          TabOrder = 17
           TextSettings.Trimming = None
         end
         object Label7: TLabel
@@ -443,6 +346,26 @@ object frmSettings: TfrmSettings
           TabOrder = 9
           TextSettings.Trimming = None
         end
+        object Label13: TLabel
+          Position.X = 8.000000000000000000
+          Position.Y = 327.000000000000000000
+          Text = 'Timeout (sec):'
+          TabOrder = 18
+        end
+        object inpNetworkTimeout: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 16
+          Cursor = crIBeam
+          DecimalDigits = 0
+          Max = 99999.000000000000000000
+          Position.X = 97.000000000000000000
+          Position.Y = 325.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
       end
       object lblLoadedEngine: TLabel
         Align = Top
@@ -453,7 +376,6 @@ object frmSettings: TfrmSettings
         Size.PlatformDefault = False
         TextSettings.Font.StyleExt = {00070000000000000004000000}
         TextSettings.HorzAlign = Center
-        Text = 'S'
         TabOrder = 0
       end
     end

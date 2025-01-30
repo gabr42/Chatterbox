@@ -13,18 +13,19 @@ type
     function GetError: string;
     function GetResponse: string;
   //
+    procedure Cancel;
     function IsCompleted: boolean;
     property Response: string read GetResponse;
     property Error: string read GetError;
   end;
 
 function SendAsyncRequest(const url: string; const headers: IEnumerable<TNetworkHeader>;
-  const request: string): INetAsyncRequest;
+  const request: string; timeout_sec: integer): INetAsyncRequest;
 
 implementation
 
 uses
-  System.SysUtils, System.Classes, System.Types,
+  System.SysUtils, System.Classes, System.Types, System.Math,
   System.Net.HttpClient, System.Net.URLClient, System.NetConsts, System.NetEncoding;
 
 type
@@ -39,23 +40,39 @@ type
     function  GetError: string;
     function  GetResponse: string;
   public
-    constructor Create(const url: string; const headers: IEnumerable<TNetworkHeader>; const request: string);
+    constructor Create(const url: string; const headers: IEnumerable<TNetworkHeader>;
+      const request: string; timeout_sec: integer);
     destructor  Destroy; override;
+    procedure Cancel;
     function IsCompleted: boolean;
   end;
 
 function SendAsyncRequest(const url: string; const headers: IEnumerable<TNetworkHeader>;
-  const request: string): INetAsyncRequest;
+  const request: string; timeout_sec: integer): INetAsyncRequest;
 begin
-  Result := TAIAsyncRequest.Create(url, headers, request);
+  Result := TAIAsyncRequest.Create(url, headers, request, timeout_sec);
 end;
 
 { TAIAsyncRequest }
 
+procedure TAIAsyncRequest.Cancel;
+begin
+  try
+    if assigned(FHttpAsync) then begin
+      FHttpAsync.Cancel;
+      FHttpResponse := THttpClient.EndAsyncHTTP(FHttpAsync);
+    end;
+  except
+    on E: ENetHTTPClientException do
+      ;
+  end;
+end;
+
 constructor TAIAsyncRequest.Create(const url: string; const headers: IEnumerable<TNetworkHeader>;
-  const request: string);
+  const request: string; timeout_sec: integer);
 begin
   FHttpClient := THTTPClient.Create;
+  FHttpClient.ResponseTimeout := IfThen(timeout_sec > 0, timeout_sec * 1000, 60 * 1000);
   var netHeaders: TNetHeaders;
   SetLength(netHeaders, 1 + headers.Count);
   netHeaders[0].Name := 'Content-Type';
@@ -81,10 +98,15 @@ function TAIAsyncRequest.GetError: string;
 begin
   Assert(IsCompleted);
   Result := '';
-  if assigned(FHttpAsync) then
-    FHttpResponse := THttpClient.EndAsyncHTTP(FHttpAsync);
-  if (FHttpResponse.StatusCode div 100) <> 2 then
-    Result := FHttpResponse.StatusCode.ToString + ' ' + FHttpResponse.ContentAsString(TEncoding.UTF8);
+  try
+    if assigned(FHttpAsync) then
+      FHttpResponse := THttpClient.EndAsyncHTTP(FHttpAsync);
+    if (FHttpResponse.StatusCode div 100) <> 2 then
+      Result := FHttpResponse.StatusCode.ToString + ' ' + FHttpResponse.ContentAsString(TEncoding.UTF8);
+  except
+    on E: ENetHTTPClientException do
+      Result := E.Message;
+  end;
 end;
 
 function TAIAsyncRequest.GetResponse: string;

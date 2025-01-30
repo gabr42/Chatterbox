@@ -56,6 +56,7 @@ type
     actNext: TAction;
     SkSvg5: TSkSvg;
     SkSvg7: TSkSvg;
+    actStop: TAction;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
@@ -70,6 +71,8 @@ type
     procedure actSendToAllExecute(Sender: TObject);
     procedure actSendToAllUpdate(Sender: TObject);
     procedure actSendUpdate(Sender: TObject);
+    procedure actStopExecute(Sender: TObject);
+    procedure actStopUpdate(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
     procedure outHistoryChange(Sender: TObject);
     procedure outHistoryEnter(Sender: TObject);
@@ -225,11 +228,13 @@ begin
                     StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
 
   FRequest := SendAsyncRequest(FSerializer.URL(FEngine), headers,
-                               FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text));
+                               FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text),
+                               FEngine.NetTimeoutSec);
   tmrSend.Enabled := true;
   indSend.Visible := true;
   indSend.Enabled := true;
   svgSend.Visible := false;
+  btnSend.Action := actStop;
 end;
 
 procedure TfrChat.actSendUpdate(Sender: TObject);
@@ -253,6 +258,26 @@ begin
   if assigned(FOnGetChatInfo) then
     FOnGetChatInfo(Self, count);
   (Sender as TAction).Enabled := actSend.Enabled and (count > 1) and (assigned(FOnExecuteInAll));
+end;
+
+procedure TfrChat.actStopExecute(Sender: TObject);
+begin
+  if not assigned(FRequest) then
+    Exit;
+
+  FRequest.Cancel;
+  FRequest := nil;
+
+  tmrSend.Enabled := false;
+  indSend.Visible := false;
+  indSend.Enabled := false;
+  svgSend.Visible := true;
+  btnSend.Action := actSend;
+end;
+
+procedure TfrChat.actStopUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := assigned(FRequest);
 end;
 
 procedure TfrChat.AfterConstruction;
@@ -492,6 +517,7 @@ begin
   indSend.Visible := false;
   indSend.Enabled := false;
   svgSend.Visible := true;
+  btnSend.Action := actSend;
 end;
 
 end.

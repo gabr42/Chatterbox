@@ -366,5 +366,10 @@ object frChat: TfrChat
       ShortCut = 16424
       OnExecute = actNextExecute
     end
+    object actStop: TAction
+      Text = 'Stop'
+      OnExecute = actStopExecute
+      OnUpdate = actStopUpdate
+    end
   end
 end

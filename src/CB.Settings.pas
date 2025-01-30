@@ -19,6 +19,7 @@ type
     Host         : string;
     SysPrompt    : string;
     MaxTokens    : integer;
+    NetTimeoutSec: integer;
     IsDefault    : boolean;
     function DisplayName(showDefault: boolean = true): string;
   end;
@@ -132,6 +133,7 @@ begin
       eng.MaxTokens := ini.ReadInteger(section, 'MaxTokens', 2048);
       eng.SysPrompt := ini.ReadString(section, 'SystemPrompt', '');
       eng.IsDefault := ini.ReadInteger(section, 'IsDefault', 0) <> 0;
+      eng.NetTimeoutSec := ini.ReadInteger(section, 'NetworkTimeout', 60);
       AIEngines.Add(eng);
       Inc(iEng);
     until false;
@@ -167,6 +169,7 @@ begin
       ini.WriteInteger(section, 'MaxTokens', eng.MaxTokens);
       ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
+      ini.WriteInteger(section, 'NetworkTimeout', eng.NetTimeoutSec);
     end;
   finally FreeAndNil(ini); end;
 end;

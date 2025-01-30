@@ -26,9 +26,6 @@ type
     lbAIEngines: TListBox;
     Button1: TButton;
     Button2: TButton;
-    tcAIEngineSettings: TTabControl;
-    tiEngineEmpty: TTabItem;
-    tiEngineOpenAI: TTabItem;
     lyCommonAIEngineSettings: TLayout;
     cbxEngineType: TComboBox;
     Label2: TLabel;
@@ -44,16 +41,13 @@ type
     Label5: TLabel;
     inpAuth: TEdit;
     lblLoadedEngine: TLabel;
-    tiEngineOllama: TTabItem;
     Label8: TLabel;
     inpHost: TEdit;
     cbDefault: TCheckBox;
     inpSystemPrompt: TMemo;
     Label6: TLabel;
-    tcEngineAnthropic: TTabItem;
-    btnResetEngine: TButton;
+    btnSetToDefault: TButton;
     actResetSettings: TAction;
-    tiEngineGemini: TTabItem;
     Label7: TLabel;
     inpMaxTokens: TNumberBox;
     Label9: TLabel;
@@ -65,6 +59,8 @@ type
     actOK: TAction;
     btnGetAPIKey: TButton;
     actGetAPIKey: TAction;
+    Label13: TLabel;
+    inpNetworkTimeout: TNumberBox;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -233,11 +229,11 @@ begin
   stg.Host := inpHost.Text;
   stg.SysPrompt := StringReplace(StringReplace(inpSystemPrompt.Text, #$0D, ' ', [rfReplaceAll]), #$0A, ' ', [rfReplaceAll]);
   stg.MaxTokens := Round(inpMaxTokens.Value);
+  stg.NetTimeoutSec := Round(inpNetworkTimeout.Value);
   FEngines[lbAIEngines.ItemIndex] := stg;
 
   lbAIEngines.Items[lbAIEngines.ItemIndex] := stg.DisplayName;
   lblLoadedEngine.Text := stg.DisplayName(false);
-  tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
 procedure TfrmSettings.lbAIEnginesClick(Sender: TObject);
@@ -266,10 +262,10 @@ begin
   inpSystemPrompt.Text := stg.SysPrompt;
   inpHost.Text := stg.Host;
   inpMaxTokens.Value := stg.MaxTokens;
+  inpNetworkTimeout.Value := stg.NetTimeoutSec;
   FUpdate := false;
 
   lblLoadedEngine.Text := stg.DisplayName(false);
-  tcAIEngineSettings.TabIndex := Ord(stg.EngineType);
 end;
 
 procedure TfrmSettings.liAIEnginesClick(Sender: TObject);
@@ -333,6 +329,7 @@ end;
 procedure TfrmSettings.sbAddEngineClick(Sender: TObject);
 begin
   var stg := Default(TCBAIEngineSettings);
+  stg.NetTimeoutSec := 60;
   if FEngines.Count = 0 then
     stg.IsDefault := true;
   stg.MaxTokens := 2048;
