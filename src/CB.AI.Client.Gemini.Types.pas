@@ -68,6 +68,7 @@ type
     modelVersion : string;
     destructor Destroy; override;
   end;
+
 {$M-}
 
 implementation

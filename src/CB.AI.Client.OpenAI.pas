@@ -18,7 +18,7 @@ type
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
   end;
 
 { TOpenAISerializer }
@@ -42,17 +42,25 @@ begin
   Result := engineConfig.Host;
 end;
 
-function TOpenAISerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
-  const json: string; var reasoning, errorMsg: string): string;
+function TOpenAISerializer.JSONToAnswer(
+  const engineConfig: TCBAIEngineSettings; const json: string;
+  var errorMsg: string): TAIResponse;
 begin
   errorMsg := '';
-  reasoning := '';
-  Result := '';
+  Result := Default(TAIResponse);
   try
     var response := TJson.JsonToObject<TOpenAIResponse>(json);
     try
-      if Length(response.choices) > 0 then
-        Result := response.choices[0].message.content;
+      if not assigned(response) then
+        errorMsg := 'Failed to parse JSON response: ' + json
+      else if Length(response.choices) > 0 then begin
+        Result.Response := response.choices[0].message.content;
+        Result.Done := true;
+        Result.DoneReason := response.choices[0].finish_reason;
+        Result.PromptTokens := response.usage.prompt_tokens;
+        Result.ResponseTokens := response.usage.completion_tokens;
+        Result.Model := response.model;
+      end;
     finally FreeAndNil(response); end;
   except
     on E: Exception do

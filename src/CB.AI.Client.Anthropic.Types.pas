@@ -28,19 +28,21 @@ type
 
   TAnthropicUsage = class
   public
-    input_tokens : integer;
-    output_tokens: integer;
+    cache_creation_input_tokens: integer; // The number of input tokens used to create the cache entry.
+    cache_read_input_tokens    : integer; // The number of input tokens read from the cache.
+    input_tokens               : integer; // The number of input tokens which were used.
+    output_tokens              : integer; // The number of output tokens which were used.
   end;
 
   TAnthropicResponse = class
   public
-    &type      : string;
-    role       : string;
-    model      : string;
-    content    : TArray<TAnthropicContent>;
-    stop_reason: string;
-    //stop_sequence ???
-    usage      : TAnthropicUsage;
+    &type        : string;
+    role         : string;
+    model        : string;
+    content      : TArray<TAnthropicContent>;
+    stop_reason  : string;
+    stop_sequence: string;
+    usage        : TAnthropicUsage;
     destructor Destroy; override;
   end;
 {$M-}

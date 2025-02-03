@@ -1,5 +1,5 @@
 object frChat: TfrChat
-  Size.Width = 716.000000000000000000
+  Size.Width = 964.000000000000000000
   Size.Height = 620.000000000000000000
   Size.PlatformDefault = False
   object outHistory: TMemo
@@ -8,27 +8,27 @@ object frChat: TfrChat
     TextSettings.WordWrap = True
     OnChange = outHistoryChange
     Align = Client
-    Size.Width = 716.000000000000000000
-    Size.Height = 420.000000000000000000
+    Size.Width = 964.000000000000000000
+    Size.Height = 416.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     OnEnter = outHistoryEnter
     OnKeyUp = outHistoryKeyUp
     OnMouseUp = outHistoryMouseUp
-    Viewport.Width = 712.000000000000000000
-    Viewport.Height = 416.000000000000000000
+    Viewport.Width = 960.000000000000000000
+    Viewport.Height = 412.000000000000000000
   end
   object inpQuestion: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
     TextSettings.WordWrap = True
     Align = Bottom
-    Position.Y = 420.000000000000000000
-    Size.Width = 716.000000000000000000
+    Position.Y = 416.000000000000000000
+    Size.Width = 964.000000000000000000
     Size.Height = 124.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
-    Viewport.Width = 712.000000000000000000
+    Viewport.Width = 960.000000000000000000
     Viewport.Height = 120.000000000000000000
   end
   object tmrSend: TTimer
@@ -39,21 +39,21 @@ object frChat: TfrChat
     Top = 304
   end
   object tbChat: TToolBar
-    Align = MostBottom
-    Position.Y = 544.000000000000000000
-    Size.Width = 716.000000000000000000
-    Size.Height = 76.000000000000000000
+    Align = Bottom
+    Position.Y = 540.000000000000000000
+    Size.Width = 964.000000000000000000
+    Size.Height = 80.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
     object lyEngine: TFlowLayout
-      Align = Left
+      Align = MostLeft
       Margins.Left = 8.000000000000000000
       Margins.Top = 8.000000000000000000
       Margins.Bottom = 8.000000000000000000
       Position.X = 8.000000000000000000
       Position.Y = 8.000000000000000000
       Size.Width = 153.000000000000000000
-      Size.Height = 60.000000000000000000
+      Size.Height = 64.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       Justify = Left
@@ -75,20 +75,22 @@ object frChat: TfrChat
       object cbDisableSysPrompt: TCheckBox
         Position.Y = 39.000000000000000000
         Size.Width = 145.000000000000000000
-        Size.Height = 19.000000000000000000
+        Size.Height = 25.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
         Text = 'Disable system prompt'
       end
     end
     object lyTools: TFlowLayout
-      Align = Client
-      Margins.Left = 8.000000000000000000
+      Align = Top
+      Margins.Left = 4.000000000000000000
       Margins.Top = 8.000000000000000000
       Margins.Right = 8.000000000000000000
-      Margins.Bottom = 8.000000000000000000
-      Size.Width = 539.000000000000000000
-      Size.Height = 60.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 171.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 785.000000000000000000
+      Size.Height = 45.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       Justify = Left
@@ -150,7 +152,7 @@ object frChat: TfrChat
       object lySpacer: TLayout
         Position.X = 148.000000000000000000
         Size.Width = 16.000000000000000000
-        Size.Height = 50.000000000000000000
+        Size.Height = 46.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 6
       end
@@ -307,6 +309,121 @@ object frChat: TfrChat
             ' 292.686 68.687zM144 448a15.895 15.895 0 0 1-11.314-4.686l-96-96' +
             'c-6.243-6.243-6.253-16.374 0-22.627L153.373 208 336 390.628l-52.' +
             '686 52.686A15.895 15.895 0 0 1 272 448H144z"/></svg>'
+        end
+      end
+    end
+    object Line1: TLine
+      Align = MostLeft
+      LineType = Left
+      Margins.Left = 4.000000000000000000
+      Position.X = 165.000000000000000000
+      Size.Width = 2.000000000000000000
+      Size.Height = 80.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object FlowLayout1: TFlowLayout
+      Align = Left
+      Padding.Left = 4.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 167.000000000000000000
+      Position.Y = 57.000000000000000000
+      Size.Width = 789.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 6
+      Justify = Left
+      JustifyLastLine = Left
+      FlowDirection = LeftToRight
+      HorizontalGap = 4.000000000000000000
+      object pnlStatusStatus: TPanel
+        Hint = 'Status'
+        Position.X = 4.000000000000000000
+        Size.Width = 52.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        ParentShowHint = False
+        ShowHint = True
+        object lblStatusStatus: TLabel
+          Align = Client
+          Size.Width = 52.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'lblStatusStatus'
+          TabOrder = 0
+        end
+      end
+      object pnlStatusModel: TPanel
+        Hint = 'Model'
+        Position.X = 60.000000000000000000
+        Size.Width = 128.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        ParentShowHint = False
+        ShowHint = True
+        object lblStatusModel: TLabel
+          Align = Client
+          Size.Width = 128.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'lblStatusModel'
+          TabOrder = 0
+        end
+      end
+      object pnlStatusExecTime: TPanel
+        Hint = 'Execution time'
+        Position.X = 192.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        ParentShowHint = False
+        ShowHint = True
+        object lblStatusExecTime: TLabel
+          Align = Client
+          Size.Width = 64.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'lblStatusExecTime'
+          TabOrder = 0
+        end
+      end
+      object pnlStatusPromptTokens: TPanel
+        Align = Client
+        Hint = 'Prompt tokens'
+        Size.Width = 64.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        ParentShowHint = False
+        ShowHint = True
+        object lblStatusPromptTokens: TLabel
+          Align = Client
+          Size.Width = 64.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'lblStatusPromptTokens'
+          TabOrder = 0
+        end
+      end
+      object pnlStatusResponseTokens: TPanel
+        Hint = 'Response tokens'
+        Position.X = 328.000000000000000000
+        Size.Width = 64.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        ParentShowHint = False
+        ShowHint = True
+        object lblStatusResponseTokens: TLabel
+          Align = Client
+          Size.Width = 64.000000000000000000
+          Size.Height = 18.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'lblStatusResponseTokens'
+          TabOrder = 0
         end
       end
     end

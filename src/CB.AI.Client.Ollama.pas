@@ -18,7 +18,7 @@ type
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
   end;
 
 { TOllamaSerializer }
@@ -43,16 +43,26 @@ begin
   Result := engineConfig.Host;
 end;
 
-function TOllamaSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
-  const json: string; var reasoning, errorMsg: string): string;
+function TOllamaSerializer.JSONToAnswer(
+  const engineConfig: TCBAIEngineSettings; const json: string;
+  var errorMsg: string): TAIResponse;
 begin
   errorMsg := '';
-  reasoning := '';
-  Result := '';
+  Result := Default(TAIResponse);
   try
     var response := TJson.JsonToObject<TOllamaResponse>(json);
     try
-      Result := response.message.content;
+      if not assigned(response) then
+        errorMsg := 'Failed to parse JSON response: ' + json
+      else begin
+        Result.Response := response.message.content;
+        Result.Done := response.done;
+        Result.DoneReason := response.done_reason;
+        Result.Duration_ms := Round(response.total_duration / 1_000_000);
+        Result.PromptTokens := response.prompt_eval_count;
+        Result.ResponseTokens := response.eval_count;
+        Result.Model := response.model;
+      end;
     finally FreeAndNil(response); end;
   except
     on E: Exception do

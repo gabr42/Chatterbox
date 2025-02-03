@@ -18,7 +18,7 @@ type
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
   end;
 
 { TGeminiSerializer }
@@ -62,19 +62,27 @@ begin
   Result := Result + 'models/' + engineConfig.Model + ':generateContent?key=' + engineConfig.Authorization;
 end;
 
-function TGeminiSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
-  const json: string; var reasoning, errorMsg: string): string;
+function TGeminiSerializer.JSONToAnswer(
+  const engineConfig: TCBAIEngineSettings; const json: string;
+  var errorMsg: string): TAIResponse;
 begin
   errorMsg := '';
-  Result := '';
+  Result := Default(TAIResponse);
   try
     var response := TJson.JsonToObject<TGeminiResponse>(json);
     try
-      if Length(response.candidates) > 0 then begin
+      if not assigned(response) then
+        errorMsg := 'Failed to parse JSON response: ' + json
+      else if Length(response.candidates) > 0 then begin
+        Result.Done := true;
+        Result.DoneReason := response.candidates[0].finishReason;
+        Result.PromptTokens := response.usageMetadata.promptTokenCount;
+        Result.ResponseTokens := response.usageMetadata.candidatesTokenCount;
+        Result.Model := response.modelVersion;
         for var part in response.candidates[0].content.parts do begin
-          if Result <> '' then
-            Result := Result + #$0D#$0A;
-          Result := Result + part.text;
+          if Result.Response <> '' then
+            Result.Response := Result.Response + #$0D#$0A;
+          Result.Response := Result.Response + part.text;
         end;
       end;
     finally FreeAndNil(response); end;

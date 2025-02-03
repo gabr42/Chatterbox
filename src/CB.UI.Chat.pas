@@ -9,7 +9,7 @@ uses
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
   FMX.ListBox, FMX.ActnList, FMX.Skia, FMX.TextLayout,
   Spring, Spring.Collections,
-  CB.Network, CB.Settings, CB.AI.Interaction, FMX.Layouts;
+  CB.Network, CB.Settings, CB.AI.Interaction, FMX.Layouts, FMX.Objects, FMX.Edit;
 
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;
@@ -57,6 +57,18 @@ type
     SkSvg5: TSkSvg;
     SkSvg7: TSkSvg;
     actStop: TAction;
+    Line1: TLine;
+    FlowLayout1: TFlowLayout;
+    pnlStatusStatus: TPanel;
+    pnlStatusModel: TPanel;
+    pnlStatusExecTime: TPanel;
+    pnlStatusPromptTokens: TPanel;
+    pnlStatusResponseTokens: TPanel;
+    lblStatusStatus: TLabel;
+    lblStatusModel: TLabel;
+    lblStatusExecTime: TLabel;
+    lblStatusPromptTokens: TLabel;
+    lblStatusResponseTokens: TLabel;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
@@ -96,6 +108,7 @@ type
     FOnGetChatInfo : TFrameGetChatInfo;
     FOnExecuteInAll: TFrameExecuteInAll;
     FRequest       : INetAsyncRequest;
+    FSendTimer     : TStopwatch;
     FSerializer    : IAISerializer;
   protected
     procedure CheckActions(force: boolean = false);
@@ -107,6 +120,7 @@ type
     procedure SetConfiguration(const config: TCBSettings);
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
     procedure ClearLog;
     procedure ReloadConfiguration;
     procedure SendQuestion(const question: string);
@@ -126,8 +140,7 @@ uses
 
 procedure TfrChat.actClearHistoryExecute(Sender: TObject);
 begin
-  FChat.Clear;
-  outHistory.Lines.Clear;
+  ClearLog;
 end;
 
 procedure TfrChat.actClearHistoryUpdate(Sender: TObject);
@@ -228,6 +241,7 @@ begin
       headers.Add(TNetworkHeader.Create(header.Value1,
                     StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
 
+  FSendTimer := TStopwatch.StartNew;
   FRequest := SendAsyncRequest(FSerializer.URL(FEngine), headers,
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text),
                                FEngine.NetTimeoutSec);
@@ -292,6 +306,15 @@ begin
   ClearLog;
 end;
 
+procedure TfrChat.BeforeDestruction;
+begin
+  if assigned(FRequest) then begin
+    FRequest.Cancel;
+    FRequest := nil;
+  end;
+  inherited;
+end;
+
 procedure TfrChat.cbxEnginesChange(Sender: TObject);
 begin
   if cbxEngines.ItemIndex >= 0 then begin
@@ -319,7 +342,13 @@ end;
 
 procedure TfrChat.ClearLog;
 begin
-  actClearHistory.Execute;
+  FChat.Clear;
+  outHistory.Lines.Clear;
+  lblStatusExecTime.Text := '';
+  lblStatusPromptTokens.Text := '';
+  lblStatusResponseTokens.Text := '';
+  lblStatusStatus.Text := '';
+  lblStatusModel.Text := '';
   actPrevious.Enabled := false;
   actNext.Enabled := false;
 end;
@@ -497,22 +526,29 @@ end;
 
 procedure TfrChat.tmrSendTimer(Sender: TObject);
 var
-  answer   : string;
-  reasoning: string;
+  response: TAIResponse;
 begin
   if not FRequest.IsCompleted then
     Exit;
 
+  FSendTimer.Stop;
   tmrSend.Enabled := false;
 
   var errorMsg := FRequest.Error;
-  if errorMsg = '' then
-    answer := FSerializer.JSONToAnswer(FEngine, FRequest.Response, reasoning, errorMsg);
-
   if errorMsg <> '' then
     ShowMessage(FEngine.Name + #13#10#13#10'Error : ' + errorMsg)
   else begin
-    answer := ExtractReasoning(answer, reasoning).Trim([#13, #10]);
+    response := FSerializer.JSONToAnswer(FEngine, FRequest.Response, errorMsg);
+    if response.Duration_ms = 0 then
+      response.Duration_ms := FSendTimer.ElapsedMilliseconds;
+    lblStatusExecTime.Text := Round(response.Duration_ms / 1000).ToString + ' s';
+    lblStatusPromptTokens.Text := response.PromptTokens.ToString;
+    lblStatusResponseTokens.Text := response.ResponseTokens.ToString;
+    lblStatusStatus.Text := response.DoneReason;
+    lblStatusModel.Text := response.Model;
+
+    var reasoning := response.Reasoning;
+    var answer := ExtractReasoning(response.Response, reasoning).Trim([#13, #10]);
     reasoning := reasoning.Trim([#13, #10]);
     var int := Default(TAIInteraction);
     int.Question := inpQuestion.Text;

@@ -18,7 +18,7 @@ type
   public
     function URL(const engineConfig: TCBAIEngineSettings): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var reasoning, errorMsg: string): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
   end;
 
 { TAnthropicSerializer }
@@ -44,18 +44,28 @@ begin
   Result := engineConfig.Host;
 end;
 
-function TAnthropicSerializer.JSONToAnswer(const engineConfig: TCBAIEngineSettings;
-  const json: string; var reasoning, errorMsg: string): string;
+function TAnthropicSerializer.JSONToAnswer(
+  const engineConfig: TCBAIEngineSettings; const json: string;
+  var errorMsg: string): TAIResponse;
 begin
   errorMsg := '';
-  Result := '';
+  Result := Default(TAIResponse);
   try
     var response := TJson.JsonToObject<TAnthropicResponse>(json);
     try
-      for var txt in response.content do begin
-        if Result <> '' then
-          Result := Result + #$0D#$0A;
-        Result := Result + txt.text;
+      if not assigned(response) then
+        errorMsg := 'Failed to parse JSON response: ' + json
+      else if Length(response.content) > 0 then begin
+        Result.Done := true;
+        Result.DoneReason := response.stop_reason;
+        Result.PromptTokens := response.usage.input_tokens;
+        Result.ResponseTokens := response.usage.output_tokens;
+        Result.Model := response.model;
+        for var txt in response.content do begin
+          if Result.Response <> '' then
+            Result.Response := Result.Response + #$0D#$0A;
+          Result.Response := Result.Response + txt.text;
+        end;
       end;
     finally FreeAndNil(response); end;
   except
