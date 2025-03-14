@@ -3,12 +3,13 @@ unit CB.UI.Settings;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Actions,
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, System.Actions, System.Skia,
   FMX.Platform, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
-  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox,
+  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox, FMX.Skia,
   Spring.Collections,
-  CB.Utils, CB.Settings;
+  CB.Utils, CB.Settings, CB.AI.Registry, CB.AI.Interaction, CB.Network,
+  FMX.ComboEdit;
 
 type
   TfrmSettings = class(TForm)
@@ -20,9 +21,9 @@ type
     tabGlobalSettings: TTabItem;
     Layout1: TLayout;
     Label1: TLabel;
-    Layout2: TLayout;
+    Layout2: TFlowLayout;
     sbAddEngine: TSpeedButton;
-    btnRemoveEngine: TSpeedButton;
+    sbRemoveEngine: TSpeedButton;
     lbAIEngines: TListBox;
     Button1: TButton;
     Button2: TButton;
@@ -31,7 +32,6 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    inpModel: TEdit;
     inpName: TEdit;
     tbSettings: TToolBar;
     btnOK: TButton;
@@ -61,11 +61,30 @@ type
     actGetAPIKey: TAction;
     Label13: TLabel;
     inpNetworkTimeout: TNumberBox;
+    sbDuplicateEngine: TSpeedButton;
+    actDuplicateAIEngine: TAction;
+    SkSvg6: TSkSvg;
+    SkSvg1: TSkSvg;
+    SkSvg2: TSkSvg;
+    sbMoveUp: TSpeedButton;
+    SkSvg3: TSkSvg;
+    sbMoveDown: TSpeedButton;
+    SkSvg4: TSkSvg;
+    actMoveUp: TAction;
+    actMoveDown: TAction;
+    sbRefreshModels: TSpeedButton;
+    cbxModel: TComboEdit;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
+    procedure actDuplicateAIEngineExecute(Sender: TObject);
+    procedure actDuplicateAIEngineUpdate(Sender: TObject);
     procedure actGetAPIKeyExecute(Sender: TObject);
     procedure actGetAPIKeyUpdate(Sender: TObject);
+    procedure actMoveDownExecute(Sender: TObject);
+    procedure actMoveDownUpdate(Sender: TObject);
+    procedure actMoveUpExecute(Sender: TObject);
+    procedure actMoveUpUpdate(Sender: TObject);
     procedure actOKExecute(Sender: TObject);
     procedure actOKUpdate(Sender: TObject);
     procedure actResetSettingsExecute(Sender: TObject);
@@ -81,6 +100,9 @@ type
     FEngines: IList<TCBAIEngineSettings>;
     FUpdate : boolean;
     procedure MakeDefault;
+    procedure RefreshModels(const engineConfig: TCBAIEngineSettings);
+    procedure SelectModel(const models: TArray<string>);
+    procedure Swap(idx1, idx2: integer);
   public
     procedure AfterConstruction; override;
     procedure LoadFromSettings(settings: TCBSettings);
@@ -110,14 +132,27 @@ begin
   (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
 end;
 
+procedure TfrmSettings.actDuplicateAIEngineExecute(Sender: TObject);
+begin
+  var stg := FEngines[lbAIEngines.ItemIndex];
+  stg.IsDefault := false;
+  var li := TListBoxItem.Create(Self);
+  li.Parent := lbAIEngines;
+  li.Text := stg.DisplayName;
+  lbAIEngines.ItemIndex := FEngines.Add(stg);
+  lbAIEnginesClick(lbAIEngines);
+end;
+
+procedure TfrmSettings.actDuplicateAIEngineUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := lbAIEngines.ItemIndex >= 0;
+end;
+
 procedure TfrmSettings.actGetAPIKeyExecute(Sender: TObject);
 begin
-  case FEngines[lbAIEngines.ItemIndex].EngineType of
-    etOpenAI:    OpenURL('https://platform.openai.com/api-keys');
-    etAnthropic: OpenURL('https://console.anthropic.com/settings/keys');
-    etGemini:    OpenURL('https://aistudio.google.com/app/apikey');
-    etDeepSeek:  OpenURL('https://platform.deepseek.com/api_keys');
-  end;
+  var keyUrl := GSerializers[FEngines[lbAIEngines.ItemIndex].EngineType].URL(FEngines[lbAIEngines.ItemIndex], qpAPIKeys);
+  if keyUrl <> '' then
+    OpenURL(keyURL);
 end;
 
 procedure TfrmSettings.actGetAPIKeyUpdate(Sender: TObject);
@@ -128,6 +163,26 @@ begin
     var stg := FEngines[lbAIEngines.ItemIndex];
     (Sender as TAction).Enabled := (stg.EngineType in [etOpenAI, etAnthropic, etGemini, etDeepSeek]);
   end;
+end;
+
+procedure TfrmSettings.actMoveDownExecute(Sender: TObject);
+begin
+  Swap(lbAIEngines.ItemIndex, lbAIEngines.ItemIndex + 1);
+end;
+
+procedure TfrmSettings.actMoveDownUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := lbAIEngines.ItemIndex < (lbAIEngines.Count - 1);
+end;
+
+procedure TfrmSettings.actMoveUpExecute(Sender: TObject);
+begin
+  Swap(lbAIEngines.ItemIndex, lbAIEngines.ItemIndex - 1);
+end;
+
+procedure TfrmSettings.actMoveUpUpdate(Sender: TObject);
+begin
+  (Sender as TAction).Enabled := lbAIEngines.ItemIndex > 0;
 end;
 
 procedure TfrmSettings.actOKExecute(Sender: TObject);
@@ -144,35 +199,31 @@ procedure TfrmSettings.actResetSettingsExecute(Sender: TObject);
 begin
   var stg := FEngines[lbAIEngines.ItemIndex];
   FUpdate := true;
+  inpHost.Text := GSerializers[stg.EngineType].URL(stg, qpChat);
   case stg.EngineType of
     etAnthropic:
       begin
-        inpHost.Text := 'https://api.anthropic.com/v1/messages';
-        inpModel.Text := 'claude-3-5-sonnet-latest';
+        SelectModel(['claude-3-5-sonnet-latest']);
         inpMaxTokens.Value := 4096;
       end;
     etOllama:
       begin
-        inpHost.Text := 'http://localhost:11434/api/chat';
-        inpModel.Text := 'codellama';
+        SelectModel(['codellama', 'deepseek-coder']);
         inpMaxTokens.Value := 4096;
       end;
     etOpenAI:
       begin
-        inpHost.Text := 'https://api.openai.com/v1/chat/completions';
-        inpModel.Text := 'o1-mini';
+        SelectModel(['o3-mini', 'o1-mini']);
         inpMaxTokens.Value := 4096;
       end;
     etGemini:
       begin
-        inpHost.Text := 'https://generativelanguage.googleapis.com/v1beta/';
-        inpModel.Text := 'gemini-1.5-pro';
+        SelectModel(['gemini-2.0-flash', 'gemini-1.5-pro']);
         inpMaxTokens.Value := 4096;
       end;
     etDeepSeek:
       begin
-        inpHost.Text := 'https://api.deepseek.com/chat/completions';
-        inpModel.Text := 'deepseek-reasoner';
+        SelectModel(['deepseek-reasoner']);
         inpMaxTokens.Value := 4096;
       end;
     else
@@ -223,13 +274,14 @@ begin
     4:   stg.EngineType := etDeepSeek;
     else stg.EngineType := etNone;
   end;
-  stg.Model := inpModel.Text;
   stg.Name := inpName.Text;
   stg.Authorization := inpAuth.Text;
   stg.Host := inpHost.Text;
   stg.SysPrompt := StringReplace(StringReplace(inpSystemPrompt.Text, #$0D, ' ', [rfReplaceAll]), #$0A, ' ', [rfReplaceAll]);
   stg.MaxTokens := Round(inpMaxTokens.Value);
   stg.NetTimeoutSec := Round(inpNetworkTimeout.Value);
+  RefreshModels(stg);
+  stg.Model := cbxModel.Text;
   FEngines[lbAIEngines.ItemIndex] := stg;
 
   lbAIEngines.Items[lbAIEngines.ItemIndex] := stg.DisplayName;
@@ -256,7 +308,8 @@ begin
     etDeepSeek:  cbxEngineType.ItemIndex := 4;
     else         cbxEngineType.ItemIndex := -1;
   end;
-  inpModel.Text := stg.Model;
+  RefreshModels(stg);
+  SelectModel([stg.Model]);
   inpName.Text := stg.Name;
   inpAuth.Text := stg.Authorization;
   inpSystemPrompt.Text := stg.SysPrompt;
@@ -312,11 +365,34 @@ var
   color: TAlphaColor;
 begin
   if inpPassphrase.Text = inpPassphraseCheck.Text then
-    color := inpModel.TextSettings.FontColor
+    color := inpName.TextSettings.FontColor
   else
     color := TAlphaColors.OrangeRed;
   inpPassphrase.TextSettings.FontColor := color;
   inpPassphraseCheck.TextSettings.FontColor := color;
+end;
+
+procedure TfrmSettings.RefreshModels(const engineConfig: TCBAIEngineSettings);
+begin
+  var model := cbxModel.Text;
+  var serializer := GSerializers[engineConfig.engineType];
+  var url := serializer.URL(engineConfig, qpModels);
+  if url = '' then begin
+    cbxModel.Items.Clear;
+    SelectModel([model]);
+    Exit;
+  end;
+
+  var request := SendSyncRequest(url, MakeHeaders(engineConfig), '', engineConfig.NetTimeoutSec);
+  var errorMsg := request.Error;
+  if errorMsg = '' then begin
+    cbxModel.Items.Clear;
+    cbxModel.Items.AddStrings(serializer.JSONToModels(request.Response, errorMsg));
+    SelectModel([model]);
+  end;
+
+  if errorMsg <> '' then
+    ShowMessage(engineConfig.Name + #13#10#13#10'Error : ' + errorMsg)
 end;
 
 procedure TfrmSettings.SaveToSettings(settings: TCBSettings);
@@ -337,6 +413,30 @@ begin
   li.Parent := lbAIEngines;
   li.Text := stg.DisplayName;
   lbAIEngines.ItemIndex := FEngines.Add(stg);
+  lbAIEnginesClick(lbAIEngines);
+end;
+
+procedure TfrmSettings.SelectModel(const models: TArray<string>);
+begin
+  for var model in models do begin
+    for var iModel := 0 to cbxModel.Items.Count - 1 do
+      if SameText(model, cbxModel.Items[iModel]) then begin
+        cbxModel.ItemIndex := iModel;
+        Exit;
+      end;
+  end;
+  cbxModel.ItemIndex := -1;
+  cbxModel.Text := models[0];
+end;
+
+procedure TfrmSettings.Swap(idx1, idx2: integer);
+begin
+  var stg := FEngines[idx1];
+  FEngines[idx1] := FEngines[idx2];
+  FEngines[idx2] := stg;
+  lbAIEngines.ListItems[idx1].Text := FEngines[idx1].DisplayName;
+  lbAIEngines.ListItems[idx2].Text := FEngines[idx2].DisplayName;
+  lbAIEngines.ItemIndex := idx2;
   lbAIEnginesClick(lbAIEngines);
 end;
 

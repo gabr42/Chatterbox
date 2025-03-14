@@ -58,6 +58,17 @@ type
     usage  : TOpenAIUsage;
     destructor Destroy; override;
   end;
+
+  TOpenAIModel = class
+  public
+    id: string;
+  end;
+
+  TOpenAIModels = class
+  public
+    data: TArray<TOpenAIModel>;
+    destructor Destroy; override;
+  end;
 {$M-}
 
 implementation
@@ -84,6 +95,15 @@ destructor TOpenAIUsage.Destroy;
 begin
   FreeAndNil(completion_tokens_details);
   FreeAndNil(prompt_tokens_details);
+  inherited;
+end;
+
+{ TOpenAIModels }
+
+destructor TOpenAIModels.Destroy;
+begin
+  for var model in data do
+    model.Free;
   inherited;
 end;
 

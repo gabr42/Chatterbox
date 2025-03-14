@@ -69,6 +69,26 @@ type
     destructor Destroy; override;
   end;
 
+  TGeminiModel = class
+  public
+    name                      : string;
+    version                   : string;
+    displayName               : string;
+    description               : string;
+    inputTokenLimit           : integer;
+    outputTokenLimit          : integer;
+    supportedGenerationMethods: TArray<string>;
+    temperature               : real;
+    topP                      : real;
+    topK                      : real;
+  end;
+
+  TGeminiModels = class
+  public
+    models: TArray<TGeminiModel>;
+    destructor Destroy; override;
+  end;
+
 {$M-}
 
 implementation
@@ -145,6 +165,15 @@ begin
   for var cand in candidates do
     cand.Free;
   FreeAndNil(usageMetadata);
+  inherited;
+end;
+
+{ TGeminiModels }
+
+destructor TGeminiModels.Destroy;
+begin
+  for var model in models do
+    model.Free;
   inherited;
 end;
 

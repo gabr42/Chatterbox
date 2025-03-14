@@ -16,9 +16,10 @@ uses
 type
   TDeepSeekSerializer = class(TInterfacedObject, IAISerializer)
   public
-    function URL(const engineConfig: TCBAIEngineSettings): string;
+    function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TDeepSeekSerializer }
@@ -50,6 +51,23 @@ begin
   end;
 end;
 
+function TDeepSeekSerializer.JSONToModels(const json: string;
+  var errorMsg: string): TArray<string>;
+begin
+  errorMsg := '';
+  try
+    var models := TJson.JsonToObject<TDeepSeekModels>(json);
+    try
+      SetLength(Result, Length(models.data));
+      for var iModel := 0 to High(Result) do
+        Result[iModel] := models.data[iModel].id;
+    finally FreeAndNil(models); end;
+  except
+    on E: Exception do
+      errorMsg := E.Message;
+  end;
+end;
+
 function TDeepSeekSerializer.QuestionToJSON(
   const engineConfig: TCBAIEngineSettings; const history: TAIChat;
   sendSystemPrompt: boolean; const question: string): string;
@@ -60,17 +78,25 @@ begin
   try
     request.model := engineConfig.Model;
     request.max_tokens := engineConfig.MaxTokens;
-    request.LoadMessages(engineConfig.SysPrompt.Trim, sendSystemPrompt, history, question);
+    request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), true, history, question);
     request.stream := false;
     request.temperature := 0;
     Result := TJson.ObjectToJsonString(request);
   finally FreeAndNil(request); end;
 end;
 
-function TDeepSeekSerializer.URL(
-  const engineConfig: TCBAIEngineSettings): string;
+function TDeepSeekSerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
 begin
-  Result := engineConfig.Host;
+  case purpose of
+    qpChat,
+    qpHost:    if engineConfig.Host = '' then
+                 Result := 'https://api.deepseek.com/chat/completions'
+               else
+                 Result := engineConfig.Host;
+    qpAPIKeys: Result := 'https://platform.deepseek.com/api_keys';
+    qpModels:  Result := 'https://api.deepseek.com/v1/models';
+    else raise Exception.Create('Unsupported purpose');
+  end;
 end;
 
 initialization

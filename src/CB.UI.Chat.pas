@@ -107,7 +107,7 @@ type
     FOnEngineChange: TFrameEngineChange;
     FOnGetChatInfo : TFrameGetChatInfo;
     FOnExecuteInAll: TFrameExecuteInAll;
-    FRequest       : INetAsyncRequest;
+    FRequest       : INetRequest;
     FSendTimer     : TStopwatch;
     FSerializer    : IAISerializer;
   protected
@@ -233,16 +233,8 @@ end;
 
 procedure TfrChat.actSendExecute(Sender: TObject);
 begin
-  var headers := TCollections.CreateList<TNetworkHeader>;
-  for var header in GNetworkHeaderProvider[FEngine.EngineType] do
-    if not header.Value2.Contains(CAuthorizationKeyPlaceholder) then
-      headers.Add(header)
-    else if FEngine.Authorization.Trim <> '' then
-      headers.Add(TNetworkHeader.Create(header.Value1,
-                    StringReplace(header.Value2, CAuthorizationKeyPlaceholder, FEngine.Authorization, [])));
-
   FSendTimer := TStopwatch.StartNew;
-  FRequest := SendAsyncRequest(FSerializer.URL(FEngine), headers,
+  FRequest := SendAsyncRequest(FSerializer.URL(FEngine, qpChat), MakeHeaders(FEngine),
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text),
                                FEngine.NetTimeoutSec);
   tmrSend.Enabled := true;

@@ -55,6 +55,17 @@ type
     destructor Destroy; override;
   end;
 
+  TDeepSeekModel = class
+  public
+    id: string;
+  end;
+
+  TDeepSeekModels = class
+  public
+    data: TArray<TDeepSeekModel>;
+    destructor Destroy; override;
+  end;
+
 implementation
 
 { TDeepSeekChoice }
@@ -80,6 +91,15 @@ end;
 destructor TDeepSeekUsage.Destroy;
 begin
   FreeAndNil(completion_tokens_details);
+  inherited;
+end;
+
+{ TDeepSeekModels }
+
+destructor TDeepSeekModels.Destroy;
+begin
+  for var model in data do
+    model.Free;
   inherited;
 end;
 

@@ -109,39 +109,161 @@ object frmSettings: TfrmSettings
           Text = 'AI engines'
           TabOrder = 0
         end
-        object Layout2: TLayout
+        object Layout2: TFlowLayout
           Align = Bottom
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 3.000000000000000000
           Position.Y = 458.000000000000000000
           Size.Width = 193.000000000000000000
           Size.Height = 38.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
+          Justify = Left
+          JustifyLastLine = Left
+          FlowDirection = LeftToRight
           object sbAddEngine: TSpeedButton
             Hint = 'Add AI engine'
-            Position.X = 8.000000000000000000
-            Position.Y = 8.000000000000000000
+            Position.X = 4.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 33.000000000000000000
-            Size.Height = 22.000000000000000000
+            Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             ParentShowHint = False
             ShowHint = True
-            StyleLookup = 'additembutton'
-            Text = 'sbAddEngine'
             TextSettings.Trimming = None
             OnClick = sbAddEngineClick
+            object SkSvg1: TSkSvg
+              Align = Center
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Svg.Source = 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!' +
+                '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+                '.com License - https://fontawesome.com/license (Commercial Licen' +
+                'se) --><path d="M376 232H216V72c0-4.42-3.58-8-8-8h-32c-4.42 0-8 ' +
+                '3.58-8 8v160H8c-4.42 0-8 3.58-8 8v32c0 4.42 3.58 8 8 8h160v160c0' +
+                ' 4.42 3.58 8 8 8h32c4.42 0 8-3.58 8-8V280h160c4.42 0 8-3.58 8-8v' +
+                '-32c0-4.42-3.58-8-8-8z"/></svg>'
+            end
           end
-          object btnRemoveEngine: TSpeedButton
+          object sbRemoveEngine: TSpeedButton
             Action = actDeleteAIEngine
             ImageIndex = -1
-            Position.X = 49.000000000000000000
-            Position.Y = 8.000000000000000000
+            Position.X = 37.000000000000000000
+            Position.Y = 3.000000000000000000
             Size.Width = 33.000000000000000000
-            Size.Height = 22.000000000000000000
+            Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             ParentShowHint = False
             ShowHint = True
-            StyleLookup = 'deleteitembutton'
             TextSettings.Trimming = None
+            object SkSvg2: TSkSvg
+              Align = Center
+              Size.Width = 32.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              Svg.Source = 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!' +
+                '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+                '.com License - https://fontawesome.com/license (Commercial Licen' +
+                'se) --><path d="M376 232H8c-4.42 0-8 3.58-8 8v32c0 4.42 3.58 8 8' +
+                ' 8h368c4.42 0 8-3.58 8-8v-32c0-4.42-3.58-8-8-8z"/></svg>'
+            end
+          end
+          object sbDuplicateEngine: TSpeedButton
+            Action = actDuplicateAIEngine
+            ImageIndex = -1
+            Position.X = 70.000000000000000000
+            Position.Y = 3.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = True
+            TextSettings.Trimming = None
+            object SkSvg6: TSkSvg
+              Align = Center
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Svg.Source = 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!' +
+                '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+                '.com License - https://fontawesome.com/license (Commercial Licen' +
+                'se) --><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.1' +
+                '18 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v3' +
+                '20c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.5' +
+                '1 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM352 32.491a' +
+                '15.88 15.88 0 0 1 7.431 4.195l51.882 51.883A15.885 15.885 0 0 1 ' +
+                '415.508 96H352V32.491zM288 464c0 8.822-7.178 16-16 16H48c-8.822 ' +
+                '0-16-7.178-16-16V144c0-8.822 7.178-16 16-16h80v240c0 26.51 21.49' +
+                ' 48 48 48h112v48zm128-96c0 8.822-7.178 16-16 16H176c-8.822 0-16-' +
+                '7.178-16-16V48c0-8.822 7.178-16 16-16h144v72c0 13.2 10.8 24 24 2' +
+                '4h72v240z"/></svg>'
+            end
+          end
+          object sbMoveUp: TSpeedButton
+            Action = actMoveUp
+            ImageIndex = -1
+            Position.X = 103.000000000000000000
+            Position.Y = 3.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = True
+            TextSettings.Trimming = None
+            object SkSvg3: TSkSvg
+              Align = Center
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Svg.Source = 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!' +
+                '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+                '.com License - https://fontawesome.com/license (Commercial Licen' +
+                'se) --><path d="M180.573 448C169.211 448 160 438.789 160 427.428' +
+                'V255.991H43.021c-7.125 0-10.695-8.612-5.66-13.653L209.444 70.035' +
+                'c8.036-8.046 21.076-8.047 29.112 0L410.64 242.338c5.035 5.041 1.' +
+                '464 13.653-5.66 13.653H288v171.437C288 438.79 278.789 448 267.42' +
+                '7 448h-86.854m0 32h86.855C296.416 480 320 456.416 320 427.428V28' +
+                '7.991h84.979c35.507 0 53.497-43.04 28.302-68.266L261.198 47.422c' +
+                '-20.55-20.576-53.842-20.58-74.396 0L14.719 219.724c-25.091 25.12' +
+                '2-7.351 68.266 28.302 68.266H128v139.437C128 456.416 151.584 480' +
+                ' 180.573 480z"/></svg>'
+            end
+          end
+          object sbMoveDown: TSpeedButton
+            Action = actMoveDown
+            ImageIndex = -1
+            Position.X = 136.000000000000000000
+            Position.Y = 3.000000000000000000
+            Size.Width = 33.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = True
+            TextSettings.Trimming = None
+            object SkSvg4: TSkSvg
+              Align = Center
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              Svg.Source = 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!' +
+                '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+                '.com License - https://fontawesome.com/license (Commercial Licen' +
+                'se) --><path d="M267.427 64C278.789 64 288 73.211 288 84.572v171' +
+                '.437h116.979c7.125 0 10.695 8.612 5.66 13.653L238.556 441.965c-8' +
+                '.036 8.046-21.076 8.047-29.112 0L37.36 269.662c-5.035-5.041-1.46' +
+                '4-13.653 5.66-13.653H160V84.572C160 73.211 169.211 64 180.573 64' +
+                'h86.854m0-32h-86.855C151.584 32 128 55.584 128 84.572v139.437H43' +
+                '.021c-35.507 0-53.497 43.04-28.302 68.266l172.083 172.303c20.55 ' +
+                '20.576 53.842 20.58 74.396 0l172.083-172.303c25.091-25.122 7.351' +
+                '-68.266-28.302-68.266H320V84.572C320 55.584 296.416 32 267.427 3' +
+                '2z"/></svg>'
+            end
           end
         end
         object lbAIEngines: TListBox
@@ -207,17 +329,6 @@ object frmSettings: TfrmSettings
           Size.PlatformDefault = False
           Text = 'Name:'
           TabOrder = 5
-        end
-        object inpModel: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          Anchors = [akLeft, akTop, akRight]
-          TabOrder = 6
-          Position.X = 97.000000000000000000
-          Position.Y = 62.000000000000000000
-          Size.Width = 197.000000000000000000
-          Size.Height = 22.000000000000000000
-          Size.PlatformDefault = False
-          OnChange = inpCommonAIChange
         end
         object inpName: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -310,6 +421,8 @@ object frmSettings: TfrmSettings
           Size.PlatformDefault = False
           TabOrder = 17
           TextSettings.Trimming = None
+          ParentShowHint = False
+          ShowHint = True
         end
         object Label7: TLabel
           Position.X = 8.000000000000000000
@@ -361,6 +474,26 @@ object frmSettings: TfrmSettings
           Max = 99999.000000000000000000
           Position.X = 97.000000000000000000
           Position.Y = 325.000000000000000000
+          Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object sbRefreshModels: TSpeedButton
+          Position.X = 273.000000000000000000
+          Position.Y = 63.000000000000000000
+          Size.Width = 21.000000000000000000
+          Size.Height = 21.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Trimming = None
+        end
+        object cbxModel: TComboEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 6
+          ItemIndex = -1
+          Position.X = 97.000000000000000000
+          Position.Y = 62.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
@@ -490,7 +623,7 @@ object frmSettings: TfrmSettings
     Left = 56
     Top = 280
     object actDeleteAIEngine: TAction
-      Text = 'actDeleteAIEngine'
+      Hint = 'Remove AI engine'
       OnExecute = actDeleteAIEngineExecute
       OnUpdate = actDeleteAIEngineUpdate
     end
@@ -510,6 +643,19 @@ object frmSettings: TfrmSettings
       Hint = 'Get API key'
       OnExecute = actGetAPIKeyExecute
       OnUpdate = actGetAPIKeyUpdate
+    end
+    object actDuplicateAIEngine: TAction
+      Hint = 'Duplicate AI engine'
+      OnExecute = actDuplicateAIEngineExecute
+      OnUpdate = actDuplicateAIEngineUpdate
+    end
+    object actMoveUp: TAction
+      OnExecute = actMoveUpExecute
+      OnUpdate = actMoveUpUpdate
+    end
+    object actMoveDown: TAction
+      OnExecute = actMoveDownExecute
+      OnUpdate = actMoveDownUpdate
     end
   end
 end

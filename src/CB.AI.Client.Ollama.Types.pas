@@ -33,6 +33,19 @@ type
     eval_duration       : int64;   // time in nanoseconds spent generating the response
     destructor Destroy; override;
   end;
+
+  TOllamaModel = class
+  public
+    name: string;
+    model: string;
+    size: int64;
+  end;
+
+  TOllamaModels = class
+  public
+    models: TArray<TOllamaModel>;
+    destructor Destroy; override;
+  end;
 {$M-}
 
 implementation
@@ -45,6 +58,15 @@ uses
 destructor TOllamaResponse.Destroy;
 begin
   FreeAndNil(message);
+  inherited;
+end;
+
+{ TOllamaModels }
+
+destructor TOllamaModels.Destroy;
+begin
+  for var model in models do
+    model.Free;
   inherited;
 end;
 

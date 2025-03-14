@@ -16,12 +16,63 @@ uses
 type
   TGeminiSerializer = class(TInterfacedObject, IAISerializer)
   public
-    function URL(const engineConfig: TCBAIEngineSettings): string;
+    function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TGeminiSerializer }
+
+function TGeminiSerializer.JSONToAnswer(
+  const engineConfig: TCBAIEngineSettings; const json: string;
+  var errorMsg: string): TAIResponse;
+begin
+  errorMsg := '';
+  Result := Default(TAIResponse);
+  try
+    var response := TJson.JsonToObject<TGeminiResponse>(json);
+    try
+      if not assigned(response) then
+        errorMsg := 'Failed to parse JSON response: ' + json
+      else if Length(response.candidates) > 0 then begin
+        Result.Done := true;
+        Result.DoneReason := response.candidates[0].finishReason;
+        Result.PromptTokens := response.usageMetadata.promptTokenCount;
+        Result.ResponseTokens := response.usageMetadata.candidatesTokenCount;
+        Result.Model := response.modelVersion;
+        for var part in response.candidates[0].content.parts do begin
+          if Result.Response <> '' then
+            Result.Response := Result.Response + #$0D#$0A;
+          Result.Response := Result.Response + part.text;
+        end;
+      end;
+    finally FreeAndNil(response); end;
+  except
+    on E: Exception do
+      errorMsg := E.Message;
+  end;
+end;
+
+function TGeminiSerializer.JSONToModels(const json: string;
+  var errorMsg: string): TArray<string>;
+begin
+  errorMsg := '';
+  try
+    var models := TJson.JsonToObject<TGeminiModels>(json);
+    try
+      SetLength(Result, Length(models.models));
+      for var iModel := 0 to High(Result) do begin
+        Result[iModel] := models.models[iModel].name;
+        if Result[iModel].StartsWith('models/', true) then
+          Result[iModel] := Copy(Result[iModel], Length('models/') + 1);
+      end;
+    finally FreeAndNil(models); end;
+  except
+    on E: Exception do
+      errorMsg := E.Message;
+  end;
+end;
 
 function TGeminiSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
   const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
@@ -54,41 +105,23 @@ begin
   finally FreeAndNil(request); end;
 end;
 
-function TGeminiSerializer.URL(const engineConfig: TCBAIEngineSettings): string;
+function TGeminiSerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
 begin
-  Result := engineConfig.Host;
-  if not Result.EndsWith('/') then
-    Result := Result + '/';
-  Result := Result + 'models/' + engineConfig.Model + ':generateContent?key=' + engineConfig.Authorization;
-end;
+  case purpose of
+    qpHost:    if engineConfig.Host = '' then
+                 Result := 'https://generativelanguage.googleapis.com/v1beta/'
+               else
+                 Result := engineConfig.Host;
 
-function TGeminiSerializer.JSONToAnswer(
-  const engineConfig: TCBAIEngineSettings; const json: string;
-  var errorMsg: string): TAIResponse;
-begin
-  errorMsg := '';
-  Result := Default(TAIResponse);
-  try
-    var response := TJson.JsonToObject<TGeminiResponse>(json);
-    try
-      if not assigned(response) then
-        errorMsg := 'Failed to parse JSON response: ' + json
-      else if Length(response.candidates) > 0 then begin
-        Result.Done := true;
-        Result.DoneReason := response.candidates[0].finishReason;
-        Result.PromptTokens := response.usageMetadata.promptTokenCount;
-        Result.ResponseTokens := response.usageMetadata.candidatesTokenCount;
-        Result.Model := response.modelVersion;
-        for var part in response.candidates[0].content.parts do begin
-          if Result.Response <> '' then
-            Result.Response := Result.Response + #$0D#$0A;
-          Result.Response := Result.Response + part.text;
-        end;
-      end;
-    finally FreeAndNil(response); end;
-  except
-    on E: Exception do
-      errorMsg := E.Message;
+    qpChat: begin
+      Result := URL(engineConfig, qpHost);
+      if not Result.EndsWith('/') then
+        Result := Result + '/';
+      Result := Result + 'models/' + engineConfig.Model + ':generateContent?key=' + engineConfig.Authorization;
+    end;
+    qpAPIKeys: Result := 'https://aistudio.google.com/app/apikey';
+    qpModels: Result := 'https://generativelanguage.googleapis.com/v1beta/models?key=' + engineConfig.Authorization;
+    else raise Exception.Create('Unexpected purpose');
   end;
 end;
 

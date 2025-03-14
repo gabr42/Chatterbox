@@ -16,12 +16,20 @@ uses
 type
   TAnthropicSerializer = class(TInterfacedObject, IAISerializer)
   public
-    function URL(const engineConfig: TCBAIEngineSettings): string;
+    function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TAnthropicSerializer }
+
+function TAnthropicSerializer.JSONToModels(const json: string;
+  var errorMsg: string): TArray<string>;
+begin
+  errorMsg := 'not implemented';
+  Result := nil;
+end;
 
 function TAnthropicSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
   const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
@@ -39,9 +47,18 @@ begin
   finally FreeAndNil(request); end;
 end;
 
-function TAnthropicSerializer.URL(const engineConfig: TCBAIEngineSettings): string;
+function TAnthropicSerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
 begin
-  Result := engineConfig.Host;
+  case purpose of
+    qpChat,
+    qpHost:    if engineConfig.Host = '' then
+                 Result := 'https://api.anthropic.com/v1/messages'
+               else
+                 Result := engineConfig.Host;
+    qpAPIKeys: Result := 'https://console.anthropic.com/settings/keys';
+    qpModels:  Result := '';
+    else raise Exception.Create('Unknown purpose');
+  end;
 end;
 
 function TAnthropicSerializer.JSONToAnswer(

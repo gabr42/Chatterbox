@@ -8,7 +8,7 @@ uses
   System.SysUtils, System.StrUtils,
   REST.Json,
   Spring,
-  CB.Settings, CB.Network,
+  CB.Utils, CB.Settings, CB.Network,
   CB.AI.Registry,
   CB.AI.Interaction,
   CB.AI.Client.Ollama.Types;
@@ -16,12 +16,30 @@ uses
 type
   TOllamaSerializer = class(TInterfacedObject, IAISerializer)
   public
-    function URL(const engineConfig: TCBAIEngineSettings): string;
+    function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TOllamaSerializer }
+
+function TOllamaSerializer.JSONToModels(const json: string;
+  var errorMsg: string): TArray<string>;
+begin
+  errorMsg := '';
+  try
+    var models := TJson.JsonToObject<TOllamaModels>(json);
+    try
+      SetLength(Result, Length(models.models));
+      for var iModel := 0 to High(Result) do
+        Result[iModel] := models.models[iModel].model;
+    finally FreeAndNil(models); end;
+  except
+    on E: Exception do
+      errorMsg := E.Message;
+  end;
+end;
 
 function TOllamaSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
   const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
@@ -38,9 +56,17 @@ begin
   finally FreeAndNil(request); end;
 end;
 
-function TOllamaSerializer.URL(const engineConfig: TCBAIEngineSettings): string;
+function TOllamaSerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
 begin
-  Result := engineConfig.Host;
+  case purpose of
+    qpChat,
+    qpHost:    if engineConfig.Host = '' then
+                 Result := 'http://localhost:11434/api/chat'
+               else
+                 Result := engineConfig.Host;
+    qpAPIKeys: Result := '';
+    qpModels:  Result := FirstPartEndingWith(URL(engineConfig, qpHost), '/api/') + 'tags';
+  end;
 end;
 
 function TOllamaSerializer.JSONToAnswer(
