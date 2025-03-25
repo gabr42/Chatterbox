@@ -12,6 +12,7 @@ object frmCBMain: TfrmCBMain
   DesignerMasterStyle = 0
   object tcChatter: TTabControl
     Align = Client
+    DragMode = dmAutomatic
     Size.Width = 768.000000000000000000
     Size.Height = 539.000000000000000000
     Size.PlatformDefault = False

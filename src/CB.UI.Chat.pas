@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.StrUtils, System.Actions, System.Skia,
+  System.StrUtils, System.Actions, System.Skia, System.IOUtils,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
   FMX.ListBox, FMX.ActnList, FMX.Skia, FMX.TextLayout,
@@ -47,6 +47,7 @@ type
     btnSendToAll: TSpeedButton;
     SkSvg6: TSkSvg;
     lyEngine: TFlowLayout;
+    lyEngineEx: TFlowLayout;
     lyTools: TFlowLayout;
     lySpacer: TLayout;
     cbDisableSysPrompt: TCheckBox;
@@ -58,7 +59,7 @@ type
     SkSvg7: TSkSvg;
     actStop: TAction;
     Line1: TLine;
-    FlowLayout1: TFlowLayout;
+    lyStatusBar: TFlowLayout;
     pnlStatusStatus: TPanel;
     pnlStatusModel: TPanel;
     pnlStatusExecTime: TPanel;
@@ -69,6 +70,14 @@ type
     lblStatusExecTime: TLabel;
     lblStatusPromptTokens: TLabel;
     lblStatusResponseTokens: TLabel;
+    btnExpandEngine: TSpeedButton;
+    skSvgExpand: TSkSvg;
+    skSvgCollapse: TSkSvg;
+    cbAppendChatToFile: TCheckBox;
+    inpAppendChatLog: TEdit;
+    btnSelectChatLog: TSpeedButton;
+    SkSvg8: TSkSvg;
+    SaveDialog2: TSaveDialog;
     procedure actClearHistoryExecute(Sender: TObject);
     procedure actClearHistoryUpdate(Sender: TObject);
     procedure actCopyLastAnswerExecute(Sender: TObject);
@@ -85,6 +94,8 @@ type
     procedure actSendUpdate(Sender: TObject);
     procedure actStopExecute(Sender: TObject);
     procedure actStopUpdate(Sender: TObject);
+    procedure btnExpandEngineClick(Sender: TObject);
+    procedure btnSelectChatLogClick(Sender: TObject);
     procedure cbxEnginesChange(Sender: TObject);
     procedure outHistoryChange(Sender: TObject);
     procedure outHistoryEnter(Sender: TObject);
@@ -99,6 +110,7 @@ type
     CConversationAnswer = 'A>';
     CConversationReasoning = 'R>';
   private var
+    FAppendChatLog : string;
     FChat          : IList<TAIInteraction>;
     FChatPosition  : TCaretPosition;
     FConfiguration : TCBSettings;
@@ -112,6 +124,7 @@ type
     FSerializer    : IAISerializer;
   protected
     procedure CheckActions(force: boolean = false);
+    procedure ClearStatusBar;
     function  ExtractReasoning(const response: string; var reasoning: string): string;
     function  FindQA(line, delta: integer; var newLine: integer): boolean;
     procedure JumpInChat(delta: integer);
@@ -233,6 +246,7 @@ end;
 
 procedure TfrChat.actSendExecute(Sender: TObject);
 begin
+  ClearStatusBar;
   FSendTimer := TStopwatch.StartNew;
   FRequest := SendAsyncRequest(FSerializer.URL(FEngine, qpChat), MakeHeaders(FEngine),
                                FSerializer.QuestionToJSON(FEngine, FChat.ToArray, not cbDisableSysPrompt.IsChecked, inpQuestion.Text),
@@ -293,6 +307,9 @@ begin
   FChat := TCollections.CreateList<TAIInteraction>;
   indSend.Visible := false;
   svgSend.Visible := true;
+  skSvgExpand.Visible := true;
+  skSvgCollapse.Visible := false;
+  lyEngineEx.Visible := false;
   if not TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, FClipBoard) then
     FClipBoard := nil;
   ClearLog;
@@ -305,6 +322,24 @@ begin
     FRequest := nil;
   end;
   inherited;
+end;
+
+procedure TfrChat.btnExpandEngineClick(Sender: TObject);
+begin
+  lyEngineEx.Visible := not lyEngineEx.Visible;
+  if lyEngineEx.Visible then
+    lyEngineEx.Position.X := Line1.Position.X - 1;
+  skSvgCollapse.Visible := lyEngineEx.Visible;
+  skSvgExpand.Visible := not skSvgCollapse.Visible;
+end;
+
+procedure TfrChat.btnSelectChatLogClick(Sender: TObject);
+begin
+  SaveDialog2.FileName := FAppendChatLog;
+  if SaveDialog2.Execute then begin
+    FAppendChatLog := SaveDialog2.FileName;
+    inpAppendChatLog.Text := ExtractFileName(FAppendChatLog);
+  end;
 end;
 
 procedure TfrChat.cbxEnginesChange(Sender: TObject);
@@ -336,13 +371,18 @@ procedure TfrChat.ClearLog;
 begin
   FChat.Clear;
   outHistory.Lines.Clear;
+  actPrevious.Enabled := false;
+  actNext.Enabled := false;
+  ClearStatusBar;
+end;
+
+procedure TfrChat.ClearStatusBar;
+begin
   lblStatusExecTime.Text := '';
   lblStatusPromptTokens.Text := '';
   lblStatusResponseTokens.Text := '';
   lblStatusStatus.Text := '';
   lblStatusModel.Text := '';
-  actPrevious.Enabled := false;
-  actNext.Enabled := false;
 end;
 
 function TfrChat.ExtractReasoning(const response: string;
@@ -518,7 +558,16 @@ end;
 
 procedure TfrChat.tmrSendTimer(Sender: TObject);
 var
+  appendLog: TStringList;
   response: TAIResponse;
+
+  procedure Write(const line: string);
+  begin
+    outHistory.Lines.Add(line);
+    if assigned(appendLog) then
+      appendLog.Add(line);
+  end;
+
 begin
   if not FRequest.IsCompleted then
     Exit;
@@ -549,17 +598,24 @@ begin
     FChat.Add(int);
     outHistory.Lines.BeginUpdate;
     try
-      if outHistory.Lines.Count > 0 then
-        outHistory.Lines.Add(CConversationDelimiter);
-      outHistory.Lines.Add(CConversationQuestion + ' ' + inpQuestion.Text);
-      outHistory.Lines.Add('');
-      outHistory.CaretPosition := Point(0, outHistory.Lines.Count);
-      outHistory.Lines.Add(CConversationAnswer + ' ' + answer);
-      outHistory.Lines.Add('');
-      if reasoning.Trim <> '' then begin
-        outHistory.Lines.Add(CConversationReasoning + ' ' + reasoning);
-        outHistory.Lines.Add('');
-      end;
+      appendLog := nil;
+      try
+        if cbAppendChatToFile.IsChecked and (FAppendChatLog <> '') then
+          appendLog := TStringList.Create;
+        if outHistory.Lines.Count > 0 then
+          Write(CConversationDelimiter);
+        Write(CConversationQuestion + ' ' + inpQuestion.Text);
+        Write('');
+        outHistory.CaretPosition := Point(0, outHistory.Lines.Count);
+        Write(CConversationAnswer + ' ' + answer);
+        Write('');
+        if reasoning.Trim <> '' then begin
+          Write(CConversationReasoning + ' ' + reasoning);
+          Write('');
+        end;
+        if cbAppendChatToFile.IsChecked and (FAppendChatLog <> '') then
+          TFile.AppendAllText(FAppendChatLog, appendLog.Text, TEncoding.UTF8);
+      finally FreeAndNil(appendLog); end;
     finally
       outHistory.Lines.EndUpdate;
     end;

@@ -50,9 +50,9 @@ type
     procedure SaveDesktop;
     function  SettingsFileName: string;
     procedure HandleEngineChange(Frame: TFrame; const Engine: TCBAIEngineSettings);
+    procedure HandleExecuteInAll(Frame: TFrame; const question: string);
     procedure HandleGetPassphrase(var passphrase: string; var cancel: boolean);
     procedure HandleGetChatInfo(Frame: TFrame; var countChats: integer);
-    procedure HandleExecuteInAll(Frame: TFrame; const question: string);
     function  TabIndexToChat(tabIndex: integer): TfrChat;
   public
   end;

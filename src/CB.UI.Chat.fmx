@@ -17,6 +17,10 @@ object frChat: TfrChat
     OnMouseUp = outHistoryMouseUp
     Viewport.Width = 960.000000000000000000
     Viewport.Height = 412.000000000000000000
+    object SaveDialog2: TSaveDialog
+      Left = 344
+      Top = 240
+    end
   end
   object inpQuestion: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -55,12 +59,12 @@ object frChat: TfrChat
       Size.Width = 153.000000000000000000
       Size.Height = 64.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 1
+      TabOrder = 3
       Justify = Left
       JustifyLastLine = Left
       FlowDirection = LeftToRight
       object lblActiveEngine: TLabel
-        Text = 'Active engine'
+        Text = 'Active engine:'
         TabOrder = 1
       end
       object cbxEngines: TComboBox
@@ -81,15 +85,73 @@ object frChat: TfrChat
         Text = 'Disable system prompt'
       end
     end
+    object lyEngineEx: TFlowLayout
+      Align = MostLeft
+      Margins.Left = 2.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 181.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 153.000000000000000000
+      Size.Height = 64.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Justify = Left
+      JustifyLastLine = Left
+      FlowDirection = LeftToRight
+      object cbAppendChatToFile: TCheckBox
+        Size.Width = 149.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Append chat to file:'
+      end
+      object inpAppendChatLog: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 1
+        Position.Y = 19.000000000000000000
+        Size.Width = 127.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        object btnSelectChatLog: TSpeedButton
+          Position.X = 130.000000000000000000
+          Size.Width = 17.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Trimming = None
+          OnClick = btnSelectChatLogClick
+          object SkSvg8: TSkSvg
+            Align = Client
+            Size.Width = 17.000000000000000000
+            Size.Height = 22.000000000000000000
+            Size.PlatformDefault = False
+            Svg.Source = 
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!' +
+              '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+              '.com License - https://fontawesome.com/license (Commercial Licen' +
+              'se) --><path d="M605.65 487.05l-88.89-88.88c16.86-21.68 27.31-48' +
+              '.58 27.31-78.17a128 128 0 1 0-128 128c29.55 0 56.43-10.42 78.1-2' +
+              '7.24l88.9 88.89a8 8 0 0 0 11.32 0l11.31-11.31a8 8 0 0 0-.05-11.2' +
+              '9zM416.05 416a96 96 0 1 1 96-96 96.12 96.12 0 0 1-96 96zM368 480' +
+              'H80a16 16 0 0 1-16-16V48.09a16 16 0 0 1 16-16h176v104a23.93 23.9' +
+              '3 0 0 0 24 24l136-.09v-28a48.23 48.23 0 0 0-14.1-34L318 14.1A48 ' +
+              '48 0 0 0 284.08 0H80a48.16 48.16 0 0 0-48 48.09V464a48 48 0 0 0 ' +
+              '48 48h288a47.87 47.87 0 0 0 45.15-32.29 159.9 159.9 0 0 1-33.92-' +
+              '4.36A15.91 15.91 0 0 1 368 480zM288 32.59a15.73 15.73 0 0 1 7.4 ' +
+              '4.2l83.9 83.89a15.75 15.75 0 0 1 4.2 7.39H288z"/></svg>'
+          end
+        end
+      end
+    end
     object lyTools: TFlowLayout
       Align = Top
       Margins.Left = 4.000000000000000000
       Margins.Top = 8.000000000000000000
       Margins.Right = 8.000000000000000000
       Margins.Bottom = 4.000000000000000000
-      Position.X = 171.000000000000000000
+      Position.X = 344.000000000000000000
       Position.Y = 8.000000000000000000
-      Size.Width = 785.000000000000000000
+      Size.Width = 612.000000000000000000
       Size.Height = 45.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
@@ -316,22 +378,23 @@ object frChat: TfrChat
       Align = MostLeft
       LineType = Left
       Margins.Left = 4.000000000000000000
-      Position.X = 165.000000000000000000
+      Position.X = 338.000000000000000000
       Size.Width = 2.000000000000000000
       Size.Height = 80.000000000000000000
       Size.PlatformDefault = False
     end
-    object FlowLayout1: TFlowLayout
+    object lyStatusBar: TFlowLayout
       Align = Left
       Padding.Left = 4.000000000000000000
+      Margins.Left = 4.000000000000000000
       Margins.Right = 8.000000000000000000
       Margins.Bottom = 4.000000000000000000
-      Position.X = 167.000000000000000000
+      Position.X = 344.000000000000000000
       Position.Y = 57.000000000000000000
-      Size.Width = 789.000000000000000000
+      Size.Width = 785.000000000000000000
       Size.Height = 19.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 6
+      TabOrder = 5
       Justify = Left
       JustifyLastLine = Left
       FlowDirection = LeftToRight
@@ -339,7 +402,7 @@ object frChat: TfrChat
       object pnlStatusStatus: TPanel
         Hint = 'Status'
         Position.X = 4.000000000000000000
-        Size.Width = 52.000000000000000000
+        Size.Width = 80.000000000000000000
         Size.Height = 18.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 4
@@ -347,7 +410,7 @@ object frChat: TfrChat
         ShowHint = True
         object lblStatusStatus: TLabel
           Align = Client
-          Size.Width = 52.000000000000000000
+          Size.Width = 80.000000000000000000
           Size.Height = 18.000000000000000000
           Size.PlatformDefault = False
           Text = 'lblStatusStatus'
@@ -356,8 +419,8 @@ object frChat: TfrChat
       end
       object pnlStatusModel: TPanel
         Hint = 'Model'
-        Position.X = 60.000000000000000000
-        Size.Width = 128.000000000000000000
+        Position.X = 88.000000000000000000
+        Size.Width = 144.000000000000000000
         Size.Height = 18.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 3
@@ -365,7 +428,7 @@ object frChat: TfrChat
         ShowHint = True
         object lblStatusModel: TLabel
           Align = Client
-          Size.Width = 128.000000000000000000
+          Size.Width = 144.000000000000000000
           Size.Height = 18.000000000000000000
           Size.PlatformDefault = False
           Text = 'lblStatusModel'
@@ -374,7 +437,7 @@ object frChat: TfrChat
       end
       object pnlStatusExecTime: TPanel
         Hint = 'Execution time'
-        Position.X = 192.000000000000000000
+        Position.X = 236.000000000000000000
         Size.Width = 64.000000000000000000
         Size.Height = 18.000000000000000000
         Size.PlatformDefault = False
@@ -410,7 +473,7 @@ object frChat: TfrChat
       end
       object pnlStatusResponseTokens: TPanel
         Hint = 'Response tokens'
-        Position.X = 328.000000000000000000
+        Position.X = 372.000000000000000000
         Size.Width = 64.000000000000000000
         Size.Height = 18.000000000000000000
         Size.PlatformDefault = False
@@ -427,10 +490,67 @@ object frChat: TfrChat
         end
       end
     end
+    object btnExpandEngine: TSpeedButton
+      Align = MostLeft
+      Margins.Left = 2.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 163.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 16.000000000000000000
+      Size.Height = 64.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Trimming = None
+      OnClick = btnExpandEngineClick
+      object skSvgCollapse: TSkSvg
+        Align = Client
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Size.Width = 12.000000000000000000
+        Size.Height = 56.000000000000000000
+        Size.PlatformDefault = False
+        OnClick = btnExpandEngineClick
+        Svg.Source = 
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!' +
+          '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+          '.com License - https://fontawesome.com/license (Commercial Licen' +
+          'se) --><path d="M153.1 247.5l117.8-116c4.7-4.7 12.3-4.7 17 0l7.1' +
+          ' 7.1c4.7 4.7 4.7 12.3 0 17L192.7 256l102.2 100.4c4.7 4.7 4.7 12.' +
+          '3 0 17l-7.1 7.1c-4.7 4.7-12.3 4.7-17 0L153 264.5c-4.6-4.7-4.6-12' +
+          '.3.1-17zm-128 17l117.8 116c4.7 4.7 12.3 4.7 17 0l7.1-7.1c4.7-4.7' +
+          ' 4.7-12.3 0-17L64.7 256l102.2-100.4c4.7-4.7 4.7-12.3 0-17l-7.1-7' +
+          '.1c-4.7-4.7-12.3-4.7-17 0L25 247.5c-4.6 4.7-4.6 12.3.1 17z"/></s' +
+          'vg>'
+      end
+      object skSvgExpand: TSkSvg
+        Align = Client
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 4.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Margins.Bottom = 4.000000000000000000
+        Size.Width = 12.000000000000000000
+        Size.Height = 56.000000000000000000
+        Size.PlatformDefault = False
+        Visible = False
+        Svg.Source = 
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!' +
+          '-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome' +
+          '.com License - https://fontawesome.com/license (Commercial Licen' +
+          'se) --><path d="M166.9 264.5l-117.8 116c-4.7 4.7-12.3 4.7-17 0l-' +
+          '7.1-7.1c-4.7-4.7-4.7-12.3 0-17L127.3 256 25.1 155.6c-4.7-4.7-4.7' +
+          '-12.3 0-17l7.1-7.1c4.7-4.7 12.3-4.7 17 0l117.8 116c4.6 4.7 4.6 1' +
+          '2.3-.1 17zm128-17l-117.8-116c-4.7-4.7-12.3-4.7-17 0l-7.1 7.1c-4.' +
+          '7 4.7-4.7 12.3 0 17L255.3 256 153.1 356.4c-4.7 4.7-4.7 12.3 0 17' +
+          'l7.1 7.1c4.7 4.7 12.3 4.7 17 0l117.8-116c4.6-4.7 4.6-12.3-.1-17z' +
+          '"/></svg>'
+      end
+    end
   end
   object SaveDialog1: TSaveDialog
-    Left = 328
-    Top = 208
+    Left = 304
+    Top = 176
   end
   object OpenDialog1: TOpenDialog
     Left = 416
