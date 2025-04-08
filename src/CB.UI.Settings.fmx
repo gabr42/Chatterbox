@@ -39,7 +39,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -59,7 +59,7 @@ object frmSettings: TfrmSettings
         Size.Height = 22.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'arrowrighttoolbutton'
-        TabOrder = 39
+        TabOrder = 40
         Text = 'Button1'
         TextSettings.Trimming = None
       end
@@ -401,8 +401,8 @@ object frmSettings: TfrmSettings
           Size.Height = 92.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 13
-          Viewport.Width = 197.000000000000000000
-          Viewport.Height = 92.000000000000000000
+          Viewport.Width = 193.000000000000000000
+          Viewport.Height = 88.000000000000000000
         end
         object Label6: TLabel
           Position.X = 8.000000000000000000
@@ -618,6 +618,15 @@ object frmSettings: TfrmSettings
       TabOrder = 1
       Text = 'Cancel'
       TextSettings.Trimming = None
+    end
+    object lblSettingLocation: TLabel
+      Align = Client
+      Margins.Left = 16.000000000000000000
+      Size.Width = 624.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'lblSettingLocation'
+      TabOrder = 2
     end
   end
   object ActionList1: TActionList

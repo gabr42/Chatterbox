@@ -74,6 +74,7 @@ type
     actMoveDown: TAction;
     sbRefreshModels: TSpeedButton;
     cbxModel: TComboEdit;
+    lblSettingLocation: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -103,10 +104,12 @@ type
     procedure RefreshModels(const engineConfig: TCBAIEngineSettings);
     procedure SelectModel(const models: TArray<string>);
     procedure Swap(idx1, idx2: integer);
+    procedure SetLocation(const value: string);
   public
     procedure AfterConstruction; override;
     procedure LoadFromSettings(settings: TCBSettings);
     procedure SaveToSettings(settings: TCBSettings);
+    property Location: string write SetLocation;
   end;
 
 implementation
@@ -373,9 +376,12 @@ begin
 end;
 
 procedure TfrmSettings.RefreshModels(const engineConfig: TCBAIEngineSettings);
+var
+  serializer: IAISerializer;
 begin
   var model := cbxModel.Text;
-  var serializer := GSerializers[engineConfig.engineType];
+  if not GSerializers.TryGetValue(engineConfig.engineType, serializer) then
+    Exit;
   var url := serializer.URL(engineConfig, qpModels);
   if url = '' then begin
     cbxModel.Items.Clear;
@@ -427,6 +433,11 @@ begin
   end;
   cbxModel.ItemIndex := -1;
   cbxModel.Text := models[0];
+end;
+
+procedure TfrmSettings.SetLocation(const value: string);
+begin
+  lblSettingLocation.Text := 'Settings location: ' + value;
 end;
 
 procedure TfrmSettings.Swap(idx1, idx2: integer);

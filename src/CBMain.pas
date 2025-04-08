@@ -113,6 +113,7 @@ procedure TfrmCBMain.actSettingsExecute(Sender: TObject);
 begin
   var frmSettings := TfrmSettings.Create(Self);
   try
+    frmSettings.Location := ExtractFilePath(SettingsFileName);
     frmSettings.LoadFromSettings(FSettings);
     if frmSettings.ShowModal = mrOK then begin
       frmSettings.SaveToSettings(FSettings);
