@@ -6,8 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   System.IOUtils, System.IniFiles, System.Actions, System.Skia,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, CB.UI.Chat,
-  FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.ActnList, FMX.Skia,
-  CB.Settings, FMX.Layouts;
+  FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.ActnList, FMX.Skia, FMX.Layouts,
+  CB.Settings, CB.Settings.Types;
 
 type
   TfrmCBMain = class(TForm)

@@ -7,9 +7,9 @@ uses
   System.StrUtils, System.Actions, System.Skia, System.IOUtils,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   FMX.Memo.Types, FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Platform,
-  FMX.ListBox, FMX.ActnList, FMX.Skia, FMX.TextLayout,
+  FMX.ListBox, FMX.ActnList, FMX.Skia, FMX.TextLayout, FMX.Layouts, FMX.Objects, FMX.Edit,
   Spring, Spring.Collections,
-  CB.Network, CB.Settings, CB.AI.Interaction, FMX.Layouts, FMX.Objects, FMX.Edit;
+  CB.Network, CB.Settings, CB.Settings.Types, CB.AI.Interaction;
 
 type
   TFrameEngineChange = procedure (Frame: TFrame; const Engine: TCBAIEngineSettings) of object;

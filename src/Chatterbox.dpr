@@ -25,7 +25,9 @@ uses
   CB.UI.Passphrase in 'CB.UI.Passphrase.pas' {frmPassphrase},
   CB.Utils in 'CB.Utils.pas',
   CB.AI.Client.DeepSeek in 'CB.AI.Client.DeepSeek.pas',
-  CB.AI.Client.DeepSeek.Types in 'CB.AI.Client.DeepSeek.Types.pas';
+  CB.AI.Client.DeepSeek.Types in 'CB.AI.Client.DeepSeek.Types.pas',
+  CB.Settings.Types in 'CB.Settings.Types.pas',
+  CB.Network.Types in 'CB.Network.Types.pas';
 
 {$R *.res}
 

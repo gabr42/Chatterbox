@@ -8,7 +8,7 @@ uses
   System.SysUtils, System.StrUtils,
   REST.Json,
   Spring,
-  CB.Utils, CB.Settings, CB.Network,
+  CB.Utils, CB.Settings.Types, CB.Network.Types,
   CB.AI.Registry,
   CB.AI.Interaction,
   CB.AI.Client.Ollama.Types;

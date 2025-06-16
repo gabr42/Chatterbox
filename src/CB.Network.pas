@@ -4,11 +4,9 @@ interface
 
 uses
   Spring, Spring.Collections, Spring.Collections.Extensions,
-  CB.Settings;
+  CB.Settings.Types, CB.Network.Types;
 
 type
-  TNetworkHeader = Tuple<string, string>;
-
   INetRequest = interface ['{88B1028B-E8D2-47F3-B753-D4A47DA8B35C}']
     function GetError: string;
     function GetResponse: string;

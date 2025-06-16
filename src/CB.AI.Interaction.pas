@@ -3,7 +3,7 @@ unit CB.AI.Interaction;
 interface
 
 uses
-  CB.Settings,
+  CB.Settings.Types,
   Spring.Collections;
 
 type

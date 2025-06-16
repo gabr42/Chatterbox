@@ -15,8 +15,8 @@ object frChat: TfrChat
     OnEnter = outHistoryEnter
     OnKeyUp = outHistoryKeyUp
     OnMouseUp = outHistoryMouseUp
-    Viewport.Width = 960.000000000000000000
-    Viewport.Height = 412.000000000000000000
+    Viewport.Width = 964.000000000000000000
+    Viewport.Height = 416.000000000000000000
     object SaveDialog2: TSaveDialog
       Left = 344
       Top = 240
@@ -32,8 +32,8 @@ object frChat: TfrChat
     Size.Height = 124.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
-    Viewport.Width = 960.000000000000000000
-    Viewport.Height = 120.000000000000000000
+    Viewport.Width = 964.000000000000000000
+    Viewport.Height = 124.000000000000000000
   end
   object tmrSend: TTimer
     Enabled = False

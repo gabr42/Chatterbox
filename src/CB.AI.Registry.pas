@@ -4,7 +4,7 @@ interface
 
 uses
   Spring, Spring.Collections,
-  CB.Settings, CB.Network,
+  CB.Settings.Types, CB.Network.Types,
   CB.AI.Interaction;
 
 const

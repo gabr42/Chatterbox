@@ -7,10 +7,9 @@ uses
   System.Actions, System.Skia, System.Generics.Defaults, System.Generics.Collections,
   FMX.Platform, FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.ListBox,
   FMX.Layouts, FMX.TabControl, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit,
-  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox, FMX.Skia,
+  FMX.ActnList, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, FMX.EditBox, FMX.NumberBox, FMX.Skia, FMX.ComboEdit,
   Spring.Collections,
-  CB.Utils, CB.Settings, CB.AI.Registry, CB.AI.Interaction, CB.Network,
-  FMX.ComboEdit;
+  CB.Utils, CB.Settings, CB.Settings.Types, CB.AI.Registry, CB.AI.Interaction, CB.Network;
 
 type
   TfrmSettings = class(TForm)
