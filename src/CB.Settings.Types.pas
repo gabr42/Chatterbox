@@ -2,6 +2,9 @@ unit CB.Settings.Types;
 
 interface
 
+uses
+  System.SysUtils;
+
 type
   TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini, etDeepSeek);
 
@@ -22,7 +25,18 @@ type
 var
   CBAIEngineName: array [TCBAIEngineType] of string = ('<none>', 'Anthropic', 'Ollama', 'OpenAI', 'Gemini', 'DeepSeek');
 
+  function EngineType(const engineName: string): TCBAIEngineType;
+
 implementation
+
+function EngineType(const engineName: string): TCBAIEngineType;
+begin
+  for Result := Low(TCBAIEngineType) to High(TCBAIEngineType) do
+    if SameText(engineName, CBAIEngineName[Result]) then
+      Exit;
+
+  Result := etNone;
+end;
 
 { TCBAIEngineSettings }
 
