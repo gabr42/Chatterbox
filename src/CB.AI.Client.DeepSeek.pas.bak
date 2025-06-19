@@ -81,7 +81,7 @@ end;
 
 function TDeepSeekSerializer.QuestionToJSON(
   const engineConfig: TCBAIEngineSettings; const history: TAIChat;
-  sendSystemPrompt: boolean; const question, outputSchema: string): string;
+  sendSystemPrompt: boolean; const question: string): string;
 var
   request: TDeepSeekRequest;
 begin
@@ -93,7 +93,7 @@ begin
     request.stream := false;
     request.temperature := 0;
     if outputSchema <> '' then begin
-      var func := TDeepSeekFunction.Create;
+      var func := TOpenAIFunction.Create;
       func.name := 'JSON_schema';
       func.description := 'Output JSON schema';
       func.parameters := '<([schema])>';

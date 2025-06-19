@@ -28,8 +28,10 @@ type
 
   TGeminiGenerationConfig = class
   public
-    temperature    : real;
-    maxOutputTokens: integer; // default 1
+    temperature     : real;
+    maxOutputTokens : integer; // default 1
+    responseMimeType: string;
+    responseSchema  : string;
   end;
 
   TGeminiRequest = class

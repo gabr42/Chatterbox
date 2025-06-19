@@ -16,13 +16,22 @@ uses
 type
   TOpenAISerializer = class(TInterfacedObject, IAISerializer)
   public
+    function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+      const outputSchema: string = ''): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+      const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TOpenAISerializer }
+
+function TOpenAISerializer.EngineType: TCBAIEngineType;
+begin
+  Result := etOpenAI;
+end;
 
 function TOpenAISerializer.JSONToAnswer(
   const engineConfig: TCBAIEngineSettings; const json: string;
@@ -39,6 +48,8 @@ begin
         Result.Response := response.choices[0].message.content;
         Result.Done := true;
         Result.DoneReason := response.choices[0].finish_reason;
+        if Result.DoneReason = 'function_call' then
+          Result.Response := response.choices[0].message.function_call.arguments;
         Result.PromptTokens := response.usage.prompt_tokens;
         Result.ResponseTokens := response.usage.completion_tokens;
         Result.Model := response.model;
@@ -68,7 +79,8 @@ begin
 end;
 
 function TOpenAISerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+  const outputSchema: string): string;
 var
   request: TOpenAIRequest;
 begin
@@ -77,7 +89,17 @@ begin
     request.model := engineConfig.Model;
     request.max_completion_tokens := engineConfig.MaxTokens;
     request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), not engineConfig.Model.StartsWith('o1-', true), history, question);
-    Result := TJson.ObjectToJsonString(request);
+    if outputSchema <> '' then begin
+      var func := TOpenAIFunction.Create;
+      func.name := 'JSON_schema';
+      func.description := 'Output JSON schema';
+      func.parameters := '<([schema])>';
+      request.functions := [func];
+      request.function_call := 'auto';
+    end;
+    Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
+    if outputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
   finally FreeAndNil(request); end;
 end;
 

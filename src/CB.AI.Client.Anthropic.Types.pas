@@ -3,6 +3,7 @@ unit CB.AI.Client.Anthropic.Types;
 interface
 
 uses
+  System.JSON,
   CB.AI.Client.Types;
 
 {$M+}
@@ -12,18 +13,30 @@ type
   TAnthropicMessage = class(TAIMessage)
   end;
 
+  TAnthropicTool = class
+  public
+    name        : string;
+    description : string;
+    input_schema: string;
+  end;
+
   TAnthropicRequest = class(TAIRequest)
   public
     system    : string;
     max_tokens: integer;
     stream    : boolean;
+    tools     : TArray<TAnthropicTool>;
     //temperature: float;
+    destructor Destroy; override;
   end;
 
   TAnthropicContent = class
   public
     &type: string;
     text : string;
+    id   : string;
+    name : string;
+    // input: TJSONObject; //read manually
   end;
 
   TAnthropicUsage = class
@@ -59,6 +72,15 @@ begin
   for var c in content do
     c.Free;
   FreeAndNil(usage);
+  inherited;
+end;
+
+{ TAnthropicRequest }
+
+destructor TAnthropicRequest.Destroy;
+begin
+  for var t in tools do
+    t.Free;
   inherited;
 end;
 

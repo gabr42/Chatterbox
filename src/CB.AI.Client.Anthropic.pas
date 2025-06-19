@@ -6,6 +6,7 @@ implementation
 
 uses
   System.SysUtils, System.StrUtils,
+  System.JSON,
   REST.Json,
   Spring,
   CB.Settings.Types, CB.Network.Types,
@@ -16,13 +17,22 @@ uses
 type
   TAnthropicSerializer = class(TInterfacedObject, IAISerializer)
   public
+    function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+      const outputSchema: string = ''): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+      const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TAnthropicSerializer }
+
+function TAnthropicSerializer.EngineType: TCBAIEngineType;
+begin
+  Result := etAnthropic;
+end;
 
 function TAnthropicSerializer.JSONToModels(const json: string;
   var errorMsg: string): TArray<string>;
@@ -32,7 +42,8 @@ begin
 end;
 
 function TAnthropicSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+  const outputSchema: string): string;
 var
   request: TAnthropicRequest;
 begin
@@ -43,7 +54,16 @@ begin
     request.system := IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, '');
     request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
+    if outputSchema <> '' then begin
+      var tool := TAnthropicTool.Create;
+      tool.name := 'JSON_schema';
+      tool.description := 'A tool describing the output schema.';
+      tool.input_schema := '<([schema])>';
+      request.tools := [tool];
+    end;
     Result := TJson.ObjectToJsonString(request);
+    if outputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
   finally FreeAndNil(request); end;
 end;
 
@@ -78,6 +98,27 @@ begin
         Result.PromptTokens := response.usage.input_tokens;
         Result.ResponseTokens := response.usage.output_tokens;
         Result.Model := response.model;
+        for var txt in response.content do
+          if txt.name = 'JSON_schema' then begin
+            // extract 'input' field
+            var js := TJSONObject.ParseJSONValue(json) as TJSONObject;
+            if assigned(js) then try
+              var contArr := js.GetValue('content') as TJSONArray;
+              if assigned(contArr) then begin
+                for var contItem in contArr do begin
+                  var name := TJSONObject(contItem).GetValue('name');
+                  if assigned(name) and (name is TJSONString) and (TJSONString(name).Value = 'JSON_schema') then begin
+                    var input := TJSONObject(contItem).GetValue('input');
+                    if assigned(input) then begin
+                      Result.Response := input.ToString;
+                      Exit; // ignore other segments
+                    end;
+                  end;
+                end;
+              end;
+            finally FreeAndNil(js); end;
+          end;
+
         for var txt in response.content do begin
           if Result.Response <> '' then
             Result.Response := Result.Response + #$0D#$0A;

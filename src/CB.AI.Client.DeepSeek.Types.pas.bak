@@ -29,8 +29,9 @@ type
     description: string;
     parameters : string;
   end;
+  end;
 
-  TDeepSeekRequest = class(TAIRequest)
+  TOpenAIRequest = class(TAIRequest)
   public
     max_tokens : integer;
     stream     : boolean;
@@ -120,23 +121,6 @@ destructor TDeepSeekModels.Destroy;
 begin
   for var model in data do
     model.Free;
-  inherited;
-end;
-
-{ TDeepSeekRequest }
-
-destructor TDeepSeekRequest.Destroy;
-begin
-  for var func in functions do
-    func.Free;
-  inherited;
-end;
-
-{ TDeepSeekMessage }
-
-destructor TDeepSeekMessage.Destroy;
-begin
-  FreeAndNil(function_call);
   inherited;
 end;
 

@@ -12,11 +12,25 @@ type
   TOllamaMessage = class(TAIMessage)
   end;
 
+  TOllamaJsonSchema = class
+  public
+    name  : string;
+    schema: string;
+  end;
+
+  TOllamaResponseFormat = class
+  public
+    &type      : string;
+    json_schema: string; // TOllamaJsonSchema
+  end;
+
   TOllamaRequest = class(TAIRequest)
   public
     stream: boolean;
     //temperature
     max_tokens: integer;
+    response_format: TOllamaResponseFormat;
+    destructor Destroy; override;
   end;
 
   TOllamaResponse = class
@@ -67,6 +81,12 @@ destructor TOllamaModels.Destroy;
 begin
   for var model in models do
     model.Free;
+  inherited;
+end;
+
+destructor TOllamaRequest.Destroy;
+begin
+  FreeAndNil(response_format);
   inherited;
 end;
 

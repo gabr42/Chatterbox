@@ -16,13 +16,22 @@ uses
 type
   TOllamaSerializer = class(TInterfacedObject, IAISerializer)
   public
+    function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+      const outputSchema: string = ''): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+      const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TOllamaSerializer }
+
+function TOllamaSerializer.EngineType: TCBAIEngineType;
+begin
+  Result := etOllama;
+end;
 
 function TOllamaSerializer.JSONToModels(const json: string;
   var errorMsg: string): TArray<string>;
@@ -42,7 +51,8 @@ begin
 end;
 
 function TOllamaSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean;
+  const question, outputSchema: string): string;
 var
   request: TOllamaRequest;
 begin
@@ -52,7 +62,22 @@ begin
     request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
     request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), false, history, question);
-    Result := TJson.ObjectToJsonString(request);
+    if outputSchema <> '' then begin
+      request.response_format := TOllamaResponseFormat.Create;
+      request.response_format.&type := 'json_schema';
+      request.response_format.json_schema := '<([json_schema])>';
+    end;
+
+    Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
+    if outputSchema <> '' then begin
+      var schema := TOllamaJsonSchema.Create;
+      try
+        schema.name := 'JSON_schema';
+        schema.schema := '<([schema])>';
+        Result := StringReplace(Result, '"<([json_schema])>"', TJson.ObjectToJsonString(schema), []);
+        Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+      finally FreeAndNil(schema); end;
+    end;
   finally FreeAndNil(request); end;
 end;
 

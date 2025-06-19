@@ -29,9 +29,13 @@ type
   TAIQueryPurpose = (qpHost, qpChat, qpAPIKeys, qpModels);
 
   IAISerializer = interface ['{9F731BD7-3A25-4747-93EA-0751C94FEB97}']
+    function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompty: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+      const history: TAIChat; sendSystemPrompty: boolean; const question: string;
+      const outputSchema: string = ''): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+      const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 

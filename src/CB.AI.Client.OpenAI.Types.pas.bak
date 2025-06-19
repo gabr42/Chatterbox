@@ -139,8 +139,6 @@ begin
   inherited;
 end;
 
-{ TOpenAIMessage }
-
 destructor TOpenAIMessage.Destroy;
 begin
   FreeAndNil(function_call);

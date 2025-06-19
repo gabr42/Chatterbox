@@ -5,7 +5,7 @@ interface
 implementation
 
 uses
-  System.SysUtils,
+  System.SysUtils, System.Math,
   REST.Json,
   Spring,
   CB.Settings.Types, CB.Network.Types,
@@ -16,13 +16,22 @@ uses
 type
   TGeminiSerializer = class(TInterfacedObject, IAISerializer)
   public
+    function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; const json: string; var errorMsg: string): TAIResponse;
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+      const outputSchema: string = ''): string;
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
+      const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
 { TGeminiSerializer }
+
+function TGeminiSerializer.EngineType: TCBAIEngineType;
+begin
+  Result := etGemini;
+end;
 
 function TGeminiSerializer.JSONToAnswer(
   const engineConfig: TCBAIEngineSettings; const json: string;
@@ -75,7 +84,8 @@ begin
 end;
 
 function TGeminiSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+  const outputSchema: string): string;
 var
   request : TGeminiRequest;
   messages: TArray<TGeminiMessage>;
@@ -96,12 +106,20 @@ begin
     end;
     messages[iMsg] := TGeminiMessage.Create('user', question);
     request.contents := messages;
-    if engineConfig.MaxTokens > 0 then begin
+    if (engineConfig.MaxTokens > 0) or (outputSchema <> '') then begin
       request.generationConfig := TGeminiGenerationConfig.Create;
       request.generationConfig.temperature := 1; // TODO : make configurable
-      request.generationConfig.maxOutputTokens := engineConfig.MaxTokens;
+      request.generationConfig.maxOutputTokens := IfThen(engineConfig.MaxTokens = 0, 4096, engineConfig.MaxTokens);
+      if outputSchema = '' then
+        request.generationConfig.responseMimeType := 'text/plain'
+      else begin
+        request.generationConfig.responseMimeType := 'application/json';
+        request.generationConfig.responseSchema := '<([schema])>';
+      end;
     end;
-    Result := TJson.ObjectToJsonString(request);
+    Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
+    if outputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
   finally FreeAndNil(request); end;
 end;
 

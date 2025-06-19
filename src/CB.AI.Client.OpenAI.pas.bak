@@ -1,52 +1,51 @@
-unit CB.AI.Client.DeepSeek;
+unit CB.AI.Client.OpenAI;
 
 interface
 
 implementation
 
 uses
-  System.SysUtils, System.StrUtils, System.Classes,
+  System.SysUtils, System.StrUtils,
   REST.Json,
   Spring,
   CB.Settings.Types, CB.Network.Types,
   CB.AI.Registry,
   CB.AI.Interaction,
-  CB.AI.Client.DeepSeek.Types;
+  CB.AI.Client.OpenAI.Types;
 
 type
-  TDeepSeekSerializer = class(TInterfacedObject, IAISerializer)
+  TOpenAISerializer = class(TInterfacedObject, IAISerializer)
   public
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
-    function QuestionToJSON(const engineConfig: TCBAIEngineSettings; 
+    function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
       const history: TAIChat; sendSystemPrompt: boolean; const question: string;
       const outputSchema: string = ''): string;
-    function JSONToAnswer(const engineConfig: TCBAIEngineSettings; 
+    function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
   end;
 
-{ TDeepSeekSerializer }
+{ TOpenAISerializer }
 
-function TDeepSeekSerializer.EngineType: TCBAIEngineType;
+function TOpenAISerializer.EngineType: TCBAIEngineType;
 begin
-  Result := etDeepSeek;
+  Result := etOpenAI;
 end;
 
-function TDeepSeekSerializer.JSONToAnswer(
+function TOpenAISerializer.JSONToAnswer(
   const engineConfig: TCBAIEngineSettings; const json: string;
   var errorMsg: string): TAIResponse;
 begin
   errorMsg := '';
   Result := Default(TAIResponse);
   try
-    var response := TJson.JsonToObject<TDeepSeekResponse>(json);
+    var response := TJson.JsonToObject<TOpenAIResponse>(json);
     try
       if not assigned(response) then
         errorMsg := 'Failed to parse JSON response: ' + json
       else if Length(response.choices) > 0 then begin
         Result.Response := response.choices[0].message.content;
-        Result.Reasoning := response.choices[0].message.reasoning_content;
         Result.Done := true;
         Result.DoneReason := response.choices[0].finish_reason;
         if Result.DoneReason = 'function_call' then
@@ -62,12 +61,12 @@ begin
   end;
 end;
 
-function TDeepSeekSerializer.JSONToModels(const json: string;
+function TOpenAISerializer.JSONToModels(const json: string;
   var errorMsg: string): TArray<string>;
 begin
   errorMsg := '';
   try
-    var models := TJson.JsonToObject<TDeepSeekModels>(json);
+    var models := TJson.JsonToObject<TOpenAIModels>(json);
     try
       SetLength(Result, Length(models.data));
       for var iModel := 0 to High(Result) do
@@ -79,21 +78,20 @@ begin
   end;
 end;
 
-function TDeepSeekSerializer.QuestionToJSON(
-  const engineConfig: TCBAIEngineSettings; const history: TAIChat;
-  sendSystemPrompt: boolean; const question, outputSchema: string): string;
+function TOpenAISerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
+  const outputSchema: string): string;
 var
-  request: TDeepSeekRequest;
+  request: TOpenAIRequest;
+  sFunc  : string;
 begin
-  request := TDeepSeekRequest.Create;
+  request := TOpenAIRequest.Create;
   try
     request.model := engineConfig.Model;
-    request.max_tokens := engineConfig.MaxTokens;
-    request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), true, history, question);
-    request.stream := false;
-    request.temperature := 0;
+    request.max_completion_tokens := engineConfig.MaxTokens;
+    request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), not engineConfig.Model.StartsWith('o1-', true), history, question);
     if outputSchema <> '' then begin
-      var func := TDeepSeekFunction.Create;
+      var func := TOpenAIFunction.Create;
       func.name := 'JSON_schema';
       func.description := 'Output JSON schema';
       func.parameters := '<([schema])>';
@@ -106,21 +104,21 @@ begin
   finally FreeAndNil(request); end;
 end;
 
-function TDeepSeekSerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
+function TOpenAISerializer.URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
 begin
   case purpose of
     qpChat,
     qpHost:    if engineConfig.Host = '' then
-                 Result := 'https://api.deepseek.com/chat/completions'
+                 Result := 'https://api.openai.com/v1/chat/completions'
                else
                  Result := engineConfig.Host;
-    qpAPIKeys: Result := 'https://platform.deepseek.com/api_keys';
-    qpModels:  Result := 'https://api.deepseek.com/v1/models';
+    qpAPIKeys: Result := 'https://platform.openai.com/api-keys';
+    qpModels:  Result := 'https://api.openai.com/v1/models';
     else raise Exception.Create('Unsupported purpose');
   end;
 end;
 
 initialization
-  GSerializers[etDeepSeek] := TDeepSeekSerializer.Create;
-  GNetworkHeaderProvider.Add(etDeepSeek, TNetworkHeader.Create('Authorization', 'Bearer ' + CAuthorizationKeyPlaceholder));
+  GSerializers[etOpenAI] := TOpenAISerializer.Create;
+  GNetworkHeaderProvider.Add(etOpenAI, TNetworkHeader.Create('Authorization', 'Bearer ' + CAuthorizationKeyPlaceholder));
 end.
