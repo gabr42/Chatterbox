@@ -2,9 +2,6 @@ unit CB.Settings.Types;
 
 interface
 
-uses
-  System.SysUtils;
-
 type
   TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini, etDeepSeek);
 
@@ -28,6 +25,9 @@ var
   function EngineType(const engineName: string): TCBAIEngineType;
 
 implementation
+
+uses
+  System.SysUtils;
 
 function EngineType(const engineName: string): TCBAIEngineType;
 begin
