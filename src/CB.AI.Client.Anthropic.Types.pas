@@ -58,6 +58,21 @@ type
     usage        : TAnthropicUsage;
     destructor Destroy; override;
   end;
+
+  TAnthropicModel = class
+  public
+    &type       : string;
+    id          : string;
+    display_name: string;
+    created_at  : string;
+  end;
+
+  TAnthropicModels = class
+  public
+    data: TArray<TAnthropicModel>;
+    destructor Destroy; override;
+  end;
+
 {$M-}
 
 implementation
@@ -81,6 +96,13 @@ destructor TAnthropicRequest.Destroy;
 begin
   for var t in tools do
     t.Free;
+  inherited;
+end;
+
+destructor TAnthropicModels.Destroy;
+begin
+  for var model in data do
+    model.Free;
   inherited;
 end;
 

@@ -8,7 +8,7 @@ uses
   System.SysUtils, System.StrUtils,
   System.JSON,
   REST.Json,
-  Spring,
+  Spring, Spring.Collections,
   CB.Settings.Types, CB.Network.Types,
   CB.AI.Registry,
   CB.AI.Interaction,
@@ -37,8 +37,20 @@ end;
 function TAnthropicSerializer.JSONToModels(const json: string;
   var errorMsg: string): TArray<string>;
 begin
-  errorMsg := 'not implemented';
-  Result := nil;
+  errorMsg := '';
+  try
+    var models := TJson.JsonToObject<TAnthropicModels>(json);
+    try
+      var lModels := TCollections.CreateList<string>;
+      for var iModel := 0 to Length(models.data) - 1 do
+        if SameText(models.data[iModel].&type, 'model') then
+          lModels.Add(models.data[iModel].id);
+      Result := lModels.ToArray;
+    finally FreeAndNil(models); end;
+  except
+    on E: Exception do
+      errorMsg := E.Message;
+  end;
 end;
 
 function TAnthropicSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
@@ -76,7 +88,7 @@ begin
                else
                  Result := engineConfig.Host;
     qpAPIKeys: Result := 'https://console.anthropic.com/settings/keys';
-    qpModels:  Result := '';
+    qpModels:  Result := 'https://api.anthropic.com/v1/models';
     else raise Exception.Create('Unknown purpose');
   end;
 end;
