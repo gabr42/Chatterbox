@@ -24,14 +24,14 @@ object frmEngineDemo: TfrmEngineDemo
   end
   object lblAPIKey: TLabel
     Left = 8
-    Top = 103
+    Top = 74
     Width = 40
     Height = 15
     Caption = 'API Key'
   end
   object lblMode: TLabel
     Left = 8
-    Top = 73
+    Top = 102
     Width = 34
     Height = 15
     Caption = 'Model'
@@ -69,37 +69,22 @@ object frmEngineDemo: TfrmEngineDemo
   end
   object inpAPIKey: TEdit
     Left = 68
-    Top = 100
+    Top = 71
     Width = 537
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     PasswordChar = '*'
-    TabOrder = 3
+    TabOrder = 2
   end
   object inpModel: TEdit
     Left = 68
-    Top = 71
-    Width = 377
+    Top = 100
+    Width = 537
     Height = 23
-    TabOrder = 1
-  end
-  object btnListModels: TButton
-    Left = 451
-    Top = 69
-    Width = 25
-    Height = 25
-    Caption = '...'
-    TabOrder = 2
-    OnClick = btnListModelsClick
-  end
-  object inpURL: TEdit
-    Left = 68
-    Top = 42
-    Width = 377
-    Height = 23
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 4
   end
-  object btnGetAPIKey: TButton
+  object btnListModels: TButton
     Left = 611
     Top = 99
     Width = 25
@@ -107,6 +92,24 @@ object frmEngineDemo: TfrmEngineDemo
     Anchors = [akTop, akRight]
     Caption = '...'
     TabOrder = 5
+    OnClick = btnListModelsClick
+  end
+  object inpURL: TEdit
+    Left = 68
+    Top = 42
+    Width = 537
+    Height = 23
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 1
+  end
+  object btnGetAPIKey: TButton
+    Left = 611
+    Top = 70
+    Width = 25
+    Height = 25
+    Anchors = [akTop, akRight]
+    Caption = '...'
+    TabOrder = 3
     OnClick = btnGetAPIKeyClick
   end
   object inpQuery: TMemo
@@ -116,6 +119,7 @@ object frmEngineDemo: TfrmEngineDemo
     Height = 216
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 6
+    ExplicitWidth = 566
   end
   object btnRunQuery: TButton
     Left = 68
@@ -126,6 +130,7 @@ object frmEngineDemo: TfrmEngineDemo
     Caption = 'Ask'
     TabOrder = 7
     OnClick = btnRunQueryClick
+    ExplicitWidth = 566
   end
   object outResponse: TMemo
     Left = 68
@@ -134,5 +139,7 @@ object frmEngineDemo: TfrmEngineDemo
     Height = 269
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 8
+    ExplicitWidth = 566
+    ExplicitHeight = 261
   end
 end

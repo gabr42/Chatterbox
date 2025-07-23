@@ -143,8 +143,11 @@ function TfrmEngineDemo.MakeHeaders: TNetHeaders;
 begin
   var headers := TCollections.CreateList<TNameValuePair>;
   headers.Add(TNameValuePair.Create('Content-type', 'application/json'));
-  for var hdr in GNetworkHeaderProvider[FSerializer.EngineType] do
-    headers.Add(TNameValuePair.Create(hdr.Value1, StringReplace(hdr.Value2, CAuthorizationKeyPlaceholder, inpAPIKey.Text, [])));
+  for var hdr in GNetworkHeaderProvider[FSerializer.EngineType] do begin
+    var hdrValue := StringReplace(hdr.Value2, CAuthorizationKeyPlaceholder, inpAPIKey.Text, []);
+    if hdrValue <> '' then
+      headers.Add(TNameValuePair.Create(hdr.Value1, hdrValue));
+  end;
   Result := headers.ToArray;
 end;
 
