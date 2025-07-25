@@ -343,7 +343,7 @@ object frmSettings: TfrmSettings
         end
         object Label5: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 118.000000000000000000
+          Position.Y = 117.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 16.000000000000000000
           Size.PlatformDefault = False
@@ -407,6 +407,9 @@ object frmSettings: TfrmSettings
         object Label6: TLabel
           Position.X = 8.000000000000000000
           Position.Y = 203.000000000000000000
+          Size.Width = 89.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
           Text = 'System prompt:'
           TabOrder = 14
         end
@@ -415,11 +418,11 @@ object frmSettings: TfrmSettings
           Anchors = [akLeft, akTop, akRight]
           ImageIndex = -1
           Position.X = 97.000000000000000000
-          Position.Y = 352.000000000000000000
+          Position.Y = 384.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 17
+          TabOrder = 18
           TextSettings.Trimming = None
           ParentShowHint = False
           ShowHint = True
@@ -441,7 +444,7 @@ object frmSettings: TfrmSettings
           DecimalDigits = 0
           Max = 99999.000000000000000000
           Position.X = 97.000000000000000000
-          Position.Y = 298.000000000000000000
+          Position.Y = 299.000000000000000000
           Size.Width = 197.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
@@ -461,20 +464,23 @@ object frmSettings: TfrmSettings
         end
         object Label13: TLabel
           Position.X = 8.000000000000000000
-          Position.Y = 327.000000000000000000
+          Position.Y = 355.000000000000000000
+          Size.Width = 89.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
           Text = 'Timeout (sec):'
-          TabOrder = 18
+          TabOrder = 19
         end
         object inpNetworkTimeout: TNumberBox
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 16
+          TabOrder = 17
           Cursor = crIBeam
           DecimalDigits = 0
           Max = 99999.000000000000000000
-          Position.X = 97.000000000000000000
-          Position.Y = 325.000000000000000000
-          Size.Width = 197.000000000000000000
+          Position.X = 96.000000000000000000
+          Position.Y = 354.000000000000000000
+          Size.Width = 198.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
           OnChange = inpCommonAIChange
@@ -496,6 +502,34 @@ object frmSettings: TfrmSettings
           Position.X = 97.000000000000000000
           Position.Y = 62.000000000000000000
           Size.Width = 197.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = inpCommonAIChange
+        end
+        object Label14: TLabel
+          Position.X = 7.000000000000000000
+          Position.Y = 327.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Temperature:'
+          TabOrder = 20
+        end
+        object inpTemperature: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 16
+          Cursor = crIBeam
+          DecimalDigits = 1
+          Max = 2.000000000000000000
+          Value = 1.000000000000000000
+          ValueType = Float
+          KeyboardType = NumbersAndPunctuation
+          Position.X = 96.000000000000000000
+          Position.Y = 326.000000000000000000
+          HorzIncrement = 0.100000000000000000
+          VertIncrement = 1.000000000000000000
+          Size.Width = 198.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
           OnChange = inpCommonAIChange

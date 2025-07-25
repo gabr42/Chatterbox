@@ -19,8 +19,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings; 
-      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings; 
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
@@ -81,7 +80,7 @@ end;
 
 function TDeepSeekSerializer.QuestionToJSON(
   const engineConfig: TCBAIEngineSettings; const history: TAIChat;
-  sendSystemPrompt: boolean; const question, outputSchema: string): string;
+  sendSystemPrompt: boolean; const question: string): string;
 var
   request: TDeepSeekRequest;
 begin
@@ -91,8 +90,11 @@ begin
     request.max_tokens := engineConfig.MaxTokens;
     request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), true, history, question);
     request.stream := false;
-    request.temperature := 0;
-    if outputSchema <> '' then begin
+    if engineConfig.Temperature.HasValue then
+      request.temperature := engineConfig.Temperature
+    else
+      request.temperature := 1;
+    if engineConfig.OutputSchema <> '' then begin
       var func := TDeepSeekFunction.Create;
       func.name := 'JSON_schema';
       func.description := 'Output JSON schema';
@@ -101,8 +103,8 @@ begin
       request.function_call := 'auto';
     end;
     Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
-    if outputSchema <> '' then
-      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+    if engineConfig.OutputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', engineConfig.OutputSchema, []);
   finally FreeAndNil(request); end;
 end;
 

@@ -32,8 +32,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-      const history: TAIChat; sendSystemPrompty: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompty: boolean; const question: string): string; overload;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;

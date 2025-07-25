@@ -75,6 +75,8 @@ type
     sbRefreshModels: TSpeedButton;
     cbxModel: TComboEdit;
     lblSettingLocation: TLabel;
+    Label14: TLabel;
+    inpTemperature: TNumberBox;
     procedure FormCreate(Sender: TObject);
     procedure actDeleteAIEngineExecute(Sender: TObject);
     procedure actDeleteAIEngineUpdate(Sender: TObject);
@@ -206,7 +208,7 @@ begin
   case stg.EngineType of
     etAnthropic:
       begin
-        SelectModel(['claude-3-5-sonnet-latest']);
+        SelectModel(['claude-3-7-sonnet-latest']);
         inpMaxTokens.Value := 4096;
       end;
     etOllama:
@@ -216,12 +218,12 @@ begin
       end;
     etOpenAI:
       begin
-        SelectModel(['o3-mini', 'o1-mini']);
+        SelectModel(['o4-mini', 'o3-mini', 'o1-mini']);
         inpMaxTokens.Value := 4096;
       end;
     etGemini:
       begin
-        SelectModel(['gemini-2.0-flash', 'gemini-1.5-pro']);
+        SelectModel(['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro']);
         inpMaxTokens.Value := 4096;
       end;
     etDeepSeek:
@@ -232,6 +234,7 @@ begin
     else
       inpHost.Text := '';
   end;
+  inpTemperature.Value := 1;
   FUpdate := false;
   inpCommonAIChange(nil);
 end;
@@ -283,6 +286,7 @@ begin
   stg.SysPrompt := StringReplace(StringReplace(inpSystemPrompt.Text, #$0D, ' ', [rfReplaceAll]), #$0A, ' ', [rfReplaceAll]);
   stg.MaxTokens := Round(inpMaxTokens.Value);
   stg.NetTimeoutSec := Round(inpNetworkTimeout.Value);
+  stg.Temperature := inpTemperature.Value;
   RefreshModels(stg);
   stg.Model := cbxModel.Text;
   FEngines[lbAIEngines.ItemIndex] := stg;
@@ -319,6 +323,7 @@ begin
   inpHost.Text := stg.Host;
   inpMaxTokens.Value := stg.MaxTokens;
   inpNetworkTimeout.Value := stg.NetTimeoutSec;
+  inpTemperature.Value := stg.Temperature.GetValueOrDefault(1);
   FUpdate := false;
 
   lblLoadedEngine.Text := stg.DisplayName(false);

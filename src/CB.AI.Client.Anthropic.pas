@@ -20,8 +20,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string): string; overload;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
@@ -53,9 +52,9 @@ begin
   end;
 end;
 
-function TAnthropicSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-  const outputSchema: string): string;
+function TAnthropicSerializer.QuestionToJSON(
+  const engineConfig: TCBAIEngineSettings; const history: TAIChat;
+  sendSystemPrompt: boolean; const question: string): string;
 var
   request: TAnthropicRequest;
 begin
@@ -65,8 +64,12 @@ begin
     request.LoadMessages('', false, history, question);
     request.system := IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, '');
     request.max_tokens := engineConfig.MaxTokens;
+    if engineConfig.Temperature.HasValue then
+      request.temperature := engineConfig.Temperature
+    else
+      request.temperature := 1;
     request.stream := false;
-    if outputSchema <> '' then begin
+    if engineConfig.OutputSchema <> '' then begin
       var tool := TAnthropicTool.Create;
       tool.name := 'JSON_schema';
       tool.description := 'A tool describing the output schema.';
@@ -74,8 +77,8 @@ begin
       request.tools := [tool];
     end;
     Result := TJson.ObjectToJsonString(request);
-    if outputSchema <> '' then
-      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+    if engineConfig.OutputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', engineConfig.OutputSchema, []);
   finally FreeAndNil(request); end;
 end;
 

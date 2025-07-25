@@ -19,8 +19,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
@@ -79,8 +78,7 @@ begin
 end;
 
 function TOpenAISerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-  const outputSchema: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
 var
   request: TOpenAIRequest;
 begin
@@ -89,7 +87,11 @@ begin
     request.model := engineConfig.Model;
     request.max_completion_tokens := engineConfig.MaxTokens;
     request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), not engineConfig.Model.StartsWith('o1-', true), history, question);
-    if outputSchema <> '' then begin
+    if engineConfig.Temperature.HasValue then
+      request.temperature := engineConfig.Temperature
+    else
+      request.temperature := 1;
+    if engineConfig.OutputSchema <> '' then begin
       var func := TOpenAIFunction.Create;
       func.name := 'JSON_schema';
       func.description := 'Output JSON schema';
@@ -98,8 +100,8 @@ begin
       request.function_call := 'auto';
     end;
     Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
-    if outputSchema <> '' then
-      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+    if engineConfig.OutputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', engineConfig.OutputSchema, []);
   finally FreeAndNil(request); end;
 end;
 

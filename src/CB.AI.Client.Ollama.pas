@@ -19,8 +19,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
@@ -52,7 +51,7 @@ end;
 
 function TOllamaSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
   const history: TAIChat; sendSystemPrompt: boolean;
-  const question, outputSchema: string): string;
+  const question: string): string;
 var
   request: TOllamaRequest;
 begin
@@ -62,20 +61,23 @@ begin
     request.max_tokens := engineConfig.MaxTokens;
     request.stream := false;
     request.LoadMessages(IfThen(sendSystemPrompt, engineConfig.SysPrompt.Trim, ''), false, history, question);
-    if outputSchema <> '' then begin
+    if engineConfig.OutputSchema <> '' then begin
       request.response_format := TOllamaResponseFormat.Create;
       request.response_format.&type := 'json_schema';
       request.response_format.json_schema := '<([json_schema])>';
     end;
-
+    if engineConfig.Temperature.HasValue then
+      request.temperature := engineConfig.Temperature
+    else
+      request.temperature := 1;
     Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
-    if outputSchema <> '' then begin
+    if engineConfig.OutputSchema <> '' then begin
       var schema := TOllamaJsonSchema.Create;
       try
         schema.name := 'JSON_schema';
         schema.schema := '<([schema])>';
         Result := StringReplace(Result, '"<([json_schema])>"', TJson.ObjectToJsonString(schema), []);
-        Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+        Result := StringReplace(Result, '"<([schema])>"', engineConfig.OutputSchema, []);
       finally FreeAndNil(schema); end;
     end;
   finally FreeAndNil(request); end;

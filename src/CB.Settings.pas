@@ -116,6 +116,8 @@ begin
       eng.SysPrompt := ini.ReadString(section, 'SystemPrompt', '');
       eng.IsDefault := ini.ReadInteger(section, 'IsDefault', 0) <> 0;
       eng.NetTimeoutSec := ini.ReadInteger(section, 'NetworkTimeout', 60);
+      if ini.ValueExists(section, 'Temperature') then
+        eng.Temperature := ini.ReadFloat(section, 'Temperature', 1);
       AIEngines.Add(eng);
       Inc(iEng);
     until false;
@@ -152,6 +154,10 @@ begin
       ini.WriteString(section, 'SystemPrompt', eng.SysPrompt);
       ini.WriteInteger(section, 'IsDefault', Ord(eng.IsDefault));
       ini.WriteInteger(section, 'NetworkTimeout', eng.NetTimeoutSec);
+      if eng.Temperature.HasValue then
+        ini.WriteFloat(section, 'Temperature', eng.Temperature)
+      else
+        ini.DeleteKey(section, 'Temperature');
     end;
   finally FreeAndNil(ini); end;
 end;

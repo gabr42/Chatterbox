@@ -22,11 +22,11 @@ type
 
   TAnthropicRequest = class(TAIRequest)
   public
-    system    : string;
-    max_tokens: integer;
-    stream    : boolean;
-    tools     : TArray<TAnthropicTool>;
-    //temperature: float;
+    system     : string;
+    max_tokens : integer;
+    stream     : boolean;
+    tools      : TArray<TAnthropicTool>;
+    temperature: real;
     destructor Destroy; override;
   end;
 

@@ -26,9 +26,9 @@ type
 
   TOllamaRequest = class(TAIRequest)
   public
-    stream: boolean;
-    //temperature
-    max_tokens: integer;
+    stream         : boolean;
+    temperature    : real;
+    max_tokens     : integer;
     response_format: TOllamaResponseFormat;
     destructor Destroy; override;
   end;

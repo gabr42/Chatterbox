@@ -2,6 +2,9 @@ unit CB.Settings.Types;
 
 interface
 
+uses
+  Spring;
+
 type
   TCBAIEngineType = (etNone, etAnthropic, etOllama, etOpenAI, etGemini, etDeepSeek);
 
@@ -16,6 +19,8 @@ type
     MaxTokens    : integer;
     NetTimeoutSec: integer;
     IsDefault    : boolean;
+    Temperature  : Nullable<real>;
+    OutputSchema : string;
     function DisplayName(showDefault: boolean = true): string;
   end;
 

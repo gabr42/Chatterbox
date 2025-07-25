@@ -32,6 +32,7 @@ type
   TOpenAIRequest = class(TAIRequest)
   public
     max_completion_tokens: integer;
+    temperature          : real;
     [JsonName('functions')]
     functions            : TArray<TOpenAIFunction>;
     [JsonName('function_call')]

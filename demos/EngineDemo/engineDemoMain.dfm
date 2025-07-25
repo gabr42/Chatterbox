@@ -119,7 +119,6 @@ object frmEngineDemo: TfrmEngineDemo
     Height = 216
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 6
-    ExplicitWidth = 566
   end
   object btnRunQuery: TButton
     Left = 68
@@ -130,7 +129,6 @@ object frmEngineDemo: TfrmEngineDemo
     Caption = 'Ask'
     TabOrder = 7
     OnClick = btnRunQueryClick
-    ExplicitWidth = 566
   end
   object outResponse: TMemo
     Left = 68
@@ -139,7 +137,5 @@ object frmEngineDemo: TfrmEngineDemo
     Height = 269
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 8
-    ExplicitWidth = 566
-    ExplicitHeight = 261
   end
 end

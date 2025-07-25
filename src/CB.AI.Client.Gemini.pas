@@ -19,8 +19,7 @@ type
     function EngineType: TCBAIEngineType;
     function URL(const engineConfig: TCBAIEngineSettings; purpose: TAIQueryPurpose): string;
     function QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-      const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-      const outputSchema: string = ''): string;
+      const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
     function JSONToAnswer(const engineConfig: TCBAIEngineSettings;
       const json: string; var errorMsg: string): TAIResponse;
     function JSONToModels(const json: string; var errorMsg: string): TArray<string>;
@@ -84,8 +83,7 @@ begin
 end;
 
 function TGeminiSerializer.QuestionToJSON(const engineConfig: TCBAIEngineSettings;
-  const history: TAIChat; sendSystemPrompt: boolean; const question: string;
-  const outputSchema: string): string;
+  const history: TAIChat; sendSystemPrompt: boolean; const question: string): string;
 var
   request : TGeminiRequest;
   messages: TArray<TGeminiMessage>;
@@ -106,11 +104,14 @@ begin
     end;
     messages[iMsg] := TGeminiMessage.Create('user', question);
     request.contents := messages;
-    if (engineConfig.MaxTokens > 0) or (outputSchema <> '') then begin
+    if engineConfig.Temperature.HasValue or (engineConfig.MaxTokens > 0) or (engineConfig.OutputSchema <> '') then begin
       request.generationConfig := TGeminiGenerationConfig.Create;
-      request.generationConfig.temperature := 1; // TODO : make configurable
+      if engineConfig.Temperature.HasValue then
+        request.generationConfig.temperature := engineConfig.Temperature
+      else
+        request.generationConfig.temperature := 1;
       request.generationConfig.maxOutputTokens := IfThen(engineConfig.MaxTokens = 0, 4096, engineConfig.MaxTokens);
-      if outputSchema = '' then
+      if engineConfig.OutputSchema = '' then
         request.generationConfig.responseMimeType := 'text/plain'
       else begin
         request.generationConfig.responseMimeType := 'application/json';
@@ -118,8 +119,8 @@ begin
       end;
     end;
     Result := TJson.ObjectToJsonString(request, TJson.CDefaultOptions + [joIgnoreEmptyStrings, joIgnoreEmptyArrays]);
-    if outputSchema <> '' then
-      Result := StringReplace(Result, '"<([schema])>"', outputSchema, []);
+    if engineConfig.OutputSchema <> '' then
+      Result := StringReplace(Result, '"<([schema])>"', engineConfig.OutputSchema, []);
   finally FreeAndNil(request); end;
 end;
 
